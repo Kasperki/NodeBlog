@@ -1,0 +1,137 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    
+    <!-- jQuery -->
+    <script src="../web/js/jquery.js"></script>
+    <link href="../web/css/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="../web/js/google-code-prettify/prettify.js"></script>
+    
+    <!-- Bootstrap Core JavaScript -->
+    <script src="../web/js/bootstrap.min.js"></script>
+
+    <!-- Plugin JavaScript -->
+    <script src="../web/js/jquery.easing.min.js"></script>
+    <script src="../web/js/jquery.fittext.js"></script>
+    <script src="../web/js/wow.min.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="../web/js/creative.js"></script>
+    
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="../web/css/bootstrap.min.css" type="text/css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../web/css/creative.css" type="text/css">
+    
+    <!-- Custom Fonts -->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="../web/font-awesome/css/font-awesome.min.css" type="text/css">
+
+    <!-- Plugin CSS -->
+    <link rel="stylesheet" href="../web/css/animate.min.css" type="text/css">
+    
+    <title>My Blog</title>
+</head>
+<body id="body">
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <input type="text" id="inputTitle">
+            </div>
+        </div>
+        <div class="row">
+             <div class="col-lg-12 text-center">
+                 <input type="text" id="inputImage">
+             </div>
+        </div>
+         <div class="row">
+             <div class="col-lg-12 text-center">
+                 <textarea rows="4" cols="50" id="inputText">
+                     Use Markdown To write your message.
+                 </textarea>
+             </div>
+         </div>
+    </div>
+
+
+<div id="markDownPreview">
+<div class="row">
+    <div class="col-lg-12 text-center">
+        <p>Preview</p>
+    </div>
+</div>
+    
+    <div class="container" id="header">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h1 id="previewTitle"></h1>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div id="previewData"></div>
+            </div>            
+        </div>
+    </div>
+</div>
+    
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6 text-center">
+            <button id="togglePreview">Toggle preview</button>
+        </div>
+        <div class="col-lg-6 text-center">
+            <button id="saveBlog">SAVE</button>
+        </div>
+    </div>
+</div>
+
+<script>
+$("#body").find("code").wrap("<pre class='prettyprint'></div>");
+
+$("#togglePreview").click(function() {
+    $("#markDownPreview").toggle();
+});
+
+$("#inputTitle").on('change', function() {
+    $("#previewTitle").text($('#inputTitle').val());
+});
+$("#inputImage").on('change', function() {
+    $("#header").css('background-image', 'url('+$('#inputImage').val()+')');
+});
+//Show markup preview
+$("#inputText").on('change keyup paste', function() {        
+    $.ajax({
+        url: './blog-preview',
+        type: 'POST',
+        data: $('#inputText').val(),
+        contentType: "text/text",
+        success: function (data) {
+            $("#previewData").html(data);
+            $("#previewData").find("code").wrap( "<pre class='prettyprint'></div>" );
+            prettyPrint();
+        },
+   });
+});
+
+//SaveBlog
+$("#saveBlog").click(function() {
+    $.ajax({
+    url: './blog-add',
+    type: 'POST',
+    data: JSON.stringify({ title: $('#inputTitle').val(), image: $('#inputImage').val() , text: $('#inputText').val()}),
+    contentType: "application/json",
+    success: function (data) {
+        console.log('sucess');
+    },
+   });
+});
+</script>
+</body>
+

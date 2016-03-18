@@ -1,0 +1,21 @@
+{
+  "name": "Blog",
+  "version": "0.0.1",
+  "description": "My blog",
+  "main": "blog/Server.js",
+  "dependencies": {
+    "marked": "^0.3.5",
+    "mongoose": "^4.4.6"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Kasperki/NodeBlog"
+  },
+  "keywords": [
+    "portfolio",
+    "blog"
+  ],
+  "author": "Kasper.Kiiskinen@hotmail.com",
+  "license": "MIT"
+}
