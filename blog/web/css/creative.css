@@ -224,7 +224,7 @@ header .header-content .header-content-inner p {
 
 @media(min-width:768px) {
     header {
-        min-height: 50%;
+        min-height: 70%;
     }
 
     header .header-content {

@@ -51,7 +51,7 @@ exports.AddBlogPost = function (title, image, text, category, tags) {
 /**
  * Gets array of latests blogs by limit
  * @param int limit
- * @callback (Blog[] result)
+ * @param callback (Blog[] result)
  */
 exports.GetLatestBlogPost = function(limit, callback) {
     Blog.find('title text date').sort({date: -1}).limit(limit).exec(function (err, result) {
@@ -69,7 +69,7 @@ exports.GetLatestBlogPost = function(limit, callback) {
 /**
  * Gets blog post by title
  * @param string title
- * @callback (Blog[] result)
+ * @param callback (Blog[] result)
  */
 exports.GetBlogPostByTitle = function(title, callback) {
     Blog.find({ 'title': title }, 'title image text date', function (err, result) {

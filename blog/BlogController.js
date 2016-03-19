@@ -1,6 +1,7 @@
 var marked = require('marked');
 var loadHtml = require('./HtmlLoader.js');
 var Database = require('./Database.js');
+var ErrorPage = require('./ErrorPage.js');
 
 var route;
 
@@ -34,8 +35,7 @@ BlogController.prototype.renderBlogByTitle = function (response, data, query)
         
         if (blogPost.length <= 0)
         {
-            response.writeHead(404, {'Content-Type': 'text/html'});
-            response.end('Blog not found!');
+            ErrorPage(response, "Blog not found");
             return;
         }
         
