@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
+var config = require('../config.js');
 
-var dbHost = 'mongodb://localhost:27017/test';
+var dbHost = config.database.host + config.database.schema; 
 mongoose.connect(dbHost);
 
 var db = mongoose.connection;

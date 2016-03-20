@@ -1,7 +1,6 @@
 var marked = require('marked');
 var loadHtml = require('./HtmlLoader.js');
 var Database = require('./Database.js');
-var ErrorPage = require('./ErrorPage.js');
 
 var route;
 
@@ -22,20 +21,11 @@ BlogController.prototype.getRoute = function()
 
 BlogController.prototype.renderBlogByTitle = function (response, data, query)
 {
-    console.log(query);
-    
-    if (query['title'] == null)
-    {
-        console.log("NO PARAMETER");
-        BlogController.prototype.renderLatestBlog(response, data, query);
-        return;
-    }
-    
     Database.GetBlogPostByTitle(query['title'], function(blogPost) {
         
         if (blogPost.length <= 0)
         {
-            ErrorPage(response, "Blog not found");
+            BlogController.prototype.renderLatestBlog(response, data, query);
             return;
         }
         
