@@ -27,54 +27,104 @@
     <!-- Custom Fonts -->
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="../web/font-awesome/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="../web/font-awesome/css/font-awesome.css">
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">-->
 
+    
     <!-- Plugin CSS -->
     <link rel="stylesheet" href="../web/css/animate.min.css" type="text/css">
     
     <title>My Blog</title>
 </head>
 <body id="body">
+    
+        <nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand page-scroll" href="#page-top">BLOG</a>
+            </div>
 
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a class="page-scroll" href="#portfolio">Portfolio</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#about">About Me</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+    </nav>
+    
+    <br><br><br>
     <div class="container">
         <div class="row">
             <div class="col-lg-12 text-center">
-                <input type="text" id="inputTitle">
+                <label for="inputTitle">Title</label>
+                <input type="text" id="inputTitle" class="form-control" placeholder="Awesome blog">
             </div>
         </div>
+
         <div class="row">
-             <div class="col-lg-12 text-center">
-                 <input type="text" id="inputImage">
+             <div class="col-lg-12 text-center form-group">
+                 <label for="inputImage">Header Image</label>
+                 <input type="text" id="inputImage" class="form-control" placeholder="https://myimage.png" value="http://tinyurl.com/hsh3b5s">
              </div>
         </div>
+
+        <div class="row">
+             <div class="col-lg-12 text-center">
+                 <label for="inputCategory">Category</label>
+                 <input type="text" id="inputCategory" class="form-control" placeholder="snappy category">
+             </div>
+        </div>
+
+        <div class="row" id="tags">
+            <div class="col-lg-12 text-center">
+                <label>Tags</label>
+                <i id="addTag" class="fa fa-plus-circle">++</i>
+             </div>
+         </div>
+
          <div class="row">
              <div class="col-lg-12 text-center">
-                 <textarea rows="4" cols="50" id="inputText">
-                     Use Markdown To write your message.
-                 </textarea>
+                 <label for="inputText">Body</label>
+                 <textarea rows="4" cols="50" id="inputText" class="form-control">Use Markdown To write your message.</textarea>
              </div>
          </div>
     </div>
 
 
 <div id="markDownPreview">
-<div class="row">
-    <div class="col-lg-12 text-center">
-        <p>Preview</p>
-    </div>
-</div>
-    
-    <div class="container" id="header">
-        <div class="row">
-            <div class="col-lg-12 text-center">
-                <h1 id="previewTitle"></h1>
-            </div>
+    <div class="row">
+        <div class="col-lg-12 text-center">
+            <p>Preview</p>
         </div>
     </div>
     
+    <header id="header" style="height:75%">
+        <div class="header-content">
+            <div class="header-content-inner">
+                <h1 id="previewTitle"></h1>
+                <p>Welcome to my blog!</p>
+            </div>
+        </div>
+    </header>
+    <hr class="heavy">
+    
     <div class="container">
         <div class="row">
-            <div class="col-lg-12 text-center">
+            <div class="col-lg-12">
                 <div id="previewData"></div>
             </div>            
         </div>
@@ -93,19 +143,40 @@
 </div>
 
 <script>
-$("#body").find("code").wrap("<pre class='prettyprint'></div>");
-
+//Toggle preview
 $("#togglePreview").click(function() {
     $("#markDownPreview").toggle();
 });
+$("#header").css('background-image', 'url('+$('#inputImage').val()+')');
 
-$("#inputTitle").on('change', function() {
+$("#addTag").click(function(){
+    
+    var div = document.createElement("div");
+    var input = document.createElement("input");       
+    input.id = "tag";
+    var removeLink = document.createElement("a");
+    removeLink.className = "fa fa-plus-minus";
+    removeLink.id = "removeTag";
+    removeLink.innerHTML = "--";
+    
+    div.appendChild(input);
+    div.appendChild(removeLink);
+    
+    $(this).parent().append(div);
+});
+
+$("#tags").on('click', '#removeTag', function(){
+    $(this).parent().empty();
+});
+
+//Change header preview
+$("#inputTitle").on('change keyup', function() {
     $("#previewTitle").text($('#inputTitle').val());
 });
 $("#inputImage").on('change', function() {
     $("#header").css('background-image', 'url('+$('#inputImage').val()+')');
 });
-//Show markup preview
+//Preview markup blog body
 $("#inputText").on('change keyup paste', function() {        
     $.ajax({
         url: './blog-preview',
@@ -114,7 +185,7 @@ $("#inputText").on('change keyup paste', function() {
         contentType: "text/text",
         success: function (data) {
             $("#previewData").html(data);
-            $("#previewData").find("code").wrap( "<pre class='prettyprint'></div>" );
+            $("#previewData").find("pre").addClass('prettyprint');
             prettyPrint();
         },
    });
@@ -122,13 +193,19 @@ $("#inputText").on('change keyup paste', function() {
 
 //SaveBlog
 $("#saveBlog").click(function() {
+    
+    var tags = [];
+    $("#tags #tag").each(function() {
+        tags.push($(this).val());
+    });
+    
     $.ajax({
     url: './blog-add',
     type: 'POST',
-    data: JSON.stringify({ title: $('#inputTitle').val(), image: $('#inputImage').val() , text: $('#inputText').val()}),
+    data: JSON.stringify({ title: $('#inputTitle').val(), image: $('#inputImage').val() , text: $('#inputText').val(), category: $('#inputCategory').val(), tags: tags}),
     contentType: "application/json",
     success: function (data) {
-        console.log('sucess');
+        console.log('success');
     },
    });
 });

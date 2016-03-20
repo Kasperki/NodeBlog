@@ -66,7 +66,7 @@ BlogController.prototype.previewBlog = function (response, data, query)
 BlogController.prototype.addBlog = function (response, data, query)
 {
     var jsonBlog = data.length ? JSON.parse(data) : '';
-    Database.AddBlogPost(jsonBlog.title, jsonBlog.image, jsonBlog.text);
+    Database.AddBlogPost(jsonBlog.title, jsonBlog.image, jsonBlog.text, jsonBlog.category, jsonBlog.tags);
     
     response.writeHead(200, {'Content-Type': 'text/html'});
     response.end("ok");
