@@ -5,6 +5,7 @@
   "main": "blog/Server.js",
   "dependencies": {
     "marked": "^0.3.5",
+    "mime": "^1.3.4",
     "mongoose": "^4.4.6"
   },
   "devDependencies": {},

@@ -9,6 +9,7 @@ config.database.schema = "test";
 config.database.user = process.env.DB_USER || "root";
 config.database.password = process.env.DB_PASSWORD || "root";
 config.web.port = process.env.WEB_PORT || 8081;
+config.web.publicDirectories = ["/web"];
 
 module.exports = config;
 
