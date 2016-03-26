@@ -7,17 +7,19 @@ var route;
 function BlogController()
 {
     route = {
-	"/blog": BlogController.prototype.renderBlogByTitle, //TODO ADD BLOG LIST.
+	"/blog": BlogController.prototype.renderBlogByTitle,
+        "/blog-list": BlogController.prototype.renderList,
+        "/blogs": BlogController.prototype.getBlogListJson,
         "/admin/blog-preview" : BlogController.prototype.previewBlog,
         "/admin/blog-add" : BlogController.prototype.addBlog,      
-        "/admin/blog": BlogController.prototype.adminBlog,
+        "/admin/blog": BlogController.prototype.adminBlog
     };
 }
 
 BlogController.prototype.getRoute = function()
 {
     return route;
-}
+};
 
 BlogController.prototype.renderBlogByTitle = function (response, data, query)
 {
@@ -31,14 +33,14 @@ BlogController.prototype.renderBlogByTitle = function (response, data, query)
         
         BlogController.prototype.renderBlog(response, blogPost);
     });
-}
+};
 
 BlogController.prototype.renderLatestBlog = function (response, data, query)
 {
     Database.GetLatestBlogPost(1, function(blogPost) {
         BlogController.prototype.renderBlog(response, blogPost);
     });
-}
+};
 
 BlogController.prototype.renderBlog = function (response, blogPost)
 {
@@ -48,20 +50,33 @@ BlogController.prototype.renderBlog = function (response, blogPost)
     var date = blogPost[0].date.getDay() + "." + blogPost[0].date.getMonth() + "." + blogPost[0].date.getYear();
 
     loadHtml(response, './html/blog.html', {title: title, date: date, blogText : text, image: image});
-}
+};
+
+BlogController.prototype.renderList = function (response, data, query)
+{
+    loadHtml(response, './html/blog-list.html', null);
+};
+
+BlogController.prototype.getBlogListJson = function (response, data, query) 
+{
+    Database.GetLatestBlogPost(5, function(blogPost) {
+        response.writeHead(200, {'Content-Type': 'application/json'});
+        response.end(JSON.stringify(blogPost));
+    });
+};
 
 //Admim routes
 BlogController.prototype.adminBlog = function (response, data, query)
 {
     loadHtml(response, './html/blog-admin.html', {});
-}
+};
 
 BlogController.prototype.previewBlog = function (response, data, query)
 {
     var htmll = marked(data);
     response.writeHead(200, {'Content-Type': 'text/html'});
     response.end(htmll);
-}
+};
 
 BlogController.prototype.addBlog = function (response, data, query)
 {
@@ -70,6 +85,6 @@ BlogController.prototype.addBlog = function (response, data, query)
     
     response.writeHead(200, {'Content-Type': 'text/html'});
     response.end("ok");
-}
+};
 
 module.exports = BlogController;

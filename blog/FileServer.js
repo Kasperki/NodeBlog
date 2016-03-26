@@ -67,12 +67,11 @@ function sendGeneratedHtml(response, route)
 function sendFile(response)
 {
     try {
-        var buf = fs.readFileSync(dirPath, "utf8");
+        var buf = fs.readFileSync(dirPath);
         var type = mime.lookup(dirPath);
 
         response.writeHead(200, {'Content-Length' : status["size"], 'Content-Type': type, 'X-Content-Type-Options' : 'nosniff', 'X-XSS-Protection': '1; mode=block', 'X-Frame-Options': 'SAMEORIGIN'});
-        response.write(buf);
-        response.end();
+        response.end(buf, 'binary');
     }
     catch (e) {
         console.log(e);
