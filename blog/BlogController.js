@@ -42,6 +42,7 @@ BlogController.prototype.renderLatestBlog = function (response, data, query)
     });
 };
 
+//TODO ADD TO GET BLOG, make angular
 BlogController.prototype.renderBlog = function (response, blogPost)
 {
     var title = blogPost[0].title;

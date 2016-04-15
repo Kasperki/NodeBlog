@@ -34,3 +34,6 @@ node_modules
 
 #Netbeans project
 nbproject
+
+#VisualCode
+.vscode

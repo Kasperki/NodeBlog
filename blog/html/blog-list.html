@@ -1,79 +1,21 @@
 <html>
 <head>
-    <meta charset="UTF-8">
-
-    <link href="web/css/prettify.css" type="text/css" rel="stylesheet" />
-    <script type="text/javascript" src="web/js/google-code-prettify/prettify.js"></script>
-    
-    <!-- jQuery -->
-    <script src="web/js/jquery.js"></script>
-
-    <!-- Bootstrap Core JavaScript -->
-    <script src="web/js/bootstrap.min.js"></script>
-
-    <!-- Plugin JavaScript -->
-    <script src="web/js/jquery.easing.min.js"></script>
-    <script src="web/js/jquery.fittext.js"></script>
-    <script src="web/js/wow.min.js"></script>
-
-    <!-- Custom Theme JavaScript -->
-    <script src="web/js/creative.js"></script>
-    
     <title>My Blog</title>
-    
-    <!-- Bootstrap Core CSS -->
-    <link rel="stylesheet" href="web/css/bootstrap.min.css" type="text/css">
-
-    <!-- Custom Fonts -->
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="web/font-awesome/css/font-awesome.min.css" type="text/css">
-
-    <!-- Plugin CSS -->
-    <link rel="stylesheet" href="web/css/animate.min.css" type="text/css">
-
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="web/css/creative.css" type="text/css">
-    
-    <!-- ANGULAR -->
-    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
-    
+    {% extends html/layout.html %}
+    <script src="web/js/unravel.js"></script>
 </head>
+
 <body id="body" onload="prettyPrint()">
     
-    <nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
-        <div class="container-fluid">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand page-scroll" href="#page-top">KASPER KIISKINEN - BLOG</a>
-            </div>
-
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        <a class="page-scroll" href="#portfolio">Portfolio</a>
-                    </li>
-                    <li>
-                        <a class="page-scroll" href="#about">About Me</a>
-                    </li>
-                </ul>
-            </div>
-            <!-- /.navbar-collapse -->
-        </div>
-        <!-- /.container-fluid -->
-    </nav>
+    {% extends html/nav.html %}
 
     <header>
         <div class="header-content">
             <div class="header-content-inner">
-                <h1>MY BLOG!</h1>
-                <p>Welcome to my blog!</p>
+                <h1 id="title">My Blog!</h1>
+                <p>This is my blog, where I write stuff about technology and well other stuff.</p>
+                <p>My views are my own, and do not represent views of company where I might work.</p>
+                <p>Don't take anything too seriously. ♥</p>
             </div>
         </div>
     </header>
@@ -82,12 +24,30 @@
     <div ng-app="myApp" ng-controller="myCtrl">
         <div class="container">
             <div class="row">
-                <div class="col-lg-12 text-center"  ng-repeat-start="item in blogPost2">
-                    <h2>{{ item.title }}</h2>
-                    <img src="{{item.image}}" style="border-radius: 8px; width: 640px; height: 360px;">
-                    <p>{{ item.date | date: 'yyyy-MM-dd HH:mm' }}</p>
-                    <p>{{ item.text | limitTo: 75 }}</p>
-                    <a href="blog?title={{ item.title }}">Read more...</a>
+                <div class="col-lg-12"  ng-repeat-start="item in blogPost">
+
+                    <div style="border-radius: 8px; width: 640px; height: 360px; margin: auto; background:url({{item.image}}); background-position: center; background-size: contain;">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <h1 style="color: white; padding-left: 20px; padding-top: 20px; font-weight: 700; text-shadow: 2px 2px rgba(0,0,0,0.25);">{{ item.title }}</h1>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <br>
+                    <div class="text-center">
+                        <p style="display: inline;">{{ item.text | limitTo: 125 }}</p>
+                        <a href="blog?title={{ item.title }}">Read more...</a>
+                    </div>
+                    
+                    <div class="text-center" style="margin: auto; border-radius: 8px; background-color: rgb(240,240,240); width: 640px; height: 35px;">
+                        <i class="fa fa-calendar"></i> <p style="display: inline;">{{ item.date | date: 'dd.MM.yyyy HH:mm' }}</p>
+                        <i class="fa fa-folder-open"></i> <p style="display: inline;">{{ item.category }} - </p>
+                        <i class="fa fa-tags"  ng-repeat-start="tag in item.tags">{{ tag }}</i>
+                        <div style="display: inline;" ng-repeat-end></div>
+                    </div>
+
+                    <hr class="heavy">
                 </div>
                 <div ng-repeat-end></div>
             </div>
@@ -95,16 +55,16 @@
     </div>
     
     <script>
-        
-
         var app = angular.module('myApp', []);
         app.controller('myCtrl', function($scope, $http) {  
             $http.get("blogs")
             .then(function(response) {
-                $scope.blogPost2 = response.data;
+                $scope.blogPost = response.data;
                 $("#body").find("pre").addClass('prettyprint');
             });
         });
+                
+        unravelText("My Blog!", "#title");
     </script>
 </body>
 
