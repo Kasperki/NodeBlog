@@ -21,6 +21,7 @@ BlogController.prototype.getRoute = function()
     return route;
 };
 
+//Blog
 BlogController.prototype.renderBlogByTitle = function (response, data, query)
 {
     Database.GetBlogPostByTitle(query['title'], function(blogPost) {
@@ -53,6 +54,7 @@ BlogController.prototype.renderBlog = function (response, blogPost)
     loadHtml(response, './html/blog.html', {title: title, date: date, blogText : text, image: image});
 };
 
+//Bloglist
 BlogController.prototype.renderList = function (response, data, query)
 {
     loadHtml(response, './html/blog-list.html', null);
@@ -60,9 +62,9 @@ BlogController.prototype.renderList = function (response, data, query)
 
 BlogController.prototype.getBlogListJson = function (response, data, query) 
 {
-    Database.GetLatestBlogPost(5, function(blogPost) {
+    Database.GetLatestBlogPost(5, function(blogPosts) {
         response.writeHead(200, {'Content-Type': 'application/json'});
-        response.end(JSON.stringify(blogPost));
+        response.end(JSON.stringify(blogPosts));
     });
 };
 
