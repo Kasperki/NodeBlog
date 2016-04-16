@@ -1,6 +1,14 @@
 var fs = require('fs');
 
-module.exports = function (response, file, parameters) {
+var exports = module.exports = {};
+
+/**
+ *  Loads html file with twig like functionality
+ *  @param Response response
+ *  @param String Html.file
+ *  @param array parameters [key:value]
+ */
+var load = function (response, file, parameters) {
     
   fs.readFile(file, "utf-8", function (err, html) {
     if (err) {
@@ -17,9 +25,11 @@ module.exports = function (response, file, parameters) {
 
 /**
  * Replace string in html file
- * {{ valueToBeReplaced }}
+ * Usage: {{ valueToBeReplaced }}
+ *  @param String html
+ *  @param array parameters [key:value]
  */
-function replaceParameters(html, parameters) 
+var replaceParameters = function (html, parameters) 
 {
     for (var key in parameters) {
         var regex = new RegExp("{{\\s*" + key + "\\s*}}", "g");
@@ -31,12 +41,16 @@ function replaceParameters(html, parameters)
 
 /**
  * Extend html file
- * {% extend path/to/file.html %}
+ * Usage: {% extend path/to/file.html %}
+ * @param String html
  */
-function extendHtmlFile(html)
+var extendHtmlFile = function (html)
 {
     var regex = new RegExp("{%\\s*extends\\s*[A-Za-z0-9\"/().]*\\s*%}", "g");
     var regexMatch = html.match(regex); 
+
+    if (regexMatch == null)
+        return html;
 
     for (var i = 0; i < regexMatch.length; i++) {
         
@@ -54,4 +68,10 @@ function extendHtmlFile(html)
     }
     
     return html;
+}
+
+module.exports = {
+    load : load,
+    replaceParameters : replaceParameters, 
+    extendHtmlFile : extendHtmlFile
 }

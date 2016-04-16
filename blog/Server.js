@@ -8,9 +8,13 @@ var fs = require('fs');
 var BlogController = require('./BlogController.js');
 var FileServer = require('./FileServer.js');
 var ErrorPage = require('./ErrorPage.js');
+var Database = require('./Database.js');
 
 //Initialize controllers
 var controllers = [new BlogController()];
+
+//Initialize database connection
+Database.connectToDatabase();
 
 http.createServer(function (request, response)
 {	

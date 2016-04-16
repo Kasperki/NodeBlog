@@ -11,6 +11,14 @@ config.database.password = process.env.DB_PASSWORD || "root";
 config.web.port = process.env.WEB_PORT || 8081;
 config.web.publicDirectories = ["/web"];
 
+//Test
+config.test = { 
+    database : { 
+        host : "mongodb://localhost:27017/", 
+        schema : "testdb"
+    }
+};
+
 module.exports = config;
 
 
