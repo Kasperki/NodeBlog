@@ -1,2 +1,4 @@
-# NodeBlog
-My blog made with nodejs
+# NodeBlog [![Build Status](https://travis-ci.org/Kasperki/NodeBlog.svg?branch=master)](https://travis-ci.org/Kasperki/NodeBlog)
+My blog made with NodeJS.
+This project is using very limited amount of NPM packets.
+Why? Just 4 fun and learning.
