@@ -7,9 +7,13 @@ var exports = module.exports = {};
  *  @param Response response
  *  @param String Html.file
  *  @param array parameters [key:value]
+ *  @param int code = 200 (Optional)
  */
-var load = function (response, file, parameters) {
-    
+var load = function (response, file, parameters, code) 
+{
+    if (typeof code === 'undefined' || !code) //TODO NodeJS 6.0 adds default parameters.
+        code = 200;
+        
   fs.readFile(file, "utf-8", function (err, html) {
     if (err) {
         throw err; 
@@ -17,7 +21,7 @@ var load = function (response, file, parameters) {
         html = replaceParameters(html, parameters);    
         html = extendHtmlFile(html);
         
-        response.writeHeader(200, {"Content-Type": "text/html"});  
+        response.writeHeader(code, {"Content-Type": "text/html"});  
         response.write(html);  
         response.end();  
     });

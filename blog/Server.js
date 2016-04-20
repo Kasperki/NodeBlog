@@ -27,7 +27,6 @@ http.createServer(function (request, response)
 
         var url = require('url').parse(request.url, true);
         var route = url['pathname'];
-        var routeFound = false;
         
         console.log("route:"+route);
         
@@ -35,15 +34,13 @@ http.createServer(function (request, response)
             for (var controllerRoute in controllers[i].getRoute()) {
                 if (controllerRoute === route) {
                     controllers[i].getRoute()[controllerRoute](response, incomingData, url['query']);
-                    routeFound = true;
+                    return;
                 }
             }
         }
         
-        if (!routeFound) {
-            FileServer(response, route);
-            ErrorPage(response, "Page not found:" + route);
-        }
+        FileServer(response, route);
+        
     });
 }).listen(8081);
 

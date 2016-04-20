@@ -15,6 +15,8 @@ module.exports = function (response, route) {
    
     for (var i = 0; i < config.web.publicDirectories.length; i++) {
         
+        status = null;
+        
         if (route.substring(0, config.web.publicDirectories[i].length) === config.web.publicDirectories[i]) {
             dirPath = __dirname + route;
             
@@ -23,8 +25,7 @@ module.exports = function (response, route) {
             }
             catch (e) {
                 console.log(e);
-                ErrorPage(response, "Page not found:" + route);
-                return;
+                break;
             }
 
             if (status.isDirectory()) {
@@ -34,7 +35,11 @@ module.exports = function (response, route) {
                 sendFile(response);
             }  
         }
-    }    
+    }
+    
+    if (status == null) {
+        ErrorPage(response, 404, "We have lost the page: " + route);    
+    }
 };
 
 /**
