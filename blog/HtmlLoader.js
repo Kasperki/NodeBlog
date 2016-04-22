@@ -1,7 +1,5 @@
 var fs = require('fs');
 
-var exports = module.exports = {};
-
 /**
  *  Loads html file with twig like functionality
  *  @param Response response
@@ -20,10 +18,10 @@ var load = function (response, file, parameters, code)
     }   
         html = replaceParameters(html, parameters);    
         html = extendHtmlFile(html);
-        
+                
         response.writeHeader(code, {"Content-Type": "text/html"});  
         response.write(html);  
-        response.end();  
+        response.end();
     });
 }
 

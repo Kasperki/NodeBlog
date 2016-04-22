@@ -2,6 +2,7 @@ var fs = require('fs');
 var mime = require('mime');
 var config = require('../config.js');
 var ErrorPage = require('./ErrorPage.js');
+var Logger = require('./Logger.js');
 
 var dirPath;
 var status;
@@ -38,7 +39,8 @@ module.exports = function (response, route) {
     }
     
     if (status == null) {
-        ErrorPage(response, 404, "We have lost the page: " + route);    
+        ErrorPage(response, 404, "We have lost the page: " + route);
+        Logger.Warning(config.log.error, "Path not found:" + route);
     }
 };
 
