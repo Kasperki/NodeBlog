@@ -86,6 +86,5 @@ module.exports = {
     Debug : Debug,
     Warning : Warning, 
     Error : Error,
-    Log : Log,
-    LoggingLevels : loggingLevels
+    Log : Log
 }

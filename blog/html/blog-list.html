@@ -24,29 +24,28 @@
     <div ng-app="myApp" ng-controller="myCtrl">
         <div class="container">
             <div class="row">
-                <div class="col-lg-12"  ng-repeat-start="item in blogPost">
-
+                <div class="col-sm-6"  ng-repeat-start="item in blogPost">
+             
+                    <div class="bloglist" style="background:url({{item.image}});">     
+                        <a class='default-link' href="blog#?id={{item._id}}"></a>
                     
-                    <div class="bloglist" style="background:url({{item.image}});">
-                        
-                        <a href="blog?title={{ item.title }}">
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <h1 class="bloglist-title">{{ item.title }}</h1>
-                                </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <h1 class="bloglist-title">{{item.title}}</h1>
                             </div>
-                        </a>
+                        </div>
+                        
                         <div class="bloglist-description">
                             <div class="text-center">
-                                <p class="inline">{{ item.text | limitTo: 325 }}</p>
-                                <a href="blog?title={{ item.title }}">Read more...</a>
+                                <p class="inline">{{ item.description | limitTo: 325 }}</p>
+                                <a href="blog#?id={{item._id}}">Read more...</a>
                             </div>
                         </div>
                     </div>
                 
                     <div class="text-center bloglist-infobox">
                         <i class="fa fa-calendar"></i> <p class="inline">{{ item.date | date: 'dd.MM.yyyy HH:mm' }}</p>
-                        <i class="fa fa-folder-open"></i> <p class="inline">{{ item.category }} - </p>
+                        <i class="fa fa-folder-open"></i> <p class="inline">{{ item.category }}</p>
                         <i class="fa fa-tags" ng-repeat-start="tag in item.tags">{{ tag }}</i>
                         <div class="inline" ng-repeat-end></div>
                     </div>
@@ -61,13 +60,13 @@
     <script>
         var app = angular.module('myApp', []);
         app.controller('myCtrl', function($scope, $http) {  
-            $http.get("blogs")
+            $http.get("get-blogs")
             .then(function(response) {
                 $scope.blogPost = response.data;
                 $("#body").find("pre").addClass('prettyprint');
             });
         });
-                
+            
         unravelText("My Blog!", "#title");
     </script>
 </body>

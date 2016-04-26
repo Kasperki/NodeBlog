@@ -1,4 +1,5 @@
 const assert = require('assert');
+var mongoose = require('mongoose');
 var dbutils = require('./TestDBUtils.js');
 var blogService = require('../blog/BlogService.js');
 
@@ -8,7 +9,7 @@ describe('BlogService', function () {
 
   describe('#AddBlogPost()', function () {
     it('Should add blog to database, and not throw error', function (done) {
-         blogService.AddBlogPost('a','b','c','d','e', function(result) {
+         blogService.AddBlogPost('a','b','c','d','e','f', function(result) {
              done();
          });
     });
@@ -38,29 +39,36 @@ describe('BlogService', function () {
         it('Should return sorted by datetime array');
     });
     
-    describe('#GetBlogPostByTitle()', function () {
-        it('Should return empty array if no blog posts', function (done) {        
-            blogService.GetBlogPostByTitle("1", function(result) {
-                assert.equal(result.length, 0);
+    describe('#GetBlogPostById()', function () {
+        it('Should return Error if id is not valid', function (done) {        
+            blogService.GetBlogPostById("666", function(err, result) {
+                assert.equal(err.message, "id: 666 is not valid");
                 done();
             });
         });
-        it('Should return searched blog post by title', function (done) {        
-            
-            var expectedTitle = "Expected";
-            var expectedBlog = new blogService.Blog({title:expectedTitle, image: "image", text:"text", category:"c"});
-            var notExpectedBlog = new blogService.Blog({title:"NotExpected", image: "image3", text:"tex_t", category:"c"});
+        it('Should return null if no blog posts found', function (done) {        
+            blogService.GetBlogPostById('56cb91bdc3464f14678934ca', function(err, result) {
+                assert.equal(result, null);
+                done();
+            });
+        });
+        it('Should return searched blog post by id', function (done) {        
+                      
+            var expectedBlog = new blogService.Blog({title:"expected", image: "image", text:"text", description: "txt", category:"c"});
+            var notExpectedBlog = new blogService.Blog({title:"NotExpected", image: "image3", text:"tex_t", description: "tx_t", category:"c"});
 
             dbutils.fixtures(expectedBlog);
             dbutils.fixtures(notExpectedBlog);
-            
-            blogService.GetBlogPostByTitle(expectedTitle, function(result) {
-                assert.equal(result[0].title, expectedBlog.title);
-                assert.equal(result[0].image, expectedBlog.image);
-                assert.equal(result[0].text, expectedBlog.text);
-                assert.equal(result[0].category, expectedBlog.category);
+                       
+            blogService.GetBlogPostById(expectedBlog.id, function(err, result) {
+                             
+                assert.equal(result.title, expectedBlog.title);
+                assert.equal(result.image, expectedBlog.image);
+                assert.equal(result.text, expectedBlog.text);
+                assert.equal(result.description, expectedBlog.description);
+                assert.equal(result.category, expectedBlog.category);
                 
-                assert.notEqual(result[0].title, notExpectedBlog.title);
+                assert.notEqual(result.title, notExpectedBlog.title);
                 done();
             });
         });

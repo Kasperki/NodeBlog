@@ -10,9 +10,10 @@ var status;
 /**
  * Generates routes to all files that are in Public directories
  * @param Response response
+ * @param Request request
  * @param string route
  */
-module.exports = function (response, route) {
+module.exports = function (response, request, route) {
    
     for (var i = 0; i < config.web.publicDirectories.length; i++) {
         
@@ -40,7 +41,7 @@ module.exports = function (response, route) {
     
     if (status == null) {
         ErrorPage(response, 404, "We have lost the page: " + route);
-        Logger.Warning(config.log.error, "Path not found:" + route);
+        Logger.Warning(config.log.error, "Referer: " + request.headers['referer'] + " -- " + request.connection.remoteAddress + "Path not found:" + route);
     }
 };
 

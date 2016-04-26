@@ -1,15 +1,19 @@
 var marked = require('marked');
+var config = require('../config.js');
 var loadHtml = require('./HtmlLoader.js');
 var BlogService = require('./BlogService.js');
+var ErrorPage = require('./ErrorPage.js');
+var Logger = require('./Logger.js');
 
 var route;
 
 function BlogController()
 {
     route = {
-	"/blog": BlogController.prototype.renderBlogByTitle,
+	    "/blog": BlogController.prototype.renderBlog,
+        "/get-blog": BlogController.prototype.getBlog,
         "/blog-list": BlogController.prototype.renderList,
-        "/blogs": BlogController.prototype.getBlogListJson,
+        "/get-blogs": BlogController.prototype.getBlogListJson,
         "/admin/blog-preview" : BlogController.prototype.previewBlog,
         "/admin/blog-add" : BlogController.prototype.addBlog,      
         "/admin/blog": BlogController.prototype.adminBlog
@@ -22,36 +26,25 @@ BlogController.prototype.getRoute = function()
 };
 
 //Blog
-BlogController.prototype.renderBlogByTitle = function (response, data, query)
+BlogController.prototype.renderBlog = function (response)
 {
-    BlogService.GetBlogPostByTitle(query['title'], function(blogPost) {
+    loadHtml.load(response, './html/blog.html', null);
+};
+
+BlogController.prototype.getBlog = function (response, data, query) 
+{        
+    BlogService.GetBlogPostById(query['id'], function(err, blogPost) {    
         
-        if (blogPost.length <= 0)
-        {
-            BlogController.prototype.renderLatestBlog(response, data, query);
+        if (err || !blogPost) {
+            ErrorPage(response, 404, "We have lost the page: /blog/" + query['id']);
+            Logger.Warning(config.log.error, "Blog not found: /blog/" +  query['id']);
             return;
         }
         
-        BlogController.prototype.renderBlog(response, blogPost);
+        response.writeHead(200, {'Content-Type': 'application/json'});     
+        blogPost.text = marked(blogPost.text);
+        response.end(JSON.stringify(blogPost));
     });
-};
-
-BlogController.prototype.renderLatestBlog = function (response, data, query)
-{
-    BlogService.GetLatestBlogPost(1, function(blogPost) {
-        BlogController.prototype.renderBlog(response, blogPost);
-    });
-};
-
-//TODO ADD TO GET BLOG, make angular
-BlogController.prototype.renderBlog = function (response, blogPost)
-{
-    var title = blogPost[0].title;
-    var text = marked(blogPost[0].text);
-    var image = blogPost[0].image;
-    var date = blogPost[0].date.getDay() + "." + blogPost[0].date.getMonth() + "." + blogPost[0].date.getYear();
-
-    loadHtml.load(response, './html/blog.html', {title: title, date: date, blogText : text, image: image});
 };
 
 //Bloglist
@@ -62,8 +55,8 @@ BlogController.prototype.renderList = function (response, data, query)
 
 BlogController.prototype.getBlogListJson = function (response, data, query) 
 {
-    BlogService.GetLatestBlogPost(5, function(blogPosts) {
-        response.writeHead(200, {'Content-Type': 'application/json'});
+    BlogService.GetLatestBlogPost(6, function(blogPosts) {
+        response.writeHead(200, {'Content-Type': 'application/json'});     
         response.end(JSON.stringify(blogPosts));
     });
 };
@@ -84,7 +77,7 @@ BlogController.prototype.previewBlog = function (response, data, query)
 BlogController.prototype.addBlog = function (response, data, query)
 {
     var jsonBlog = data.length ? JSON.parse(data) : '';
-    BlogService.AddBlogPost(jsonBlog.title, jsonBlog.image, jsonBlog.text, jsonBlog.category, jsonBlog.tags);
+    BlogService.AddBlogPost(jsonBlog.title, jsonBlog.image, jsonBlog.text, jsonBlog.description, jsonBlog.category, jsonBlog.tags);
     
     response.writeHead(200, {'Content-Type': 'text/html'});
     response.end("ok");

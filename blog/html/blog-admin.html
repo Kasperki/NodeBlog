@@ -16,32 +16,39 @@
     </div>
 
     <div class="row">
-            <div class="col-lg-12 text-center form-group">
-                <label for="inputImage">Header Image</label>
-                <input type="text" id="inputImage" class="form-control" placeholder="https://myimage.png" value="http://tinyurl.com/hsh3b5s">
-            </div>
+        <div class="col-lg-12 text-center form-group">
+            <label for="inputImage">Header Image</label>
+            <input type="text" id="inputImage" class="form-control" placeholder="https://myimage.png" value="http://tinyurl.com/hsh3b5s">
+        </div>
     </div>
 
     <div class="row">
-            <div class="col-lg-12 text-center">
-                <label for="inputCategory">Category</label>
-                <input type="text" id="inputCategory" class="form-control" placeholder="snappy category">
-            </div>
+        <div class="col-lg-12 text-center">
+            <label for="inputCategory">Category</label>
+            <input type="text" id="inputCategory" class="form-control" placeholder="snappy category">
+        </div>
     </div>
 
     <div class="row" id="tags">
         <div class="col-lg-12 text-center">
             <label>Tags</label>
-            <i id="addTag" class="fa fa-plus-circle">++</i>
+            <i id="addTag" style="color:green;" class="fa fa-plus-circle"></i>
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-lg-12 text-center">
-                <label for="inputText">Body</label>
-                <textarea rows="4" cols="50" id="inputText" class="form-control">Use Markdown To write your message.</textarea>
-            </div>
+    <div class="row">
+        <div class="col-lg-12 text-center">
+            <label for="inputDescription">Description</label>
+            <textarea rows="4" cols="50" id="inputDescription" maxlength="150" class="form-control">Write short description</textarea>
         </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 text-center">
+            <label for="inputText">Body</label>
+            <textarea rows="4" cols="50" id="inputText" class="form-control">Use Markdown To write your message.</textarea>
+        </div>
+    </div>
 </div>
 
 
@@ -95,9 +102,8 @@ $("#addTag").click(function(){
     var input = document.createElement("input");       
     input.id = "tag";
     var removeLink = document.createElement("a");
-    removeLink.className = "fa fa-plus-minus";
+    removeLink.className = "fa fa-minus-circle";
     removeLink.id = "removeTag";
-    removeLink.innerHTML = "--";
     
     div.appendChild(input);
     div.appendChild(removeLink);
@@ -143,7 +149,7 @@ $("#saveBlog").click(function() {
     $.ajax({
     url: './blog-add',
     type: 'POST',
-    data: JSON.stringify({ title: $('#inputTitle').val(), image: $('#inputImage').val() , text: $('#inputText').val(), category: $('#inputCategory').val(), tags: tags}),
+    data: JSON.stringify({ title: $('#inputTitle').val(), image: $('#inputImage').val() , text: $('#inputText').val(), description: $('#inputDescription').val(), category: $('#inputCategory').val(), tags: tags}),
     contentType: "application/json",
     success: function (data) {
         console.log('success');

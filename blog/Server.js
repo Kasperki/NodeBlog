@@ -48,7 +48,7 @@ var server = http.createServer(function (request, response)
             }
         }
         
-        FileServer(response, route);      
+        FileServer(response, request, route);      
     });
 }).listen(8081);
 

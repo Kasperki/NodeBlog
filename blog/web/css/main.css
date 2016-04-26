@@ -1,6 +1,6 @@
 .bloglist {
-    width: 640px;
-    height: 360px; 
+    width: 100%;
+    padding-bottom: 56.25%;
     margin: auto; 
     border-radius: 8px; 
     background-position: center !important;
@@ -9,15 +9,30 @@
     margin-bottom: 8px;
 }
 
-.bloglist-description {
-    position:absolute; 
-    width: inherit; 
-    height: 1%;
-    bottom:70px;
-    background-color:rgba(255,255,255,0.8);  
-    border-radius: 4px;
-    overflow: hidden;
-    transition-timing-function: ease-in; 
+@media(min-width:0px) and (max-width : 768px) {
+    .bloglist-description {
+        position:absolute; 
+        width: 95%; 
+        height: 1%;
+        bottom: 50px;
+        background-color:rgba(255,255,255,0.8);  
+        border-radius: 4px;
+        overflow: hidden;
+        transition-timing-function: ease-in; 
+    }
+}
+
+@media(min-width:768px) {
+    .bloglist-description {
+        position:absolute; 
+        width: 95%; 
+        height: 1%;
+        bottom: 70px;
+        background-color:rgba(255,255,255,0.8);  
+        border-radius: 4px;
+        overflow: hidden;
+        transition-timing-function: ease-in; 
+    }
 }
 
 .bloglist:hover .bloglist-description {
@@ -35,7 +50,7 @@
 }
 
 .bloglist-infobox {
-    width: 640px; 
+    width: 100%;
     height: 35px;
     margin: auto; 
     border-radius: 8px; 
@@ -59,4 +74,19 @@
     display: block; 
     margin-left: auto; 
     margin-right: auto;
+}
+
+.default-link{
+  /* all rules required to make the whole div clickable */ 
+  position:absolute; 
+  width:100%;
+  height:100%;
+  top:0;
+  left: 0;
+  z-index: 1;
+  /* this is a fix for IE7-9 */
+  background-color:#ffffff;
+  -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";  
+  filter: alpha(opacity=0);  
+  opacity:0;  
 }
