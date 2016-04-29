@@ -19,7 +19,8 @@ describe('BlogService', function () {
         blogService.AddBlogPost('a','b','c','d','e','f');   
         blogService.AddBlogPost('a','b','c','d','e','f', function(err, result) {
             assert.ok(err instanceof Error);
-            assert.equal(err.message, 'E11000 duplicate key error collection: testdb.blog index: title_1 dup key: { : "a" }');
+            assert.ok(err.message.includes("E11000 duplicate key error"));
+            assert.ok(err.message.includes("dup key: { : \"a\" }"));
             done();
         }); 
     });
