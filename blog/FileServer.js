@@ -26,7 +26,7 @@ module.exports = function (response, request, route) {
                 status = fs.lstatSync(dirPath);
             }
             catch (e) {
-                console.log(e);
+                Logger.Debug(e);
                 break;
             }
 
@@ -82,6 +82,6 @@ function sendFile(response)
         response.end(buf, 'binary');
     }
     catch (e) {
-        console.log(e);
+        Logger.Debug(e);
     }
 }

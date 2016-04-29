@@ -4,6 +4,14 @@ config.database = {};
 config.log = {};
 config.web = {};
 
+config.log.levels = 
+{
+    DEBUG : 1,
+    WARNING : 2,
+    ERROR : 4,
+    ALL : 7
+}
+
 //Dev
 config.database.host = "mongodb://localhost:27017/";
 config.database.schema = "test";
@@ -12,6 +20,7 @@ config.database.password = process.env.DB_PASSWORD || "root";
 
 config.log.access = "logs/access-log.txt";
 config.log.error = "logs/error-log.txt";
+config.log.level = config.log.levels.ALL;
 config.log.print = true;
 config.log.write = true;
 

@@ -1,27 +1,34 @@
 var fs = require('fs');
+var Logger = require('./Logger.js');
 
 /**
  *  Loads html file with twig like functionality
  *  @param Response response
  *  @param String Html.file
- *  @param array parameters [key:value]
- *  @param int code = 200 (Optional)
+ *  @param array parameters (key:value)
+ *  @param int code = 200 [Optional]
+ *  @param function callback(error, boolean) [Optional]
  */
-var load = function (response, file, parameters, code) 
+var load = function (response, file, parameters, code, callback) 
 {
     if (typeof code === 'undefined' || !code) //TODO NodeJS 6.0 adds default parameters.
         code = 200;
         
-  fs.readFile(file, "utf-8", function (err, html) {
-    if (err) {
-        throw err; 
-    }   
+    fs.readFile(file, "utf-8", function (err, html) {
+        if (err) {
+            throw err; 
+        }   
+        
         html = replaceParameters(html, parameters);    
         html = extendHtmlFile(html);
                 
-        response.writeHeader(code, {"Content-Type": "text/html"});  
+        response.writeHead(code, {"Content-Type": "text/html"});  
         response.write(html);  
         response.end();
+        
+        if (typeof callback === "function") {
+            callback(null, true);
+        }
     });
 }
 
@@ -64,7 +71,7 @@ var extendHtmlFile = function (html)
             html = html.replace(new RegExp(regexMatch[i], "g"), includingFile);
         }
         catch (e) {
-            console.log("No such file:" + filePath);
+            Logger.Debug("No such file:" + filePath + " " +e);
             html = html.replace(new RegExp(regexMatch[i], "g"), "");
         }
     }

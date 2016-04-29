@@ -9,7 +9,8 @@
     "mongoose": "^4.4.6"
   },
   "devDependencies": {
-	"mocha": "2.4.x"
+    "mocha": "2.4.x",
+    "node-mocks-http": "^1.5.2"
   },
   "scripts": {
     "test": "mocha test/*.js"
@@ -22,6 +23,6 @@
     "portfolio",
     "blog"
   ],
-  "author": "Kasper.Kiiskinen@hotmail.com",
+  "author": "https://twitter.com/Kassu27",
   "license": "MIT"
 }

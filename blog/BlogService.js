@@ -24,7 +24,7 @@ exports.Blog = Blog;
  * @param string description
  * @param string category
  * @param string[] tags
- * @param callback (true)
+ * @param callback (err, true)
  */
 exports.AddBlogPost = function (title, image, text, description, category, tags, callback) {
 
@@ -39,9 +39,8 @@ exports.AddBlogPost = function (title, image, text, description, category, tags,
     });
 
     blog.save(function (err) {
-        if (err) throw err;
         if (typeof callback === "function") {
-            callback(true);
+            callback(err, true);
         }
     });
 };
@@ -49,16 +48,18 @@ exports.AddBlogPost = function (title, image, text, description, category, tags,
 /**
  * Gets array of latests blogs by limit
  * @param int limit
- * @param callback (Blog[] result)
+ * @param callback (err, Blog[] result)
  */
 exports.GetLatestBlogPost = function (limit, callback) {
+    
+    if (limit < 0)
+        throw new Error("Limit can't be negative");
+    
     Blog.find('title text date').sort({ date: -1 }).limit(limit).exec(function (err, result) {
         if (err) throw err;
 
-        console.log(result);
-
         if (typeof callback === "function") {
-            callback(result);
+            callback(err, result);
         }
     });
 };
@@ -66,7 +67,7 @@ exports.GetLatestBlogPost = function (limit, callback) {
 /**
  * Gets blog post by title
  * @param string title
- * @param callback (err, Blog[] result)
+ * @param callback (err, Blog result)
  */
 exports.GetBlogPostById = function (id, callback) {
     

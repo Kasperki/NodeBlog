@@ -1,7 +1,30 @@
 const assert = require('assert');
-htmlLoader = require('../blog/HtmlLoader.js');
+var httpMocks = require('node-mocks-http');
+var htmlLoader = require('../blog/HtmlLoader.js');
 
 describe('HtmlLoader', function () {
+    
+    var pathToTestFile = "test/file/test.html";
+    
+    describe('load()', function () {
+        it('should set correct http status code & correct headers', function (done) {
+            var response = httpMocks.createResponse();
+
+            htmlLoader.load(response, pathToTestFile, null, 203, function() {
+                assert.equal(response.statusCode, 203);
+                assert.deepEqual(response._headers,  {"Content-Type": "text/html"})
+                done();
+            });
+        });
+        it('should send content of file', function (done) {
+            var response = httpMocks.createResponse();
+
+            htmlLoader.load(response, pathToTestFile, null, null, function(err, ready) {
+                assert.equal(response._getData(), "<p>extra content</p>");
+                done();
+            });
+        });
+    });
     
     describe('replaceParameters()', function () {
         it('should replace {{param}} in string', function () {

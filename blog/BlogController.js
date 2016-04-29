@@ -55,7 +55,7 @@ BlogController.prototype.renderList = function (response, data, query)
 
 BlogController.prototype.getBlogListJson = function (response, data, query) 
 {
-    BlogService.GetLatestBlogPost(6, function(blogPosts) {
+    BlogService.GetLatestBlogPost(6, function(err, blogPosts) {
         response.writeHead(200, {'Content-Type': 'application/json'});     
         response.end(JSON.stringify(blogPosts));
     });

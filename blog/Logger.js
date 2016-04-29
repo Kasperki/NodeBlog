@@ -8,16 +8,10 @@ var writeLogs = config.log.print;
 var printLogs = config.log.write;
 
 //All possible logging levels
-const loggingLevels = 
-{
-    "DEBUG" : 1,
-    "WARNING" : 2,
-    "ERROR" : 4,
-    "ALL" : 7
-}
+var loggingLevels = config.log.levels;
 
 //Current logging level
-var loggingLevel = loggingLevels.ALL;
+var loggingLevel = config.log.level;
 
 var Debug = function (path, message) 
 {

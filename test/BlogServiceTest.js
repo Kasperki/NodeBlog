@@ -9,20 +9,37 @@ describe('BlogService', function () {
 
   describe('#AddBlogPost()', function () {
     it('Should add blog to database, and not throw error', function (done) {
-         blogService.AddBlogPost('a','b','c','d','e','f', function(result) {
+        blogService.AddBlogPost('a','b','c','d','e','f');
+        blogService.AddBlogPost('b','b','c','d','e','f', function(err, result) {
+             assert.strictEqual(err, null)
              done();
-         });
+        });
     });
-    it('Should throw error if duplicate title');
-    it('Should add current datetime to blog');
+    it('Should throw error if duplicate title', function (done) {
+        blogService.AddBlogPost('a','b','c','d','e','f');   
+        blogService.AddBlogPost('a','b','c','d','e','f', function(err, result) {
+            assert.ok(err instanceof Error);
+            assert.equal(err.message, 'E11000 duplicate key error collection: testdb.blog index: title_1 dup key: { : "a" }');
+            done();
+        }); 
+    });
   });
 
   describe('#GetLatestBlogPost()', function () {
         it('Should return empty array if no blog posts', function (done) {        
-            blogService.GetLatestBlogPost(1, function(result) {
+            blogService.GetLatestBlogPost(1, function(err, result) {
                 assert.equal(result.length, 0);
                 done();
             });
+        });
+        it('Should throw error if limit is negative', function (done) {        
+            assert.throws(
+            () => {
+                blogService.GetLatestBlogPost(-1, function(err, result) {});
+            },
+            /Limit can't be negative/
+            );
+            done();
         });
         it('Should return expected number of blog posts', function (done) {        
             
@@ -31,7 +48,7 @@ describe('BlogService', function () {
                 dbutils.fixtures(new blogService.Blog({title:i}));
             }
             
-            blogService.GetLatestBlogPost(expected, function(result) {
+            blogService.GetLatestBlogPost(expected, function(err, result) {
                 assert.equal(result.length, expected);
                 done();
             });
