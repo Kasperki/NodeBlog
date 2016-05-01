@@ -26,15 +26,17 @@ module.exports = function (response, request, route) {
                 status = fs.lstatSync(dirPath);
             }
             catch (e) {
-                Logger.Debug(e);
-                break;
+                Logger.Debug(config.log.error, e);
+                continue;
             }
 
             if (status.isDirectory()) {
                 sendGeneratedHtml(response, route);
+                break;
             }
             else if(status.isFile()) {
                 sendFile(response);
+                break;
             }  
         }
     }
@@ -82,6 +84,6 @@ function sendFile(response)
         response.end(buf, 'binary');
     }
     catch (e) {
-        Logger.Debug(e);
+        Logger.Debug(config.log.error, e);
     }
 }

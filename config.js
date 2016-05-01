@@ -18,14 +18,14 @@ config.database.schema = "test";
 config.database.user = process.env.DB_USER || "root";
 config.database.password = process.env.DB_PASSWORD || "root";
 
-config.log.access = "logs/access-log.txt";
-config.log.error = "logs/error-log.txt";
+config.log.access = __dirname + "/logs/access-log.txt";
+config.log.error = __dirname + "/logs/error-log.txt";
 config.log.level = config.log.levels.ALL;
 config.log.print = true;
 config.log.write = true;
 
 config.web.port = process.env.WEB_PORT || 8081;
-config.web.publicDirectories = ["/web"];
+config.web.publicDirectories = ["/web", "/cache"];
 
 //Test
 config.test = { 

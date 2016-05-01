@@ -47,7 +47,7 @@ var Log = function (path, message, level)
             fs.writeFileSync(path, log,  { encoding: "utf-8", flag: "a"});
         }
         catch (e) {
-            console.log("Can't log: " + path + " does not exists");
+            console.log("Can't log: " + path + " does not exists" + e);
         }
     }    
 }
