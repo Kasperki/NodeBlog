@@ -6,14 +6,17 @@
 var http = require('http');
 var fs = require('fs');
 var config = require('../config.js'); 
+var Cookies = require('./Cookies.js'); 
 var BlogController = require('./BlogController.js');
+var UserController = require('./UserBundle/UserController.js');
+var AuthenticationService = require('../blog/UserBundle/AuthenticationService.js');
 var Database = require('./Database.js');
 var ErrorPage = require('./ErrorPage.js');
 var FileServer = require('./FileServer.js');
 var Logger = require('./Logger.js');
 
 //Initialize controllers
-var controllers = [new BlogController()];
+var controllers = [new BlogController(), new UserController()];
 
 //Initialize database connection
 Database.connectToDatabase();
@@ -39,10 +42,16 @@ var server = http.createServer(function (request, response)
         var url = require('url').parse(request.url, true);
         var route = url['pathname'];
                 
+        var cookies = Cookies.ParseCookies(request);      
+        var authenticated = AuthenticationService.IsTokenValid(cookies.sessionId, cookies.authToken);
+                
         for (var i = 0; i < controllers.length; i++) {
-            for (var controllerRoute in controllers[i].getRoute()) {
-                if (controllerRoute === route) {
-                    controllers[i].getRoute()[controllerRoute](response, incomingData, url['query']);
+            for (var j = 0; j < controllers[i].getRoute().length; j++) {
+                var controllerRouteInfo = controllers[i].getRoute()[j];
+                var controllerRoute = Object.keys(controllerRouteInfo.route)[0];
+                            
+                if (controllerRoute === route && (!controllerRouteInfo.protected || authenticated)) {       
+                    controllerRouteInfo.route[controllerRoute](response, incomingData, url['query'], cookies, request);
                     return;
                 }
             }

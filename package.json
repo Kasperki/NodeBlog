@@ -1,7 +1,7 @@
 {
-  "name": "Blog",
+  "name": "node blog",
   "version": "0.0.1",
-  "description": "My blog",
+  "description": "My blog with few npm modules",
   "main": "blog/Server.js",
   "dependencies": {
     "marked": "^0.3.5",

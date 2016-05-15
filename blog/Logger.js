@@ -54,7 +54,7 @@ var Log = function (path, message, level)
 
 function isLoggingLevelTrue(level)
 {
-    return (loggingLevel & level) == level;
+    return (loggingLevel & level) === level;
 }
 
 function formatLogMessage(message, level)
@@ -70,7 +70,7 @@ function getLogLevelName(level)
     }
     
     for (var name in loggingLevels) {
-        if (loggingLevels[name] == level) {
+        if (loggingLevels[name] === level) {
             return name + " :: ";
         }
     }

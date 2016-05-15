@@ -9,15 +9,15 @@ var route;
 
 function BlogController()
 {
-    route = {
-	    "/blog": BlogController.prototype.renderBlog,
-        "/get-blog": BlogController.prototype.getBlog,
-        "/blog-list": BlogController.prototype.renderList,
-        "/get-blogs": BlogController.prototype.getBlogListJson,
-        "/admin/blog-preview" : BlogController.prototype.previewBlog,
-        "/admin/blog-add" : BlogController.prototype.addBlog,      
-        "/admin/blog": BlogController.prototype.adminBlog
-    };
+    route = [
+	    { route: {"/blog": BlogController.prototype.renderBlog }},
+        { route: {"/get-blog": BlogController.prototype.getBlog }},
+        { route: {"/blog-list": BlogController.prototype.renderList }},
+        { route: {"/get-blogs": BlogController.prototype.getBlogListJson }},
+        { route: {"/admin/blog-preview" : BlogController.prototype.previewBlog }, protected: true},
+        { route: {"/admin/blog-add" : BlogController.prototype.addBlog }, protected: true},      
+        { route: {"/admin/blog": BlogController.prototype.adminBlog }, protected: true}
+    ];
 }
 
 BlogController.prototype.getRoute = function()

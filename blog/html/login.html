@@ -1,0 +1,59 @@
+<html>
+<head>
+    <title>My Blog - Admin</title>
+    {% extends html/layout.html %}
+</head>
+<body id="body">
+    {% extends html/nav.html %}
+    <br><br><br><br><br><br><br>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <label for="username">Username</label>
+                <input id="username" type="text">
+            </div>
+            <div class="col-lg-12 text-center">
+                <label for="password">Password</label>
+                <input id="password" type="password">
+            </div>
+            <div class="col-lg-12 text-center">
+                <div id="login" class="button">Login</div>    
+            </div>
+            <div class="col-lg-12 text-center" id="alert">
+            </div>  
+        </div>
+    </div>
+</body>
+<script>
+    //Login
+    $("#login").click(function() {  
+        $.ajax({
+            url: './auth',
+            type: 'POST',
+            data: JSON.stringify({ username: $('#username').val(), password: $('#password').val()}),
+            contentType: "application/json",
+            success: function (data) {
+                if (data === "Ok") {
+                    window.location.pathname = "./admin/blog"
+                } else {
+                    createAlert();
+                }
+            },
+        });
+    });
+    
+    function createAlert()
+    {
+        div = document.createElement('div');
+        $(div).addClass("alert-box")
+            .html("Incorrect login information")
+            .appendTo($('#alert'))
+            .click(function () {
+                $(this).remove();
+            })
+            .show("slow").delay(5000).hide("slow", function () {
+                $(this).remove();
+            });
+    }
+</script>
+</html>
