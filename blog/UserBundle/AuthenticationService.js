@@ -1,6 +1,7 @@
 var crypto = require('crypto');
 var mongoose = require('mongoose');
 var config = require('../../config.js');
+var Logger = require('../Logger.js');
 var exports = module.exports = {};
 
 var Sessions = [];
@@ -59,6 +60,7 @@ exports.IsTokenValid = function(id, token)
         }
     }
     
+    Logger.Warning(config.log.error, "Invalid token: id:" + id + " token: " + token);
     return false;
 }
 

@@ -24,7 +24,7 @@ exports.HashSync = function(data, salt)
         salt = exports.GenSalt();
     }
     
-    const key = crypto.pbkdf2Sync(data, salt, 100000, HASHLENGHT, 'sha512').toString('hex');
+    const key = crypto.pbkdf2Sync(data, salt, 150000, HASHLENGHT, 'sha512').toString('hex');
     return salt + key;
 }
 

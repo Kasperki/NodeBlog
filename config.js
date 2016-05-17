@@ -3,6 +3,7 @@ const config = {};
 config.database = {};
 config.log = {};
 config.web = {};
+config.security = {};
 
 config.log.levels = 
 {
@@ -24,9 +25,15 @@ config.log.level = config.log.levels.ALL;
 config.log.print = true;
 config.log.write = true;
 
-config.web.port = process.env.WEB_PORT || 8081;
+config.web.port = 8081;
 config.web.publicDirectories = ["/web", "/cache"];
 
+config.security.rechaptasecret = process.env.RECAPTCHASECRET;
+
+//Unique keys
+ //rechaptakey: 6LcM8R8TAAAAAIn5JrS2FxkRPj_XTTmSv6y0ng6a
+ //disqus: kiiskinen.disqus.com/embed.js
+ 
 //Test
 config.test = { 
     database : { 

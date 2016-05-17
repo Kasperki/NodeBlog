@@ -2,41 +2,74 @@
 <head>
     <title>My Blog - Admin</title>
     {% extends html/layout.html %}
+    <script src='https://www.google.com/recaptcha/api.js'></script>
 </head>
 <body id="body">
     {% extends html/nav.html %}
     <br><br><br><br><br><br><br>
     <div class="container">
         <div class="row">
-            <div class="col-lg-12 text-center">
+            <div class="col-lg-4 text-center"></div>
+            <div class="col-lg-4 text-center">
                 <label for="username">Username</label>
-                <input id="username" type="text">
+                <input id="username" style="width:100%;" type="text">
             </div>
-            <div class="col-lg-12 text-center">
+        </div>
+
+        <div class="row">
+            <div class="col-lg-4 text-center"></div>
+            <div class="col-lg-4 text-center">
                 <label for="password">Password</label>
-                <input id="password" type="password">
-            </div>
-            <div class="col-lg-12 text-center">
-                <div id="login" class="button">Login</div>    
-            </div>
-            <div class="col-lg-12 text-center" id="alert">
-            </div>  
+                <input id="password" style="width:100%;" type="password">
+            </div> 
+        </div>
+
+        <div class="row">
+            <div class="col-lg-4 text-center"></div>
+            <div class="col-lg-4 text-center" id="alert"></div>
+        </div> 
+   
+        <div class="row"> 
+            <div class="col-lg-4 text-center"></div>
+            <div class="col-lg-4 text-center">
+                <div id="login" style="width:100%;" class="button disabled">Login</div>    
+            </div> 
+        </div> 
+        
+        <br>
+        <div class="row">   
+            <div class="col-lg-4 text-center"></div>
+            <div class="col-lg-4 text-center">
+                <div id="recaptcha-service" class="g-recaptcha" data-callback="recaptchaCallback" data-sitekey="6LcM8R8TAAAAAIn5JrS2FxkRPj_XTTmSv6y0ng6a"></div>
+            </div> 
         </div>
     </div>
 </body>
 <script>
+    
+    var reChapta;
+    window.recaptchaCallback = function recaptchaCallback(response) 
+    { 
+        reChapta = response;
+        $("#login").removeClass('disabled');
+    }
+    
     //Login
-    $("#login").click(function() {  
+    $("#login").click(function() {
+        if($(this).hasClass('disabled'))
+            return;
+              
         $.ajax({
             url: './auth',
             type: 'POST',
-            data: JSON.stringify({ username: $('#username').val(), password: $('#password').val()}),
+            data: JSON.stringify({ username: $('#username').val(), password: $('#password').val(), recaptcha: reChapta}),
             contentType: "application/json",
             success: function (data) {
                 if (data === "Ok") {
                     window.location.pathname = "./admin/blog"
                 } else {
                     createAlert();
+                    grecaptcha.reset(); 
                 }
             },
         });

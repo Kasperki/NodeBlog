@@ -153,3 +153,37 @@
 	position:relative;
 	top:1px;
 }
+
+.disabled {
+    color: lightgray;
+    background-color:grey;
+    background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, grey), color-stop(1, grey));
+	background:-moz-linear-gradient(top, grey 5%, grey 100%);
+	background:-webkit-linear-gradient(top, grey 5%, grey 100%);
+	background:-o-linear-gradient(top, grey 5%, grey 100%);
+	background:-ms-linear-gradient(top, grey 5%, grey 100%);
+	background:linear-gradient(to bottom, grey 5%, grey 100%);
+}
+
+.disabled:hover {
+    color: lightgray;
+    background-color:grey;
+    background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, grey), color-stop(1, grey));
+	background:-moz-linear-gradient(top, grey 5%, grey 100%);
+	background:-webkit-linear-gradient(top, grey 5%, grey 100%);
+	background:-o-linear-gradient(top, grey 5%, grey 100%);
+	background:-ms-linear-gradient(top, grey 5%, grey 100%);
+	background:linear-gradient(to bottom, grey 5%, grey 100%);
+}
+
+.disabled:active {
+    color: lightgray;
+    background-color:grey;
+    background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, grey), color-stop(1, grey));
+	background:-moz-linear-gradient(top, grey 5%, grey 100%);
+	background:-webkit-linear-gradient(top, grey 5%, grey 100%);
+	background:-o-linear-gradient(top, grey 5%, grey 100%);
+	background:-ms-linear-gradient(top, grey 5%, grey 100%);
+	background:linear-gradient(to bottom, grey 5%, grey 100%);
+    top:0px;
+}
