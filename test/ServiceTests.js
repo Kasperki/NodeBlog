@@ -95,7 +95,41 @@ describe('BlogService', function () {
             });
         });
     });
+    
+    describe('#GetBlogPostByTitle()', function () {
+        it('Should return Error if title is not valid', function (done) {        
+            blogService.GetBlogPostByTitle(true, function(err, result) {
+                assert.equal(err.message, "title: true is not string");
+                done();
+            });
+        });
+        it('Should return null if no blog posts found', function (done) {        
+            blogService.GetBlogPostByTitle('TEST', function(err, result) {
+                assert.equal(result, null);
+                done();
+            });
+        });
+        it('Should return searched blog post by title', function (done) {        
+                      
+            var expectedBlog = new blogService.Blog({title:"expected", image: "image", text:"text", description: "txt", category:"c"});
+            var notExpectedBlog = new blogService.Blog({title:"NotExpected", image: "image3", text:"tex_t", description: "tx_t", category:"c"});
 
+            dbutils.fixtures(expectedBlog);
+            dbutils.fixtures(notExpectedBlog);
+                       
+            blogService.GetBlogPostByTitle(expectedBlog.title, function(err, result) {
+                             
+                assert.equal(result.title, expectedBlog.title);
+                assert.equal(result.image, expectedBlog.image);
+                assert.equal(result.text, expectedBlog.text);
+                assert.equal(result.description, expectedBlog.description);
+                assert.equal(result.category, expectedBlog.category);
+                
+                assert.notEqual(result.title, notExpectedBlog.title);
+                done();
+            });
+        });
+    });
 });
 
 describe('UserService', function () {

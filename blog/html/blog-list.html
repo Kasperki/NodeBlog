@@ -27,7 +27,7 @@
                 <div class="col-sm-6"  ng-repeat-start="item in blogPost">
              
                     <div class="bloglist" style="background:url({{item.image}});">     
-                        <a class='default-link' href="blog#?id={{item._id}}"></a>
+                        <a class='default-link' href="blog/{{item.title}}"></a>
                     
                         <div class="row">
                             <div class="col-sm-12">
@@ -38,7 +38,7 @@
                         <div class="bloglist-description">
                             <div class="text-center">
                                 <p class="inline">{{ item.description | limitTo: 325 }}</p>
-                                <a href="blog#?id={{item._id}}">Read more...</a>
+                                <a href="blog/{{item.title}}">Read more...</a>
                             </div>
                         </div>
                     </div>

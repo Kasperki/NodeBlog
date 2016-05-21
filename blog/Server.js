@@ -14,6 +14,7 @@ var Database = require('./Database.js');
 var ErrorPage = require('./ErrorPage.js');
 var FileServer = require('./FileServer.js');
 var Logger = require('./Logger.js');
+var Routing = require('./Routing.js');
 
 //Initialize controllers
 var controllers = [new BlogController(), new UserController()];
@@ -43,14 +44,14 @@ var server = http.createServer(function (request, response)
         var route = url['pathname'];
                 
         var cookies = Cookies.ParseCookies(request);      
-        var authenticated = AuthenticationService.IsTokenValid(cookies.sessionId, cookies.authToken);
+        var authenticated = AuthenticationService.IsTokenValid(cookies.sessionId, cookies.authToken, request);
                 
         for (var i = 0; i < controllers.length; i++) {
             for (var j = 0; j < controllers[i].getRoute().length; j++) {
                 var controllerRouteInfo = controllers[i].getRoute()[j];
                 var controllerRoute = Object.keys(controllerRouteInfo.route)[0];
-                            
-                if (controllerRoute === route && (!controllerRouteInfo.protected || authenticated)) {       
+                                  
+                if (Routing.parseRoute(controllerRoute, route) && (!controllerRouteInfo.protected || authenticated)) {       
                     controllerRouteInfo.route[controllerRoute](response, incomingData, url['query'], cookies, request);
                     return;
                 }

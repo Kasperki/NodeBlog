@@ -65,8 +65,8 @@ exports.GetLatestBlogPost = function (limit, callback) {
 };
 
 /**
- * Gets blog post by title
- * @param string title
+ * Gets blog post by id
+ * @param string id
  * @param callback (err, Blog result)
  */
 exports.GetBlogPostById = function (id, callback) {
@@ -80,6 +80,30 @@ exports.GetBlogPostById = function (id, callback) {
     }
        
     Blog.find({ '_id': id }, 'title image text description category date', function (err, result) {
+        if (err) throw err;
+                
+        if (typeof callback === "function") {
+            callback(null, result[0]);
+        }
+    });
+};
+
+/**
+ * Gets blog post by title
+ * @param string title
+ * @param callback (err, Blog result)
+ */
+exports.GetBlogPostByTitle = function (title, callback) {
+    
+    if (typeof title !== 'string')
+    {
+        if (typeof callback === "function") {
+            callback(new Error('title: ' + title + " is not string"), null);
+        }       
+        return;
+    }
+       
+    Blog.find({ 'title': title }, 'title image text description category date', function (err, result) {
         if (err) throw err;
                 
         if (typeof callback === "function") {

@@ -2,8 +2,8 @@ const config = {};
 
 config.database = {};
 config.log = {};
-config.web = {};
 config.security = {};
+config.web = {};
 
 config.log.levels = 
 {
@@ -14,6 +14,8 @@ config.log.levels =
 }
 
 //Dev
+config.env = process.env.NODE_ENV || "dev";
+
 config.database.host = "mongodb://localhost:27017/";
 config.database.schema = "test";
 config.database.user = process.env.DB_USER || "root";

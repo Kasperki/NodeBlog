@@ -10,7 +10,7 @@ var route;
 function BlogController()
 {
     route = [
-	    { route: {"/blog": BlogController.prototype.renderBlog }},
+	    { route: {"/blog/{title}": BlogController.prototype.renderBlog }},
         { route: {"/get-blog": BlogController.prototype.getBlog }},
         { route: {"/blog-list": BlogController.prototype.renderList }},
         { route: {"/get-blogs": BlogController.prototype.getBlogListJson }},
@@ -28,19 +28,20 @@ BlogController.prototype.getRoute = function()
 //Blog
 BlogController.prototype.renderBlog = function (response)
 {
+    //TODO if getblogpost by title (title) not found show error.
     loadHtml.load(response, './html/blog.html', null);
 };
 
 BlogController.prototype.getBlog = function (response, data, query) 
 {        
-    BlogService.GetBlogPostById(query['id'], function(err, blogPost) {    
+    BlogService.GetBlogPostByTitle(query['title'], function(err, blogPost) {    
         
         if (err || !blogPost) {
-            ErrorPage(response, 404, "We have lost the page: /blog/" + query['id']);
-            Logger.Warning(config.log.error, "Blog not found: /blog/" +  query['id']);
+            ErrorPage(response, 404, "We have lost the page: /blog/" + query['title']);
+            Logger.Warning(config.log.error, "Blog not found: /blog/" +  query['title']);
             return;
         }
-        
+
         response.writeHead(200, {'Content-Type': 'application/json'});     
         blogPost.text = marked(blogPost.text);
         response.end(JSON.stringify(blogPost));

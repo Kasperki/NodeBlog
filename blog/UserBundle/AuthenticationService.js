@@ -50,6 +50,9 @@ exports.RemoveSession = function (id)
  */
 exports.IsTokenValid = function(id, token)
 {
+    if (!id || !token)
+        return false;
+    
     for (var i = 0; i < Sessions.length; i++) {
         if (Sessions[i].id === id && Sessions[i].token === token) {            
             if (new Date() > new Date(Sessions[i].expires)) {

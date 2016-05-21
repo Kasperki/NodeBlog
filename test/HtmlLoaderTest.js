@@ -76,10 +76,24 @@ describe('HtmlLoader', function () {
             var actualString = htmlLoader.replaceParameters(expectedString, {key: "13:37"});
             assert.equal(actualString, expectedString);
         });
-            it('should not replace {{param}', function () {
+        it('should not replace {{param}', function () {
             var expectedString = "<html>Clock is {{ key }</html>";
             
             var actualString = htmlLoader.replaceParameters(expectedString, {key: "13:37"});
+            assert.equal(actualString, expectedString);
+        });
+        it('should not replace {{param}}', function () {
+            var htmlString = "<html>Clock is {{ asd }}</html>";
+            var expectedString = "<html>Clock is {{ asd }}</html>";
+            
+            var actualString = htmlLoader.replaceParameters(htmlString, {key: "13:37"});
+            assert.equal(actualString, expectedString);
+        });
+        it('should not replace {{param}} - Case sensitive', function () {
+            var htmlString = "<html>Clock is {{ Key }}</html>";
+            var expectedString = "<html>Clock is {{ Key }}</html>";
+            
+            var actualString = htmlLoader.replaceParameters(htmlString, {key: "13:37"});
             assert.equal(actualString, expectedString);
         });
     });

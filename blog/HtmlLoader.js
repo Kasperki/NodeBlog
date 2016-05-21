@@ -112,13 +112,15 @@ var combineFiles = function (html)
             continue;
         }
         
-        //Check if file exists.
-        try {
-            fs.accessSync(outputFile, fs.F_OK);
-            html = html.replace(new RegExp(regexMatch[i]), "");
-            continue; //File already in cache, skip combining.
-        } catch (e) {
-            Logger.Debug(config.log.error, "combineFiles() :: File " + outputFile + " not found... combining...");
+        //Check if file exists. Always combine in dev build.
+        if (config.env != "dev") {
+            try {
+                fs.accessSync(outputFile, fs.F_OK);
+                html = html.replace(new RegExp(regexMatch[i]), "");
+                continue; //File already in cache, skip combining.
+            } catch (e) {
+                Logger.Debug(config.log.error, "combineFiles() :: File " + outputFile + " not found... combining...");
+            }
         }
         
         var regexFiles = new RegExp('\"(.*?)\"', "g");
