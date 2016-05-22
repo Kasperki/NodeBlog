@@ -35,8 +35,10 @@ UserController.prototype.authenticate = function (response, data, query, cookies
             UserService.ValidateLogin(userInfo.username, userInfo.password, function(err, success) {
                 if (success) {
                     var session = AuthenticationService.CreateSession();
-                    Cookies.SetCookies(response, [{name:"sessionId", content:session.id, expires:session.expires}, 
-                    {name:"authToken", content:session.token, expires:session.expires, options : {httponly : true}}]);
+                    Cookies.SetCookies(response, [
+                        {name:"sessionId", content:session.id, expires:session.expires, options : {secure : true, httponly : true}}, 
+                        {name:"authToken", content:session.token, expires:session.expires, options : {secure : true, httponly : true}}
+                    ]);
 
                     Logger.Log(config.log.access, "User: " + userInfo.username + " logged in from: " + request.connection.remoteAddress);
                     response.writeHead(200, {'Content-Type': 'text/plain'});     

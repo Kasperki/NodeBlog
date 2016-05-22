@@ -4,6 +4,7 @@
 
 //Using
 var http = require('http');
+var https = require('https');
 var fs = require('fs');
 var config = require('../config.js'); 
 var Cookies = require('./Cookies.js'); 
@@ -25,7 +26,13 @@ Database.connectToDatabase();
 var Request;
 var Response;
 
-var server = http.createServer(function (request, response)
+var options = {
+    key: fs.readFileSync('../test/cert/server-key.pem'), 
+    cert: fs.readFileSync('../test/cert/server-crt.pem'), 
+    ca: fs.readFileSync('../test/cert/ca-crt.pem'), 
+};
+
+var server = https.createServer(options, function (request, response)
 {	
     Request = request;
     Response = response;
@@ -50,9 +57,10 @@ var server = http.createServer(function (request, response)
             for (var j = 0; j < controllers[i].getRoute().length; j++) {
                 var controllerRouteInfo = controllers[i].getRoute()[j];
                 var controllerRoute = Object.keys(controllerRouteInfo.route)[0];
-                                  
-                if (Routing.parseRoute(controllerRoute, route) && (!controllerRouteInfo.protected || authenticated)) {       
-                    controllerRouteInfo.route[controllerRoute](response, incomingData, url['query'], cookies, request);
+                
+                var keys = Routing.parseRoute(controllerRoute, route);          
+                if (keys && (!controllerRouteInfo.protected || authenticated)) {       
+                    controllerRouteInfo.route[controllerRoute](response, incomingData, url['query'], cookies, request, keys);
                     return;
                 }
             }
@@ -61,6 +69,11 @@ var server = http.createServer(function (request, response)
         FileServer(response, request, route);      
     });
 }).listen(8081);
+
+http.createServer(function (req, res) {
+    res.writeHead(301, { "Location": "https://" + req.headers['host'] + ":8081" + req.url });
+    res.end();
+}).listen(80);
 
 //Error logging
 process.on('uncaughtException', (err) => {

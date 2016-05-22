@@ -9,7 +9,13 @@ var exports = module.exports = {};
 exports.connectToDatabase = function(callback) 
 {
     var dbHost = config.database.host + config.database.schema; 
-    mongoose.connect(dbHost);
+    
+    var options = {
+        user: config.database.user,
+        pass: config.database.password
+    }
+    
+    mongoose.connect(dbHost, options);
 
     var db = mongoose.connection;
     db.on('error', console.error.bind(console, 'connection error:'));

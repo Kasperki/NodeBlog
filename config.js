@@ -40,7 +40,9 @@ config.security.rechaptasecret = process.env.RECAPTCHASECRET;
 config.test = { 
     database : { 
         host : "mongodb://localhost:27017/", 
-        schema : "testdb"
+        schema : "testdb",
+        user : "root",
+        password : "root"
     }
 };
 

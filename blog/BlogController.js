@@ -26,10 +26,18 @@ BlogController.prototype.getRoute = function()
 };
 
 //Blog
-BlogController.prototype.renderBlog = function (response)
+BlogController.prototype.renderBlog = function (response, data, query, cookies, request, keys)
 {
-    //TODO if getblogpost by title (title) not found show error.
-    loadHtml.load(response, './html/blog.html', null);
+    BlogService.GetBlogPostByTitle(keys['title'], function(err, blogPost) {
+        
+        if (err || !blogPost) {
+            ErrorPage(response, 404, "We have lost the page: /blog/" + keys['title']);
+            Logger.Warning(config.log.error, "Blog not found: /blog/" +  keys['title']);
+            return;
+        }
+        
+        loadHtml.load(response, './html/blog.html', null);
+    });
 };
 
 BlogController.prototype.getBlog = function (response, data, query) 

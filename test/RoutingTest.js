@@ -53,6 +53,13 @@ describe('Routing', function () {
             var actual = routing.parseRoute(controllerRoute, userRoute);
             assert.deepEqual(actual, {asd:"asd",blog:123})
         });
+        it('should return keys urlDecoded if route is same with value', function () {
+            var controllerRoute = "/route/{asd}/{blog}";
+            var userRoute = "/route/asd%21/12%203";
+
+            var actual = routing.parseRoute(controllerRoute, userRoute);
+            assert.deepEqual(actual, {asd:"asd!",blog:"12 3"})
+        });
         it('should return false if route is not same', function () {
             var controllerRoute = "/route/asd/{blog";
             var userRoute = "/route/asd/blog";

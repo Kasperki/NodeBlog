@@ -16,7 +16,7 @@ exports.dbInitialization = function() {
     }
 
     if (mongoose.connection.readyState === 0) {
-      mongoose.connect(config.test.database.host + config.test.database.schema, function (err) {
+      mongoose.connect(config.test.database.host + config.test.database.schema, {user:config.test.database.user, pass:config.test.database.password} , function (err) {
         if (err) {
           throw err;
         }

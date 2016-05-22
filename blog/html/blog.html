@@ -45,7 +45,7 @@
     var disqus_config = function () {
         title = angular.element(document.querySelector('[ng-controller="myCtrl"]')).scope().blogPost.title;
         id = angular.element(document.querySelector('[ng-controller="myCtrl"]')).scope().blogPost._id;
-        this.page.url = 'http://kiiskinen.xyz/blog/' + id;
+        this.page.url = 'https://kiiskinen.xyz/blog/' + id;
         this.page.identifier = title;
         this.page.title = title;
     };
