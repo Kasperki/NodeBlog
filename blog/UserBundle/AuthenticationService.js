@@ -6,24 +6,27 @@ var exports = module.exports = {};
 
 var Sessions = [];
 
-function Session(id, token, expires) 
+function Session(id, token, expires, username) 
 {
     this.id = id;
     this.token = token;
     this.expires = expires;
+    this.username = username;
 }
 
 /**
  * Creates new session
+ * @param string username
  * @returns Session
  */
-exports.CreateSession = function() 
+exports.CreateSession = function(username) 
 {
     session = new Session();
-    session.id = new mongoose.Types.ObjectId;
-    session.id = session.id.toString();
+    var objectId = new mongoose.Types.ObjectId;
+    session.id = objectId.toString();
     session.token = crypto.randomBytes(64).toString('hex');
     session.expires = new Date(new Date().getTime() + 3600000).toUTCString();
+    session.username = username;
     Sessions.push(session);
     
     return session;
@@ -46,25 +49,25 @@ exports.RemoveSession = function (id)
  * Checks if id & token belongs to valid session
  * @param string id
  * @param string token
- * @returns boolean
+ * @returns Session
  */
 exports.IsTokenValid = function(id, token)
 {
     if (!id || !token)
-        return false;
+        return null;
     
     for (var i = 0; i < Sessions.length; i++) {
         if (Sessions[i].id === id && Sessions[i].token === token) {            
             if (new Date() > new Date(Sessions[i].expires)) {
                 Sessions.splice(i, 1);
-                return false;
+                return null;
             }
-            return true;
+            return Sessions[i];
         }
     }
     
     Logger.Warning(config.log.error, "Invalid token: id:" + id + " token: " + token);
-    return false;
+    return null;
 }
 
 /**

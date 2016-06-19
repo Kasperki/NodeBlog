@@ -12,7 +12,7 @@ function BlogController()
     route = [
 	    { route: {"/blog/{title}": BlogController.prototype.renderBlog }},
         { route: {"/get-blog": BlogController.prototype.getBlog }},
-        { route: {"/blog-list": BlogController.prototype.renderList }},
+        { route: {"/blog": BlogController.prototype.renderList }},
         { route: {"/get-blogs": BlogController.prototype.getBlogListJson }},
         { route: {"/admin/blog-preview" : BlogController.prototype.previewBlog }, protected: true},
         { route: {"/admin/blog-add" : BlogController.prototype.addBlog }, protected: true},      
@@ -26,70 +26,70 @@ BlogController.prototype.getRoute = function()
 };
 
 //Blog
-BlogController.prototype.renderBlog = function (response, data, query, cookies, request, keys)
+BlogController.prototype.renderBlog = function (requestInfo)
 {
-    BlogService.GetBlogPostByTitle(keys['title'], function(err, blogPost) {
+    BlogService.GetBlogPostByTitle(requestInfo.keys['title'], function(err, blogPost) {
         
         if (err || !blogPost) {
-            ErrorPage(response, 404, "We have lost the page: /blog/" + keys['title']);
-            Logger.Warning(config.log.error, "Blog not found: /blog/" +  keys['title']);
+            ErrorPage(requestInfo.response, 404, "We have lost the page: /blog/" + requestInfo.keys['title']);
+            Logger.Warning(config.log.error, "Blog not found: /blog/" + requestInfo.keys['title']);
             return;
         }
         
-        loadHtml.load(response, './html/blog.html', null);
+        loadHtml.load(requestInfo, './html/blog.html', null);
     });
 };
 
-BlogController.prototype.getBlog = function (response, data, query) 
+BlogController.prototype.getBlog = function (requestInfo)
 {        
-    BlogService.GetBlogPostByTitle(query['title'], function(err, blogPost) {    
+    BlogService.GetBlogPostByTitle(requestInfo.queryParameters['title'], function(err, blogPost) {    
         
         if (err || !blogPost) {
-            ErrorPage(response, 404, "We have lost the page: /blog/" + query['title']);
-            Logger.Warning(config.log.error, "Blog not found: /blog/" +  query['title']);
+            ErrorPage(requestInfo.response, 404, "We have lost the page: /blog/" + requestInfo.queryParameters['title']);
+            Logger.Warning(config.log.error, "Blog not found: /blog/" + requestInfo.queryParameters['title']);
             return;
         }
 
-        response.writeHead(200, {'Content-Type': 'application/json'});     
+        requestInfo.response.writeHead(200, {'Content-Type': 'application/json'});     
         blogPost.text = marked(blogPost.text);
-        response.end(JSON.stringify(blogPost));
+        requestInfo.response.end(JSON.stringify(blogPost));
     });
 };
 
 //Bloglist
-BlogController.prototype.renderList = function (response, data, query)
+BlogController.prototype.renderList = function (requestInfo)
 {
-    loadHtml.load(response, './html/blog-list.html', null);
+    loadHtml.load(requestInfo, './html/blog-list.html', null);
 };
 
-BlogController.prototype.getBlogListJson = function (response, data, query) 
+BlogController.prototype.getBlogListJson = function (requestInfo) 
 {
     BlogService.GetLatestBlogPost(6, function(err, blogPosts) {
-        response.writeHead(200, {'Content-Type': 'application/json'});     
-        response.end(JSON.stringify(blogPosts));
+        requestInfo.response.writeHead(200, {'Content-Type': 'application/json'});     
+        requestInfo.response.end(JSON.stringify(blogPosts));
     });
 };
 
 //Admim routes
-BlogController.prototype.adminBlog = function (response, data, query)
+BlogController.prototype.adminBlog = function (requestInfo)
 {
-    loadHtml.load(response, './html/blog-admin.html', {});
+    loadHtml.load(requestInfo, './html/blog-admin.html', {});
 };
 
-BlogController.prototype.previewBlog = function (response, data, query)
+BlogController.prototype.previewBlog = function (requestInfo)
 {
-    var htmll = marked(data);
-    response.writeHead(200, {'Content-Type': 'text/html'});
-    response.end(htmll);
+    var html = marked(requestInfo.data);
+    requestInfo.response.writeHead(200, {'Content-Type': 'text/html'});
+    requestInfo.response.end(html);
 };
 
-BlogController.prototype.addBlog = function (response, data, query)
+BlogController.prototype.addBlog = function (requestInfo)
 {
-    var jsonBlog = data.length ? JSON.parse(data) : '';
+    var jsonBlog = requestInfo.data.length ? JSON.parse(requestInfo.data) : '';
     BlogService.AddBlogPost(jsonBlog.title, jsonBlog.image, jsonBlog.text, jsonBlog.description, jsonBlog.category, jsonBlog.tags);
     
-    response.writeHead(200, {'Content-Type': 'text/html'});
-    response.end("ok");
+    requestInfo.response.writeHead(200, {'Content-Type': 'text/html'});
+    requestInfo.response.end("ok");
 };
 
 module.exports = BlogController;

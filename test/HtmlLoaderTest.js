@@ -11,7 +11,7 @@ describe('HtmlLoader', function () {
         it('should set correct http status code & correct headers', function (done) {
             var response = httpMocks.createResponse();
 
-            htmlLoader.load(response, pathToTestFile, null, 203, function() {
+            htmlLoader.load({response: response}, pathToTestFile, null, 203, function() {
                 assert.equal(response.statusCode, 203);
                 assert.deepEqual(response._headers,  {"Content-Type": "text/html"})
                 done();
@@ -20,7 +20,7 @@ describe('HtmlLoader', function () {
         it('should send content of file', function (done) {
             var response = httpMocks.createResponse();
 
-            htmlLoader.load(response, pathToTestFile, null, null, function(err, ready) {
+            htmlLoader.load({response: response}, pathToTestFile, null, null, function(err, ready) {
                 assert.equal(response._getData(), "<p>extra content</p>");
                 done();
             });
@@ -120,8 +120,15 @@ describe('HtmlLoader', function () {
         });
         it('should replace {% extends path/to/file %} with invalid path with empty string', function () {
             var htmlString = "<html> need more stuff here : {% extends not/exists/test.html %} {% extends notAexists-test.html %}</html>";       
-              var expectedString = "<html> need more stuff here : </html>";
+            var expectedString = "<html> need more stuff here : </html>";
             var actualString = htmlLoader.extendHtmlFile(expectedString);
+            assert.equal(actualString, expectedString);
+        });
+        it('should replace also parameters in extended file', function() {
+            var htmlString = "<html> need more stuff here : {% extends test/file/test.1.html %}</html>";
+            var expectedString = "<html> need more stuff here : <p>extra content</p> asd</html>";
+            
+            var actualString = htmlLoader.extendHtmlFile(htmlString, {extend: "asd"});
             assert.equal(actualString, expectedString);
         });
     });

@@ -1,4 +1,4 @@
-<nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
+<nav id="mainNav" class="navbar navbar-default navbar-fixed-top" ng-controller="navController">
     <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
@@ -7,20 +7,18 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand page-scroll" href="/blog-list">KASPER KIISKINEN - BLOG</a>
+            <a class="navbar-brand page-scroll" href="/blog">KIISKINEN - BLOG</a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a class="page-scroll" href="#portfolio">Portfolio</a>
+                    <a href="/">Portfolio</a>
                 </li>
                 <li>
-                    <a class="page-scroll" href="#about">About Me</a>
-                </li>
-                <li>
-                    <a href="/login">Login</a>
+                    <a href="/login" ng-show=!{{loggedIn}}>Login</a>
+                    <a href="/logout" ng-show={{loggedIn}}>Logout</a>
                 </li>
             </ul>
         </div>
@@ -28,3 +26,10 @@
     </div>
     <!-- /.container-fluid -->
 </nav>
+
+
+<script>
+    var app = angular.module('navApp', []);
+    app.controller('navController', function($scope) {});
+    angular.bootstrap(document.getElementById('mainNav'), ['navApp']);
+</script>

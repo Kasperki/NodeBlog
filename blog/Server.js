@@ -52,15 +52,26 @@ var server = https.createServer(options, function (request, response)
                 
         var cookies = Cookies.ParseCookies(request);      
         var authenticated = AuthenticationService.IsTokenValid(cookies.sessionId, cookies.authToken, request);
-                
+
         for (var i = 0; i < controllers.length; i++) {
             for (var j = 0; j < controllers[i].getRoute().length; j++) {
+
                 var controllerRouteInfo = controllers[i].getRoute()[j];
                 var controllerRoute = Object.keys(controllerRouteInfo.route)[0];
-                
-                var keys = Routing.parseRoute(controllerRoute, route);          
+                var keys = Routing.parseRoute(controllerRoute, route); //Keys from route .../{key}/{key}/...
+
+                var requestInfo = {
+                    response: response,
+                    request: request,
+                    data: incomingData,
+                    queryParameters: url['query'],
+                    cookies: cookies,
+                    keys: keys,
+                    parameters: {loggedIn: authenticated ? true : false, userName: authenticated ? authenticated.username : null}
+                }
+
                 if (keys && (!controllerRouteInfo.protected || authenticated)) {       
-                    controllerRouteInfo.route[controllerRoute](response, incomingData, url['query'], cookies, request, keys);
+                    controllerRouteInfo.route[controllerRoute](requestInfo);
                     return;
                 }
             }

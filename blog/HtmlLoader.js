@@ -4,13 +4,13 @@ var Logger = require('./Logger.js');
 
 /**
  *  Loads html file with twig like functionality
- *  @param Response response
+ *  @param RequestInfo requestInfo
  *  @param String Html.file
  *  @param array parameters (key:value)
  *  @param int code = 200 [Optional]
  *  @param function callback(error, boolean) [Optional]
  */
-var load = function (response, file, parameters, code, callback) 
+var load = function (requestInfo, file, parameters, code, callback) 
 {
     if (typeof code === 'undefined' || !code) //TODO NodeJS 6.0 adds default parameters.
         code = 200;
@@ -20,13 +20,20 @@ var load = function (response, file, parameters, code, callback)
             throw err; 
         }   
         
+        if (parameters != null) {
+            for (var attrname in requestInfo.parameters) { parameters[attrname] = requestInfo.parameters[attrname]; }
+        }
+        else {
+            parameters = requestInfo.parameters;
+        }
+
         html = replaceParameters(html, parameters);    
-        html = extendHtmlFile(html);
+        html = extendHtmlFile(html, parameters);
         html = combineFiles(html);
                 
-        response.writeHead(code, {"Content-Type": "text/html"});  
-        response.write(html);  
-        response.end();
+        requestInfo.response.writeHead(code, {"Content-Type": "text/html"});  
+        requestInfo.response.write(html);  
+        requestInfo.response.end();
         
         if (typeof callback === "function") {
             callback(null, true);
@@ -55,9 +62,10 @@ var replaceParameters = function (html, parameters)
  * Extend html file
  * Usage: {% extend path/to/file.html %}
  * @param string html
+ * @param array parameters [key:value]
  * return string
  */
-var extendHtmlFile = function (html)
+var extendHtmlFile = function (html, parameters)
 {
     var regex = new RegExp("{%\\s*extends\\s*[A-Za-z0-9\"/().-]*\\s*%}", "g");
     var regexMatch = html.match(regex); 
@@ -72,6 +80,7 @@ var extendHtmlFile = function (html)
  
         try {
             var includingFile = fs.readFileSync(filePath, "utf-8");
+            includingFile = replaceParameters(includingFile, parameters);
             html = html.replace(new RegExp(regexMatch[i], "g"), includingFile);
         }
         catch (e) {
@@ -121,6 +130,8 @@ var combineFiles = function (html)
             } catch (e) {
                 Logger.Debug(config.log.error, "combineFiles() :: File " + outputFile + " not found... combining...");
             }
+        } else {
+            fs.unlinkSync(outputFile);
         }
         
         var regexFiles = new RegExp('\"(.*?)\"', "g");

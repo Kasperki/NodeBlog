@@ -27,9 +27,7 @@ config.log.level = config.log.levels.ALL;
 config.log.print = true;
 config.log.write = true;
 
-config.web.port = 8081;
 config.web.publicDirectories = ["/web", "/cache"];
-
 config.security.rechaptasecret = process.env.RECAPTCHASECRET;
 
 //Unique keys

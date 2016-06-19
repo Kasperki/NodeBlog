@@ -244,6 +244,10 @@ describe('AuthenticationService', function () {
             var actualSession = authenticationService.CreateSession();
             assert.strictEqual(actualSession, authenticationService.GetSessions()[1]);
         });
+        it('Should create new session with username', function(){
+            var actualSession = authenticationService.CreateSession("dude");
+            assert.strictEqual(actualSession.username, "dude");
+        });
     });
     describe('#RemoveSession()', function () {
         it('Should remove session by id from valid Sessions', function(){
@@ -253,13 +257,14 @@ describe('AuthenticationService', function () {
         });
     });
     describe('#IsTokenValid()', function () {
-        it('Should return true if token is valid', function() {
-            var actualSession = authenticationService.CreateSession();
-            assert.strictEqual(authenticationService.IsTokenValid(actualSession.id, actualSession.token), true);
+        it('Should return Session in question if token is valid', function() {
+            var expectedSession = authenticationService.CreateSession("Dude123");
+            var otherSession = authenticationService.CreateSession("NotThisDude");
+            assert.strictEqual(authenticationService.IsTokenValid(expectedSession.id, expectedSession.token), expectedSession);
         });
         it('Should return false if token is invalid', function() {
             var actualSession = authenticationService.CreateSession();
-            assert.strictEqual(authenticationService.IsTokenValid(actualSession.id, "notValidToken:)"), false);
+            assert.strictEqual(authenticationService.IsTokenValid(actualSession.id, "notValidToken:)"), null);
         });
     });
 });

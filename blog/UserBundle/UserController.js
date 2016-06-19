@@ -25,50 +25,50 @@ UserController.prototype.getRoute = function()
     return route;
 };
 
-UserController.prototype.authenticate = function (response, data, query, cookies, request)
+UserController.prototype.authenticate = function (requestInfo)
 {
     //TODO NEEDS BRUTE FORCE LOGIN PROTECTION.
-    var userInfo = data.length ? JSON.parse(data) : '';
+    var userInfo = requestInfo.data.length ? JSON.parse(requestInfo.data) : '';
     
-    verifyReCapthca(userInfo.recaptcha, request.connection.remoteAddress, function(err, validCapthca) {     
+    verifyReCapthca(userInfo.recaptcha, requestInfo.request.connection.remoteAddress, function(err, validCapthca) {     
         if (validCapthca) {
             UserService.ValidateLogin(userInfo.username, userInfo.password, function(err, success) {
                 if (success) {
-                    var session = AuthenticationService.CreateSession();
-                    Cookies.SetCookies(response, [
+                    var session = AuthenticationService.CreateSession(userInfo.username);
+                    Cookies.SetCookies(requestInfo.response, [
                         {name:"sessionId", content:session.id, expires:session.expires, options : {secure : true, httponly : true}}, 
                         {name:"authToken", content:session.token, expires:session.expires, options : {secure : true, httponly : true}}
                     ]);
 
-                    Logger.Log(config.log.access, "User: " + userInfo.username + " logged in from: " + request.connection.remoteAddress);
-                    response.writeHead(200, {'Content-Type': 'text/plain'});     
-                    response.end("Ok");
+                    Logger.Log(config.log.access, "User: " + userInfo.username + " logged in from: " + requestInfo.request.connection.remoteAddress);
+                    requestInfo.response.writeHead(200, {'Content-Type': 'text/plain'});     
+                    requestInfo.response.end("Ok");
                 }
                 else {
-                    Logger.Warning(config.log.error, "Invalid login: " + userInfo.username + " from: " + request.connection.remoteAddress);
-                    response.writeHead(200, {'Content-Type': 'text/plain'});     
-                    response.end("Invalid");
+                    Logger.Warning(config.log.error, "Invalid login: " + userInfo.username + " from: " + requestInfo.request.connection.remoteAddress);
+                    requestInfo.response.writeHead(200, {'Content-Type': 'text/plain'});     
+                    requestInfo.response.end("Invalid");
                 }
             });
         }
         else {
-            Logger.Warning(config.log.error, "Invalid capthca from: " + request.connection.remoteAddress);
-            response.writeHead(403, {'Content-Type': 'text/plain'});     
-            response.end("Invalid");
+            Logger.Warning(config.log.error, "Invalid capthca from: " + requestInfo.request.connection.remoteAddress);
+            requestInfo.response.writeHead(403, {'Content-Type': 'text/plain'});     
+            requestInfo.response.end("Invalid");
         }
     });
 };
 
-UserController.prototype.login = function (response, data, query)
+UserController.prototype.login = function (requestInfo)
 {
-    loadHtml.load(response, './html/login.html', null);
+    loadHtml.load(requestInfo, './html/login.html', null);
 };
 
-UserController.prototype.logout = function (response, data, query, cookies) 
+UserController.prototype.logout = function (requestInfo) 
 {        
-    AuthenticationService.RemoveSession(cookies.sessionId);
-    Cookies.SetCookies(response,  [{name:"sessionId", content:null, expires:new Date(0)}, {name:"authToken", content:null, expires:new Date(0)}])
-    loadHtml.load(response, './html/login.html', null);
+    AuthenticationService.RemoveSession(requestInfo.cookies.sessionId);
+    Cookies.SetCookies(requestInfo.response,  [{name:"sessionId", content:null, expires:new Date(0)}, {name:"authToken", content:null, expires:new Date(0)}])
+    loadHtml.load(requestInfo, './html/login.html', null);
 };
 
 /**
