@@ -187,3 +187,45 @@
 	background:linear-gradient(to bottom, grey 5%, grey 100%);
     top:0px;
 }
+
+
+/* portfolio */
+.grow {
+  -webkit-transition: all .2s ease-in-out;
+  -moz-transition: all .2s ease-in-out;
+   transition: all .2s ease-in-out;
+}
+
+.grow:hover { transform: scale(1.15); }
+
+.verticalHr {
+  width: 5px;
+  color: rgba(240,95,64,.8);
+  height:40px;
+  display:
+  inline-block;
+  border:3px inset;
+  border-style: solid;
+  margin:5px
+}
+
+/** nav **/
+
+@media(min-width:768px){
+    .dropdown-menu li:hover .sub-menu {
+        visibility: visible;
+    }
+
+    .dropdown:hover .dropdown-menu {
+        display: block;
+    }
+}
+
+.dropdown-menu {
+    background-color: rgba(0,0,0,0);
+}
+
+.dropdown-menu > li > a {
+    font-weight: bold;
+    color: #f05f40;
+}

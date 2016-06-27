@@ -9,6 +9,7 @@ var fs = require('fs');
 var config = require('../config.js'); 
 var Cookies = require('./Cookies.js'); 
 var BlogController = require('./BlogController.js');
+var MainController = require('./MainController.js');
 var UserController = require('./UserBundle/UserController.js');
 var AuthenticationService = require('../blog/UserBundle/AuthenticationService.js');
 var Database = require('./Database.js');
@@ -18,7 +19,7 @@ var Logger = require('./Logger.js');
 var Routing = require('./Routing.js');
 
 //Initialize controllers
-var controllers = [new BlogController(), new UserController()];
+var controllers = [new BlogController(), new MainController(), new UserController()];
 
 //Initialize database connection
 Database.connectToDatabase();

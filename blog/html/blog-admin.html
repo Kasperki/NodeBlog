@@ -4,10 +4,10 @@
     {% extends html/layout.html %}
 </head>
 <body id="body">
-    {% extends html/nav.html %}
+{% extends html/nav.html %}
     
 <br><br><br>
-<div class="container">
+<section class="container">
     <div class="row">
         <div class="col-lg-12 text-center">
             <label for="inputTitle">Title</label>
@@ -49,10 +49,10 @@
             <textarea rows="4" cols="50" id="inputText" class="form-control">Use Markdown To write your message.</textarea>
         </div>
     </div>
-</div>
+</section>
 
 
-<div id="markDownPreview">
+<section id="markDownPreview">
     <div class="row">
         <div class="col-lg-12 text-center">
             <p>Preview</p>
@@ -76,9 +76,9 @@
             </div>            
         </div>
     </div>
-</div>
+</section>
     
-<div class="container">
+<section class="container">
     <div class="row">
         <div class="col-lg-6 text-center">
             <button id="togglePreview">Toggle preview</button>
@@ -87,7 +87,7 @@
             <button id="saveBlog">SAVE</button>
         </div>
     </div>
-</div>
+</section>
 
 <script>
 //Toggle preview
