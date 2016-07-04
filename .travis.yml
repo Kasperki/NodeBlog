@@ -6,4 +6,5 @@ node_js:
 services:
   - mongodb
 before_script:
-  - mongo testdb --eval 'db.addUser({ user: "root", pwd: "root", roles: ["readWrite", "dbAdmin"]});'
+  - sleep 15
+  - mongo testdb --eval 'db.addUser("root", "root");'
