@@ -17,7 +17,7 @@ config.log.levels =
 config.env = process.env.NODE_ENV || "dev";
 
 config.database.host = "mongodb://localhost:27017/";
-config.database.schema = "test";
+config.database.schema = "blog";
 config.database.user = process.env.DB_USER || "root";
 config.database.password = process.env.DB_PASSWORD || "root";
 
@@ -38,7 +38,7 @@ config.security.rechaptasecret = process.env.RECAPTCHASECRET;
 config.test = { 
     database : { 
         host : "mongodb://localhost:27017/", 
-        schema : "testdb",
+        schema : "blogTestdb",
         user : "root",
         password : "root"
     }

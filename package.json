@@ -13,6 +13,7 @@
     "node-mocks-http": "^1.5.2"
   },
   "scripts": {
+    "install" : "node ./scripts/install.js",
     "test": "mocha test/*.js"
   },
   "repository": {

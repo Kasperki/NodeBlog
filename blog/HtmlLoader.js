@@ -131,7 +131,10 @@ var combineFiles = function (html)
                 Logger.Debug(config.log.error, "combineFiles() :: File " + outputFile + " not found... combining...");
             }
         } else {
-            fs.unlinkSync(outputFile);
+            try {
+                fs.unlinkSync(outputFile);
+            }
+            catch (e){}
         }
         
         var regexFiles = new RegExp('\"(.*?)\"', "g");
