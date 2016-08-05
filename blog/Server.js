@@ -28,9 +28,9 @@ var Request;
 var Response;
 
 var options = {
-    key: fs.readFileSync('../test/cert/server-key.pem'), 
-    cert: fs.readFileSync('../test/cert/server-crt.pem'), 
-    ca: fs.readFileSync('../test/cert/ca-crt.pem'), 
+    key: fs.readFileSync(config.cert.server_key), 
+    cert: fs.readFileSync(config.cert.server_crt), 
+    ca: fs.readFileSync(config.cert.ca_crt), 
 };
 
 var server = https.createServer(options, function (request, response)
@@ -80,15 +80,16 @@ var server = https.createServer(options, function (request, response)
         
         FileServer(response, request, route);      
     });
-}).listen(8081);
+}).listen(config.httpsPort);
 
 http.createServer(function (req, res) {
-    res.writeHead(301, { "Location": "https://" + req.headers['host'] + ":8081" + req.url });
+    res.writeHead(301, { "Location": "https://" + req.headers['host'] + ":" + String(config.httpsPort) + req.url });
     res.end();
-}).listen(80);
+}).listen(config.httpPort);
 
 //Error logging
 process.on('uncaughtException', (err) => {
+    console.log(err);
     var message = "Referer: " + Request.headers['referer'] + " -- " + Request.connection.remoteAddress + " - Exception: " + err.stack;
     Logger.Error(config.log.error, message);
     process.exit(1);

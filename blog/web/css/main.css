@@ -19,6 +19,11 @@
         overflow: hidden;
         transition-timing-function: ease-in; 
     }
+
+    .hide-xs
+    {
+        display: none;
+    }
 }
 
 @media(min-width:768px) {
@@ -31,6 +36,13 @@
         border-radius: 10px 10px 0px 0px; 
         overflow: hidden;
         transition-timing-function: ease-in; 
+    }
+}
+
+@media(min-width:0px) and (max-width : 992px) {
+    .hide-sm
+    {
+        display: none;
     }
 }
 
@@ -229,4 +241,8 @@
 
 .navbar-brand {
     color: #f05f40 !important;
+}
+
+.pointer {
+    cursor: pointer;
 }

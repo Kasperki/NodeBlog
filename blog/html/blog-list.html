@@ -24,49 +24,88 @@
     <section id="blogs" ng-controller="blogController">
         <div class="container">
             <div class="row">
-                <div class="col-md-6"  ng-repeat-start="item in blogPost">
-             
-                    <div style="position:relative">
-                        <div class="bloglist" style="background:url({{item.image}});">     
-                            <a class='default-link' href="blog/{{item.title}}"></a>
-                        
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <h1 class="bloglist-title">{{item.title}}</h1>
-                                </div>
-                            </div>
+                <div class="col-md-10">
+                    <div class="col-md-6"  ng-repeat-start="item in blogPost">
+                        <div style="position:relative">
+                            <div class="bloglist" style="background:url({{item.image}});">     
+                                <a class='default-link' href="blog/{{item.title}}"></a>
                             
-                            <div class="bloglist-description">
-                                <div class="text-center">
-                                    <p class="inline">{{ item.description | limitTo: 325 }}</p>
-                                    <a href="blog/{{item.title}}">Read more...</a>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <h1 class="bloglist-title">{{item.title}}</h1>
+                                    </div>
+                                </div>
+                                
+                                <div class="bloglist-description">
+                                    <div class="text-center">
+                                        <p class="inline">{{ item.description | limitTo: 325 }}</p>
+                                        <a href="blog/{{item.title}}">Read more...</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                
-                    <div class="text-center bloglist-infobox">
-                        <i class="fa fa-calendar"></i> <p class="inline">{{ item.date | date: 'dd.MM.yyyy HH:mm' }}</p>
-                        <i class="fa fa-folder-open"></i> <p class="inline">{{ item.category }}</p>
-                        <i class="fa fa-tags" ng-repeat-start="tag in item.tags"><code>{{ tag }}</code></i>
-                        <div class="inline" ng-repeat-end></div>
-                    </div>
+                    
+                        <div class="text-center bloglist-infobox">
+                            <i class="fa fa-calendar"></i> <p class="inline">{{ item.date | date: 'dd.MM.yyyy HH:mm' }}</p>
+                            <i class="fa fa-folder-open"></i> <p class="inline"><a class="pointer" ng-click="getByCategory(item.category)">{{ item.category }}</a></p>
+                            <i class="fa fa-tags" ng-repeat-start="tag in item.tags"><code><a class="pointer" ng-click="getByTag(tag)">{{ tag }}</a></code></i>
+                            <div class="inline" ng-repeat-end></div>
+                        </div>
 
-                    <hr class="heavy">
+                        <hr class="heavy">
+                    </div>
+                    <div ng-repeat-end></div>
                 </div>
-                <div ng-repeat-end></div>
+                <div class="col-xs-2 hide-sm">
+                    <aside>
+                        <h4>Category</h4>
+                        <ul id="categories">
+                        </ul>
+                        <hr />
+                        <h4>Tag</h4>
+                        <ul id="tags">
+                        </ul>
+                    </aside>
+                </div>
             </div>
         </div>
     </section>
     
     <script>
+
+        var categoryList = {{ categories }};
+        for (var category in categoryList) {
+          $("#categories").append("<li><a class=\"pointer\" ng-click=\"getByCategory(\'"+ category +"\')\">"+ category +" (" + categoryList[category] + ")</a></li>");
+        }
+
+        var tags = {{ tags }};
+        for (var tag in tags) {
+          $("#tags").append("<li><a class=\"pointer\" ng-click=\"getByTag(\'"+ tag +"\')\">"+ tag +" (" + tags[tag] + ")</a></li>");
+        }
+
         var app = angular.module('myApp', []);
         app.controller('blogController', function($scope, $http) {  
             $http.get("get-blogs")
             .then(function(response) {
                 $scope.blogPost = response.data;
-                $("#body").find("pre").addClass('prettyprint');
             });
+
+            $scope.getByCategory = function (category) {
+                $http.get("get-blogs-category?category="+category)
+                .then(function(response) {
+                    $scope.blogPost = response.data;
+                });
+            }
+
+            $scope.getByTag = function (tag) {
+
+                console.log(tag);
+
+                $http.get("get-blogs-tag?tag="+tag)
+                .then(function(response) {
+                    $scope.blogPost = response.data;
+                });
+            }
         });
 
         angular.bootstrap(document.getElementById('blogs'), ['myApp']);

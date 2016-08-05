@@ -111,3 +111,109 @@ exports.GetBlogPostByTitle = function (title, callback) {
         }
     });
 };
+
+/**
+ * Gets array of blogs by category
+ * @param string category
+ * @param callback (err, Blog[] result)
+ */
+exports.GetBlogPostsByCategory = function (category, callback) {
+    
+    if (typeof category !== 'string')
+    {
+        if (typeof callback === "function") {
+            callback(new Error('category: ' + category + " is not string"), null);
+        }       
+        return;
+    }
+    
+    Blog.find({'category': category}).sort({ date: -1 }).exec(function (err, result) {
+        if (err) throw err;
+
+        if (typeof callback === "function") {
+            callback(err, result);
+        }
+    });
+};
+
+/**
+ * Gets array of blogs that has tag
+ * @param string tag
+ * @param callback (err, Blog[] result)
+ */
+exports.GetBlogPostsByTag = function (tag, callback) {
+    
+    if (typeof tag !== 'string')
+    {
+        if (typeof callback === "function") {
+            callback(new Error('category: ' + tag + " is not string"), null);
+        }       
+        return;
+    }
+    
+    Blog.find({'tags': tag}).sort({ date: -1 }).exec(function (err, result) {
+        if (err) throw err;
+
+        if (typeof callback === "function") {
+            callback(err, result);
+        }
+    });
+};
+
+/**
+ * Gets array of all categories
+ * @param callback (err, Tags[Name, Count] result)
+ */
+exports.GetCategories = function (callback) {
+    
+    Blog.find().exec(function (err, result) {
+        if (err) throw err;
+
+        if (typeof callback === "function") {
+            
+            var categories = {};
+
+            for (var i = 0; i < result.length; i++)
+            {
+                if (!categories[result[i].category]) { 
+                    categories[result[i].category] = 1; 
+                }
+                else {
+                    categories[result[i].category] = categories[result[i].category] + 1;
+                }
+            }
+            
+            callback(err, categories);
+        }
+    });
+};
+
+/**
+ * Gets array of all tags
+ * @param callback (err, Tags[Name, Count] result)
+ */
+exports.GetTags = function (callback) {
+    
+    Blog.find().exec(function (err, result) {
+        if (err) throw err;
+
+        if (typeof callback === "function") {
+            
+            var tags = {};
+
+            for (var i = 0; i < result.length; i++)
+            {
+                 result[i].tags.forEach(function(tag) {
+                    if (!tags[tag]) { 
+                        tags[tag] = 1; 
+                    }
+                    else {
+                        !tags[tag] + 1;
+                    }
+                });
+            }
+            
+            callback(err, tags);
+        }
+    });
+};
