@@ -46,6 +46,18 @@ describe('BlogService', function () {
             );
             done();
         });
+        it('Should return all blogs when limit is 0', function (done) {        
+            
+            var expected = 10;
+            for (var i = 0; i < 10; i++) {
+                dbutils.fixtures(new blogService.Blog({title:i}));
+            }
+            
+            blogService.GetLatestBlogPost(0, function(err, result) {
+                assert.equal(result.length, expected);
+                done();
+            });
+        });
         it('Should return expected number of blog posts', function (done) {        
             
             var expected = 5;

@@ -67,6 +67,9 @@
                         </ul>
                     </aside>
                 </div>
+                <div id="pages" class="col-md-10 text-center">
+                    
+                </div>
             </div>
         </div>
     </section>
@@ -84,31 +87,50 @@
         }
 
         var app = angular.module('myApp', []);
-        app.controller('blogController', function($scope, $http) {  
-            $http.get("get-blogs")
-            .then(function(response) {
-                $scope.blogPost = response.data;
-            });
-
-            $scope.getByCategory = function (category) {
-                $http.get("get-blogs-category?category="+category)
+        app.controller('blogController', function($scope, $http, $compile) {  
+            
+            $scope.getBlogs = function (page = 0) {
+                $http.get("get-blogs?page=" + page)
                 .then(function(response) {
-                    $scope.blogPost = response.data;
+                    $scope.blogPost = response.data.blogs;
+                    generatePageLinks("getBlogs", response.data.pagesCount);
                 });
             }
 
-            $scope.getByTag = function (tag) {
-
-                console.log(tag);
-
-                $http.get("get-blogs-tag?tag="+tag)
+            $scope.getByCategory = function (category, page = 0) {
+                $http.get("get-blogs-category?category="+category+"&page="+page)
                 .then(function(response) {
-                    $scope.blogPost = response.data;
+                    $scope.blogPost = response.data.blogs;
+                    generatePageLinks("getByCategory", response.data.pagesCount, category);
                 });
+            }
+
+            $scope.getByTag = function (tag, page = 0) {
+                $http.get("get-blogs-tag?tag="+tag+"&page="+page)
+                .then(function(response) {
+                    $scope.blogPost = response.data.blogs;
+                    generatePageLinks("getByTag", response.data.pagesCount, tag);
+                });
+            }
+
+            function generatePageLinks(url, pageCount, data = null) {
+                $("#pages").empty();
+                for(var i = 1; i < pageCount + 1; i++) {
+                    
+                    if (!data)  {
+                        var $link = $("<a class=\"pointer pageLink\" ng-click=\""+url+"("+ i +")\"><h4 class=\"inline\">"+ i +"</h4></a>").appendTo("#pages");
+                    }
+                    else { 
+                        var $link = $("<a class=\"pointer pageLink\" ng-click=\""+url+"(\'"+ data +"\',"+ i + ")\"><h4 class=\"inline\">"+ i +"</h4></a>").appendTo("#pages");
+                    }
+
+                    $compile($link)($scope);
+                }
             }
         });
 
         angular.bootstrap(document.getElementById('blogs'), ['myApp']);
+        angular.element(document.getElementById('blogs')).scope().getBlogs(1);
         unravelText("Kiiskinen - Blog", "#title");
     </script>
     <script src="/web/js/creative.js"></script>

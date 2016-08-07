@@ -69,11 +69,40 @@ BlogController.prototype.renderList = function (requestInfo)
     });
 };
 
+const BLOGS_PER_PAGE = 8;
+
+filterBlogsPerPage = function(requestInfo, blogPosts) 
+{
+    var pageNumber = requestInfo.queryParameters['page'];
+    
+    if (!pageNumber)
+        pageNumber = 0;
+    
+    if (pageNumber > 0)
+        pageNumber--;
+
+    if (pageNumber * BLOGS_PER_PAGE > blogPosts.length)
+    {
+        pageNumber = Math.floor(blogPosts.length / BLOGS_PER_PAGE);
+    }
+
+    var blogs = []
+    for (var index = pageNumber * BLOGS_PER_PAGE; index < (pageNumber + 1) * BLOGS_PER_PAGE; index++) {
+        if (index < blogPosts.length) {
+            blogs.push(blogPosts[index]);
+        }
+    }
+
+    var pagesCount = Math.ceil(blogPosts.length / BLOGS_PER_PAGE);
+    return {blogs: blogs, pagesCount: pagesCount};
+}
+
 BlogController.prototype.getBlogListJson = function (requestInfo) 
 {
-    BlogService.GetLatestBlogPost(24, function(err, blogPosts) { //TODO WHAT IF I WRITE MORE THAN 24 BLOGS? PAGES? IMPORTANT! :DDD
+    BlogService.GetLatestBlogPost(0, function(err, blogPosts) {
         requestInfo.response.writeHead(200, {'Content-Type': 'application/json'});     
-        requestInfo.response.end(JSON.stringify(blogPosts));
+        var blogs = filterBlogsPerPage(requestInfo, blogPosts);
+        requestInfo.response.end(JSON.stringify(blogs));
     });
 };
 
@@ -82,8 +111,9 @@ BlogController.prototype.getByCategory = function (requestInfo)
     var category = requestInfo.queryParameters['category'];
     
     BlogService.GetBlogPostsByCategory(category, function(err, blogPosts) {
-        requestInfo.response.writeHead(200, {'Content-Type': 'application/json'});     
-        requestInfo.response.end(JSON.stringify(blogPosts));
+        requestInfo.response.writeHead(200, {'Content-Type': 'application/json'});
+        var blogs = filterBlogsPerPage(requestInfo, blogPosts);     
+        requestInfo.response.end(JSON.stringify(blogs));
     });
 };
 
@@ -92,8 +122,9 @@ BlogController.prototype.getByTag = function (requestInfo)
     var tag = requestInfo.queryParameters['tag'];
     
     BlogService.GetBlogPostsByTag(tag, function(err, blogPosts) {
-        requestInfo.response.writeHead(200, {'Content-Type': 'application/json'});     
-        requestInfo.response.end(JSON.stringify(blogPosts));
+        requestInfo.response.writeHead(200, {'Content-Type': 'application/json'});  
+        var blogs = filterBlogsPerPage(requestInfo, blogPosts);      
+        requestInfo.response.end(JSON.stringify(blogs));
     });
 };
 

@@ -246,3 +246,7 @@
 .pointer {
     cursor: pointer;
 }
+
+.pageLink {
+    margin: 0 5px;
+}
