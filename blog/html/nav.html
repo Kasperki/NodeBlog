@@ -1,4 +1,4 @@
-<nav id="mainNav" class="navbar navbar-default navbar-fixed-top" ng-controller="navController">
+<nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
     <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
@@ -24,20 +24,16 @@
                     </ul>
                 </li>
                 <li>
-                    <a href="/login" ng-show=!{{loggedIn}}>Login</a>
-                    <a href="/logout" ng-show={{loggedIn}}>Logout</a>
+                    {% if {{loggedIn}} == false %}
+                        <a href="/login">Login</a>
+                    {% endif %}
+                    {% if {{loggedIn}} == true %}
+                        <a href="/logout">Logout</a>
+                    {% endif %}
                 </li>
             </ul>
         </div>
-
         <!-- /.navbar-collapse -->
     </div>
     <!-- /.container-fluid -->
 </nav>
-
-
-<script>
-    var app = angular.module('navApp', []);
-    app.controller('navController', function($scope) {});
-    angular.bootstrap(document.getElementById('mainNav'), ['navApp']);
-</script>

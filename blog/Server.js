@@ -68,7 +68,7 @@ var server = https.createServer(options, function (request, response)
                     queryParameters: url['query'],
                     cookies: cookies,
                     keys: keys,
-                    parameters: {loggedIn: authenticated ? true : false, userName: authenticated ? authenticated.username : null}
+                    parameters: {loggedIn: authenticated ? true : false, userName: authenticated ? authenticated.username : null, "NODE.ENV" : String(config.env)}
                 }
 
                 if (keys && (!controllerRouteInfo.protected || authenticated)) {       

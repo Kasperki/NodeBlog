@@ -1,6 +1,8 @@
 var fs = require('fs');
 var config = require('../config.js');
 var Logger = require('./Logger.js');
+var CleanCSS = require('clean-css');
+var UglifyJS = require("uglify-js");
 
 /**
  *  Loads html file with twig like functionality
@@ -29,6 +31,7 @@ var load = function (requestInfo, file, parameters, code, callback)
 
         html = replaceParameters(html, parameters);    
         html = extendHtmlFile(html, parameters);
+        html = templateIf(html);
         html = combineFiles(html);
                 
         requestInfo.response.writeHead(code, {"Content-Type": "text/html"});  
@@ -81,6 +84,7 @@ var extendHtmlFile = function (html, parameters)
         try {
             var includingFile = fs.readFileSync(filePath, "utf-8");
             includingFile = replaceParameters(includingFile, parameters);
+            includingFile = templateIf(includingFile);
             html = html.replace(new RegExp(regexMatch[i], "g"), includingFile);
         }
         catch (e) {
@@ -141,7 +145,7 @@ var combineFiles = function (html)
         var inputFiles = [];
       
         var match; var first = true;
-        while ( ( match = regexFiles.exec(regexMatch[i]) ) != null )
+        while (( match = regexFiles.exec(regexMatch[i]) ) != null )
         {
             if (!first) {
                 inputFiles.push(match[1]);
@@ -161,9 +165,65 @@ var combineFiles = function (html)
             }
         }
         
+        //Minify
+        if (outputFile.endsWith(".css")) {
+            minifyCSS(outputFile);
+        }
+
+        if (outputFile.endsWith(".js")) {
+            minifyJS(outputFile);
+        }
+
         html = html.replace(new RegExp(regexMatch[i]), "");
     }
     
+    return html;
+}
+
+var minifyCSS = function (outputFile) 
+{
+    var outputFileMinified = outputFile.substr(0, outputFile.length - 3) + "min.css";
+
+    var source = fs.readFileSync(outputFile);
+    var minified = new CleanCSS().minify(source).styles;
+
+    fs.writeFileSync(outputFileMinified, minified,  { encoding: "utf-8", flag: "w"});
+}
+
+var minifyJS = function (outputFile) 
+{
+    var outputFileMinified = outputFile.substr(0, outputFile.length - 2) + "min.js";
+
+    var result = UglifyJS.minify([outputFile]);
+
+    fs.writeFileSync(outputFileMinified, result.code,  { encoding: "utf-8", flag: "w"});
+}
+
+var templateIf = function (html)
+{
+    var regex = new RegExp("{%\\s*if\\s*([A-Za-z0-9\"().-]*)\\s*==\\s*([A-Za-z0-9\"().-]*)\\s*%}\\s*(.*?)\\s*{%\\s*endif\\s*%}", "g");
+    
+    var regexMatch, matchReplace = [];
+    while ((regexMatch = regex.exec(html)) != null)
+    {
+        var var1 = regexMatch[1];
+        var var2 = regexMatch[2];  
+
+        var block = regexMatch[3];
+
+        if (var1 == var2) {
+            matchReplace.push({match : regexMatch[0], block : block});
+        }
+        else {
+            matchReplace.push({match : regexMatch[0], block : ""});
+        }
+    }
+
+    for (var i = 0; i < matchReplace.length; i++) 
+    {
+        html = html.replace(matchReplace[i].match, matchReplace[i].block);
+    }
+
     return html;
 }
 
@@ -171,5 +231,6 @@ module.exports = {
     load : load,
     replaceParameters : replaceParameters, 
     extendHtmlFile : extendHtmlFile,
-    combineFiles : combineFiles
+    combineFiles : combineFiles,
+    templateIf : templateIf
 }

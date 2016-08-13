@@ -80,7 +80,16 @@ function sendFile(response)
         var buf = fs.readFileSync(dirPath);
         var type = mime.lookup(dirPath);
 
-        response.writeHead(200, {'Content-Length' : status["size"], 'Content-Type': type, 'X-Content-Type-Options' : 'nosniff', 'X-XSS-Protection': '1; mode=block', 'X-Frame-Options': 'SAMEORIGIN'});
+        response.writeHead(200, 
+        {
+            'Content-Length' : status["size"], 
+            'Content-Type': type, 
+            'X-Content-Type-Options' : 'nosniff', 
+            'X-XSS-Protection': '1; mode=block', 
+            'X-Frame-Options': 'SAMEORIGIN',
+            'Cache-Control' : 'private, max-age=10800'
+        });
+
         response.end(buf, 'binary');
     }
     catch (e) {
