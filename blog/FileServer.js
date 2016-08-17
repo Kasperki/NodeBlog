@@ -1,4 +1,5 @@
 var fs = require('fs');
+var zlib = require('zlib');
 var mime = require('mime');
 var config = require('../config.js');
 var ErrorPage = require('./ErrorPage.js');
@@ -35,7 +36,7 @@ module.exports = function (response, request, route) {
                 break;
             }
             else if(status.isFile()) {
-                sendFile(response);
+                sendFile(response, request);
                 break;
             }  
         }
@@ -74,25 +75,42 @@ function sendGeneratedHtml(response, route)
  * Sends the file in response
  * @param Response response
  */
-function sendFile(response)
+function sendFile(response, request)
 {
     try {
         var buf = fs.readFileSync(dirPath);
         var type = mime.lookup(dirPath);
 
-        response.writeHead(200, 
+        var fileExtension = dirPath.substr(dirPath.lastIndexOf('.')+1);
+
+        response.statusCode = 200;
+        response.setHeader('Content-Length', status["size"]);
+        response.setHeader('Content-Type', type);
+        response.setHeader('X-Content-Type-Options', 'nosniff');
+        response.setHeader('X-XSS-Protection', '1; mode=block');
+        response.setHeader('X-Frame-Options', 'SAMEORIGIN');
+        response.setHeader('Cache-Control', 'private, max-age=10800');
+
+        //Check for Gzip support
+        if (request.headers['accept-encoding'] && request.headers['accept-encoding'].match(/\bgzip\b/)) 
         {
-            'Content-Length' : status["size"], 
-            'Content-Type': type, 
-            'X-Content-Type-Options' : 'nosniff', 
-            'X-XSS-Protection': '1; mode=block', 
-            'X-Frame-Options': 'SAMEORIGIN',
-            'Cache-Control' : 'private, max-age=10800'
-        });
+            if (fileExtension === "css" || fileExtension === "js" || fileExtension === "html") 
+            {
+                buf = encodeToGZIP(buf, response);
+            }
+        }
 
         response.end(buf, 'binary');
     }
     catch (e) {
         Logger.Debug(config.log.error, e);
     }
+}
+
+function encodeToGZIP (buffer, response) 
+{
+    var buf = zlib.gzipSync(buffer);
+    response.setHeader('Content-Encoding', 'gzip');
+    response.setHeader('Content-Length', buf.length);
+    return buf;
 }
