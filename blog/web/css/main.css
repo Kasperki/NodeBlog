@@ -85,6 +85,17 @@
     margin-right: auto;
 }
 
+.dashboardStyle {
+    height:150px;
+    opacity: 0.85;
+    background-repeat: no-repeat;
+    color: white;
+}
+
+strong {
+    font-weight: 700;
+}
+
 .default-link{
   /* all rules required to make the whole div clickable */ 
   position:absolute; 
@@ -161,6 +172,46 @@
 .button:active {
 	position:relative;
 	top:1px;
+}
+
+.button-normal {
+    width: 100%;
+    border-radius:2px;
+	border:1px solid #AAAAAA;
+	display:inline-block;
+	cursor:pointer;
+}
+
+.button-normal:hover {
+    background-color: #DFDFDF
+}
+
+.box {
+    margin: 2px 0;
+    background-color: #DDDDDD;
+}
+
+.button-add {
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  font-family: Arial;
+  font-size: 20px;
+  padding: 10px 20px 10px 20px;
+  border: dotted #f05f40 2px;
+  text-decoration: none;
+  text-align: center;
+  border-radius: 3%;
+  width: 100%;
+  height: 150px;
+  float: none;
+  margin: 0 auto;
+}
+.button-add:hover {
+  background: #f05f40;
+  border-color: white;
+  text-decoration: none !important;
+  color: #FFFFFF;
 }
 
 .disabled {

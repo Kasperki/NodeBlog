@@ -167,11 +167,11 @@ var combineFiles = function (html)
         
         //Minify
         if (outputFile.endsWith(".css")) {
-            minifyCSS(outputFile);
+            var minifiedCSS = minifyCSS(outputFile);
         }
 
         if (outputFile.endsWith(".js")) {
-            minifyJS(outputFile);
+            var minifiedJS = minifyJS(outputFile);
         }
 
         html = html.replace(new RegExp(regexMatch[i]), "");
@@ -188,6 +188,7 @@ var minifyCSS = function (outputFile)
     var minified = new CleanCSS().minify(source).styles;
 
     fs.writeFileSync(outputFileMinified, minified,  { encoding: "utf-8", flag: "w"});
+    return minified;
 }
 
 var minifyJS = function (outputFile) 
@@ -197,6 +198,7 @@ var minifyJS = function (outputFile)
     var result = UglifyJS.minify([outputFile]);
 
     fs.writeFileSync(outputFileMinified, result.code,  { encoding: "utf-8", flag: "w"});
+    return result.code;
 }
 
 var templateIf = function (html)

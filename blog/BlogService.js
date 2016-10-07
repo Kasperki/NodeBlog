@@ -9,7 +9,8 @@ var blogSchema = mongoose.Schema({
     description: String,
     category: String,
     tags: [String],
-    date: Date
+    date: Date,
+    visits: [Date]
 });
 
 //Blog model
@@ -24,6 +25,7 @@ exports.Blog = Blog;
  * @param string description
  * @param string category
  * @param string[] tags
+ * @param int visits
  * @param callback (err, true)
  */
 exports.AddBlogPost = function (title, image, text, description, category, tags, callback) {
@@ -35,7 +37,8 @@ exports.AddBlogPost = function (title, image, text, description, category, tags,
         category: category,
         description: description,
         tags: tags,
-        date: Date.now()
+        date: Date.now(),
+        visits: [],
     });
 
     blog.save(function (err) {
@@ -44,6 +47,14 @@ exports.AddBlogPost = function (title, image, text, description, category, tags,
         }
     });
 };
+
+exports.UpdateBlogPost = function (title, image, text, description, category, callback) {
+  Blog.update({ title: blog.title }, { $set: { title: title, image: image, text: text, description: description, category: category }}
+  , function (err, raw) {
+        if (err) return handleError(err);
+        console.log('The raw response from Mongo was ', raw); //TODO ADD LOOGIGN
+  });
+}
 
 /**
  * Gets array of latests blogs by limit
@@ -79,7 +90,7 @@ exports.GetBlogPostById = function (id, callback) {
         return;
     }
        
-    Blog.find({ '_id': id }, 'title image text description category date', function (err, result) {
+    Blog.find({ '_id': id }, 'title image text description category date visits', function (err, result) {
         if (err) throw err;
                 
         if (typeof callback === "function") {
@@ -103,7 +114,7 @@ exports.GetBlogPostByTitle = function (title, callback) {
         return;
     }
        
-    Blog.find({ 'title': title }, 'title image text description category date', function (err, result) {
+    Blog.find({ 'title': title }, 'title image text description category date visits', function (err, result) {
         if (err) throw err;
                 
         if (typeof callback === "function") {
@@ -217,3 +228,135 @@ exports.GetTags = function (callback) {
         }
     });
 };
+
+/**
+ * Add visit to blog
+ * @param Blog blog
+ * @param callback (err, Blog[] result)
+ */
+exports.AddVisit = function (blog, callback) {
+ 
+ if (blog.visits == null)
+ {
+     blog.visits = [];
+ }
+
+  blog.visits.push(Date.now());
+  Blog.update({ _id: blog._id }, { $set: { visits: blog.visits }}, function (err, raw) {
+    if (err) return handleError(err);
+    console.log('The raw response from Mongo was ', raw); //TODO ADD LOOGIGN
+  });
+};
+
+/**
+ * Remove blog post
+ * @param Blog blog
+ * @param callback (err, Blog[] result)
+ */
+exports.RemoveBlog = function (id, callback) {
+  Blog.find({ _id: id }).remove(function (err, raw) {
+    if (err) return handleError(err);
+    console.log('The raw response from Mongo was ', raw); //TODO ADD LOGGING
+  });
+};
+
+/**
+ * Returns blog titles with visit count
+ * return array[Title]: visitCount;
+ */
+exports.GetAllVisits = function(callback)
+{
+    var allData = {};
+    
+    this.GetLatestBlogPost(0, function(err, blogs) {
+        for (var i = 0; i < blogs.length; i++)
+         {
+            allData[blogs[i].title] =  blogs[i].visits.length;
+         }
+
+        if (typeof callback === "function") {
+            callback(err, allData);
+        }
+    });
+};
+
+/**
+ * Returns all blog visits cumulatively weekly
+ * @param id blogs id
+ * return array[yyyy/week]: visitCount 
+ */
+exports.GetVisitsPerWeekByAllBlogs = function(callback)
+{
+     var blogData = {}
+
+     this.GetLatestBlogPost(0, function(err, blogs) 
+     {
+        var startingYear = 2016;
+        var startYear = new Date(startingYear,6,1);
+        var endYear = Date.now();
+
+        var cumulative = 0;
+
+        for (var date = startYear; date < endYear; date.setDate(date.getDate() + 7))
+        {
+            blogData[date.getFullYear() + "/" + getWeek(date)] = 0;
+        }
+
+        for (var i = 0; i < blogs.length; i++) {
+            for (var index in blogs[i].visits)
+            { 
+                cumulative++;
+                blogData[blogs[i].visits[index].getFullYear() + "/" + getWeek(blogs[i].visits[index])] = cumulative;
+            };
+        }
+        
+        if (typeof callback === "function") {
+            callback(err, blogData);
+        }
+    });
+};
+
+/**
+ * Returns blogs visits monthly
+ * @param id blogs id
+ * return array[yyyy/mm]: visitCount 
+ */
+exports.GetVisitsPerMonthByBlog = function(id, callback)
+{
+        var blogData = {}
+
+        this.GetBlogPostById(id, function (err, blog) 
+        {
+            if (blog != null) 
+            {
+                var startYear = new Date(2015,12,1);
+                var endYear = Date.now();
+
+                for (var i = startYear; i < endYear; i.setMonth(i.getMonth() + 1))
+                {
+                    blogData[i.getFullYear() + "/" + (i.getMonth() + 1)] = 0;
+                }
+
+                for (var index in blog.visits)
+                {   
+                    blogData[blog.visits[index].getFullYear() + "/" + (blog.visits[index].getMonth() + 1)]++;
+                }
+            }
+        
+            if (typeof callback === "function") 
+            {
+                callback(err, blogData);
+            }
+     });
+}
+
+/**
+ * Get week number from date
+ * @param Date date
+ * return number week number
+ */
+var getWeek = function (date)
+{
+    var onejan = new Date(date.getFullYear(),0,1);
+    return Math.ceil((((date - onejan) / 86400000) + onejan.getDay()+1)/7);
+}
