@@ -13,9 +13,9 @@
         <div class="header-content">
             <div class="header-content-inner">
                 <h1 id="title">Kiiskinen - Blog</h1>
-                <p>This is my blog, where I write stuff about technology and well other stuff.</p>
-                <p>My views are my own, and do not represent views of company where I might work.</p>
-                <p>Don't take anything too seriously. ♥</p>
+                <p id="desc1">This is my blog, where I write stuff about technology and well other stuff.</p>
+                <p id="desc2">My views are my own, and do not represent views of company where I might work.</p>
+                <p id="desc3">Don't take anything too seriously. ♥</p>
             </div>
         </div>
     </header>
@@ -131,7 +131,7 @@
 
         angular.bootstrap(document.getElementById('blogs'), ['myApp']);
         angular.element(document.getElementById('blogs')).scope().getBlogs(1);
-        unravelText("Kiiskinen - Blog", "#title");
+        unravelText("Kiiskinen - Blog", "#title", 80);
     </script>
     <script src="/web/js/creative.js"></script>
 </body>

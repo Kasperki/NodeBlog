@@ -3,17 +3,17 @@
  * @param string final
  * @param string object
  */
-function unravelText(final, object) {
+function unravelText(final, object, speed = 95) {
     
     var i = 0;
     
-    var interval = setInterval(function(){ i++; }, 95);
-    var interval2 = setInterval(function(){ iterate(final, i); }, 75);
+    var interval = setInterval(function(){ i++; }, speed);
+    var interval2 = setInterval(function(){ iterate(final, i); }, speed - 25);
         
     function iterate(final ,index) {
         
         var final = final;
-        var random = "田由甲申甴电甶男甸甹町画甼甽甾甿畀畁畂畃畄畅畆畇畈畉畊畋界畍畎畏畐畑";
+        var random = "10";
         var cur = "";
 
         for(var i = 0; i < index; i++) {
