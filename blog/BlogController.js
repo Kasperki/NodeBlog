@@ -193,7 +193,7 @@ BlogController.prototype.addBlog = function (requestInfo)
 BlogController.prototype.editBlog = function (requestInfo)
 {
      BlogService.GetBlogPostById(requestInfo.queryParameters['id'], function(err, blog) {
-        var blogData = { title: blog.title, text: blog.text, image: blog.image, description: blog.description, category: blog.category};
+        var blogData = { title: blog.title, text: blog.text, image: blog.image, description: blog.description, category: blog.category, tags: JSON.stringify(blog.tags)};
         loadHtml.load(requestInfo, './html/blog-admin-add.html', blogData); 
     });
 };
@@ -208,18 +208,30 @@ BlogController.prototype.previewBlog = function (requestInfo)
 BlogController.prototype.saveBlog = function (requestInfo)
 {
     var jsonBlog = requestInfo.data.length ? JSON.parse(requestInfo.data) : '';
-    BlogService.AddBlogPost(jsonBlog.title, jsonBlog.image, jsonBlog.text, jsonBlog.description, jsonBlog.category, jsonBlog.tags);
-    
-    //TODO ADD OR UPDATE
 
-    requestInfo.response.writeHead(200, {'Content-Type': 'text/html'});
-    requestInfo.response.end("ok");
+    BlogService.GetBlogPostByTitle(requestInfo.queryParameters['title'], function(err, blogPost) {    
+        
+        if (blogPost == null) {
+            BlogService.AddBlogPost(jsonBlog.title, jsonBlog.image, jsonBlog.text, jsonBlog.description, jsonBlog.category, jsonBlog.tags);
+        }
+        else {
+            BlogService.UpdateBlogPost(jsonBlog.title, jsonBlog.image, jsonBlog.text, jsonBlog.description, jsonBlog.category, jsonBlog.tags, function (err, success)
+            {
+                Logger.Debug(config.log.debug, "Blog " + title + " updated");
+            });
+        }  
+
+        requestInfo.response.writeHead(200, {'Content-Type': 'text/html'});
+        requestInfo.response.end("ok");
+    });
 };
 
 BlogController.prototype.deleteBlog = function (requestInfo)
 {
     var id = requestInfo.queryParameters['id'];
     BlogService.RemoveBlog(id);
+    Logger.Debug(config.log.debug, "Blog" + id + " deleted");
+
     loadHtml.load(requestInfo, './html/blog-admin.html', {});
 }
 

@@ -48,11 +48,13 @@ exports.AddBlogPost = function (title, image, text, description, category, tags,
     });
 };
 
-exports.UpdateBlogPost = function (title, image, text, description, category, callback) {
-  Blog.update({ title: blog.title }, { $set: { title: title, image: image, text: text, description: description, category: category }}
+exports.UpdateBlogPost = function (title, image, text, description, category, tags, callback) {
+
+  Blog.update({ title: title }, { $set: { image: image, text: text, description: description, category: category, tags: tags }}
   , function (err, raw) {
-        if (err) return handleError(err);
-        console.log('The raw response from Mongo was ', raw); //TODO ADD LOOGIGN
+        if (typeof callback === "function") {
+            callback(err, true);
+        }
   });
 }
 
@@ -90,7 +92,7 @@ exports.GetBlogPostById = function (id, callback) {
         return;
     }
        
-    Blog.find({ '_id': id }, 'title image text description category date visits', function (err, result) {
+    Blog.find({ '_id': id }, 'title image text description category tags date visits', function (err, result) {
         if (err) throw err;
                 
         if (typeof callback === "function") {
@@ -214,14 +216,16 @@ exports.GetTags = function (callback) {
 
             for (var i = 0; i < result.length; i++)
             {
-                 result[i].tags.forEach(function(tag) {
-                    if (!tags[tag]) { 
-                        tags[tag] = 1; 
-                    }
-                    else {
-                        !tags[tag] + 1;
-                    }
-                });
+                if (result[i].tags != null) {
+                    result[i].tags.forEach(function(tag) {
+                        if (!tags[tag]) { 
+                            tags[tag] = 1; 
+                        }
+                        else {
+                            !tags[tag] + 1;
+                        }
+                    });
+                }
             }
             
             callback(err, tags);
@@ -243,8 +247,6 @@ exports.AddVisit = function (blog, callback) {
 
   blog.visits.push(Date.now());
   Blog.update({ _id: blog._id }, { $set: { visits: blog.visits }}, function (err, raw) {
-    if (err) return handleError(err);
-    console.log('The raw response from Mongo was ', raw); //TODO ADD LOOGIGN
   });
 };
 
@@ -255,8 +257,6 @@ exports.AddVisit = function (blog, callback) {
  */
 exports.RemoveBlog = function (id, callback) {
   Blog.find({ _id: id }).remove(function (err, raw) {
-    if (err) return handleError(err);
-    console.log('The raw response from Mongo was ', raw); //TODO ADD LOGGING
   });
 };
 

@@ -87,6 +87,11 @@
 </section>
 
 <script>
+var tags = {{ tags }};
+for (var tag in tags) {
+    $("#tags").append("<div><input id=\"tag\" value='"+ tags[tag] +"\'\"><a id='removeTag' class='fa fa-minus-circle'></a></div>");
+}
+
 //Toggle preview
 $("#togglePreview").click(function() {
     $("#markDownPreview").toggle();
@@ -147,7 +152,7 @@ $("#saveBlog").click(function() {
     });
     
     $.ajax({
-    url: './blog-save',
+    url: './blog-save?title={{ title }}',
     type: 'POST',
     data: JSON.stringify({ title: $('#inputTitle').val(), image: $('#inputImage').val() , text: $('#inputText').val(), description: $('#inputDescription').val(), category: $('#inputCategory').val(), tags: tags}),
     contentType: "application/json",
