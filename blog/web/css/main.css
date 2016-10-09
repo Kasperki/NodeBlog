@@ -96,6 +96,10 @@ strong {
     font-weight: 700;
 }
 
+ul {
+    padding-left: 10px;
+}
+
 .default-link{
   /* all rules required to make the whole div clickable */ 
   position:absolute; 

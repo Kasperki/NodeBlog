@@ -187,7 +187,7 @@ BlogController.prototype.adminBlog = function (requestInfo)
 
 BlogController.prototype.addBlog = function (requestInfo)
 {
-    loadHtml.load(requestInfo, './html/blog-admin-add.html', {});
+    loadHtml.load(requestInfo, './html/blog-admin-add.html', {tags: JSON.stringify("")});
 };
 
 BlogController.prototype.editBlog = function (requestInfo)

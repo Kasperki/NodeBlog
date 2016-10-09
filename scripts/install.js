@@ -1,6 +1,5 @@
 var fs = require('fs');
 
-
 //Create folders for cache and logs
 try {
 	fs.accessSync("blog/cache", fs.F_OK)
