@@ -37,10 +37,7 @@ var server = https.createServer(options, function (request, response)
 {	
     Request = request;
     Response = response;
-    
-    var access = request.connection.remoteAddress + " " + request.headers['user-agent']  + "  " + request.method + " HTTP:" + request.httpVersion + " " + request.url;  
-    Logger.Log(config.log.access, access);
-    
+        
     var incomingData = '';
     request.on('data', function (data) {
         incomingData += data;
@@ -71,7 +68,11 @@ var server = https.createServer(options, function (request, response)
                     parameters: {loggedIn: authenticated ? true : false, userName: authenticated ? authenticated.username : null, "NODE.ENV" : String(config.env)}
                 }
 
-                if (keys && (!controllerRouteInfo.protected || authenticated)) {       
+                if (keys && (!controllerRouteInfo.protected || authenticated)) {
+
+                    var access = request.connection.remoteAddress + " " + request.headers['user-agent']  + "  " + request.method + " HTTP:" + request.httpVersion + " " + request.url;  
+                    Logger.Log(config.log.access, access);
+
                     controllerRouteInfo.route[controllerRoute](requestInfo);
                     return;
                 }

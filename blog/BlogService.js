@@ -192,7 +192,7 @@ exports.GetCategories = function (callback) {
                     categories[result[i].category] = 1; 
                 }
                 else {
-                    categories[result[i].category] = categories[result[i].category] + 1;
+                    categories[result[i].category] += 1;
                 }
             }
             
@@ -222,7 +222,7 @@ exports.GetTags = function (callback) {
                             tags[tag] = 1; 
                         }
                         else {
-                            !tags[tag] + 1;
+                            tags[tag] += 1;
                         }
                     });
                 }
@@ -306,7 +306,8 @@ exports.GetVisitsPerWeekByAllBlogs = function(callback)
             for (var index in blogs[i].visits)
             { 
                 cumulative++;
-                blogData[blogs[i].visits[index].getFullYear() + "/" + getWeek(blogs[i].visits[index])] = cumulative;
+                var date = new Date(blogs[i].visits[index]);
+                blogData[date.getFullYear() + "/" + getWeek(date)] = cumulative;
             };
         }
         
@@ -339,7 +340,8 @@ exports.GetVisitsPerMonthByBlog = function(id, callback)
 
                 for (var index in blog.visits)
                 {   
-                    blogData[blog.visits[index].getFullYear() + "/" + (blog.visits[index].getMonth() + 1)]++;
+                    var date = new Date(blog.visits[index]);
+                    blogData[date.getFullYear() + "/" + (date.getMonth() + 1)]++;
                 }
             }
         

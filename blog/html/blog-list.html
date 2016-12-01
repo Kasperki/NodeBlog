@@ -106,7 +106,7 @@
             }
 
             $scope.getByTag = function (tag, page = 0) {
-                $http.get("get-blogs-tag?tag="+tag+"&page="+page)
+                $http.get("get-blogs-tag?tag=" + encodeURIComponent(tag))
                 .then(function(response) {
                     $scope.blogPost = response.data.blogs;
                     generatePageLinks("getByTag", response.data.pagesCount, tag);

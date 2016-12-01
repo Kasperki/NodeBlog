@@ -217,7 +217,7 @@ BlogController.prototype.saveBlog = function (requestInfo)
         else {
             BlogService.UpdateBlogPost(jsonBlog.title, jsonBlog.image, jsonBlog.text, jsonBlog.description, jsonBlog.category, jsonBlog.tags, function (err, success)
             {
-                Logger.Debug(config.log.debug, "Blog " + title + " updated");
+                Logger.Debug(config.log.debug, "Blog " + jsonBlog.title + " updated");
             });
         }  
 

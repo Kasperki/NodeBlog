@@ -305,3 +305,23 @@ ul {
 .pageLink {
     margin: 0 5px;
 }
+
+img[alt="drawing"] {
+    max-width: 520px; 
+}
+
+@media (min-width: 768px) {
+    img[alt="drawing"] {
+        max-width: 768px; 
+    }
+}
+@media (min-width: 992px) {
+    img[alt="drawing"] {
+        max-width: 991px; 
+    }
+}
+@media (min-width: 1200px) {
+    img[alt="drawing"] {
+        max-width: 1170px; 
+    }
+}
