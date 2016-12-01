@@ -100,6 +100,17 @@ ul {
     padding-left: 10px;
 }
 
+.dashboardStyle {
+    height:150px;
+    opacity: 0.85;
+    background-repeat: no-repeat;
+    color: white;
+}
+
+strong {
+    font-weight: 700;
+}
+
 .default-link{
   /* all rules required to make the whole div clickable */ 
   position:absolute; 
