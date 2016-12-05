@@ -216,10 +216,19 @@ exports.GetTags = function (callback) {
 
             for (var i = 0; i < result.length; i++)
             {
+                if (result[i].tags != null) {
+                    result[i].tags.forEach(function(tag) {
+                        if (!tags[tag]) { 
+                            tags[tag] = 1; 
+                        }
+                        else {
+                            tags[tag] += 1;
+                        }
+                    });
                 }
             }
             
-            callback(err, categories);
+            callback(err, tags);
         }
     });
 };
@@ -394,7 +403,7 @@ var getWeek = function (date)
 {
     var onejan = new Date(date.getFullYear(),0,1);
     return Math.ceil((((date - onejan) / 86400000) + onejan.getDay()+1)/7);
-}};
+};
 
 /**
  * Add visit to blog
