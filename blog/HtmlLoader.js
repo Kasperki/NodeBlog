@@ -7,7 +7,7 @@ var UglifyJS = require("uglify-js");
 /**
  *  Loads html file with twig like functionality
  *  @param RequestInfo requestInfo
- *  @param String Html.file
+ *  @param String .html filepath
  *  @param array parameters (key:value)
  *  @param int code = 200 [Optional]
  *  @param function callback(error, boolean) [Optional]

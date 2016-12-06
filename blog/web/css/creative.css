@@ -480,7 +480,3 @@ img::-moz-selection {
     color: #fff;
     background: 0 0;
 }
-
-body {
-    webkit-tap-highlight-color: #222;
-}
