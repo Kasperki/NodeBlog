@@ -172,10 +172,45 @@ In requestInfo we will get:
 
 
 ## Templating
+require('./HtmlLoader.js');
 
-### 
+All html pages should be loaded with .load()
+It add's some functionality to normal .html files. like {% if %}, {% replace %} and {% extending html files %}.
 
-### 
+load function parameters:
+```
+/**
+ *  Loads html file with twig like functionality
+ *  @param RequestInfo requestInfo
+ *  @param String .html filepath
+ *  @param array parameters (key:value)
+ *  @param int statusCode = 200 [Optional]
+ *  @param function callback(error, boolean) [Optional]
+ */
+```
+### Replace
+
+### Extend
+
+### If blocks
+
+### Combining & Minifying tag
+
+{% stylesheet output="" %} tags fill combine and minify files to output="main.css" field.
+The minified file will be called main.min.css.
+
+Example
+```
+{% stylesheet output="cache/main.css"
+    "web/css/prettify.css"     
+    "web/css/animate.min.css"    
+    "web/font-awesome/css/font-awesome.min.css"    
+    "web/css/bootstrap.min.css"
+    "web/css/creative.css"    
+    "web/css/main.css"     
+%}
+```
+
 
 
 ## Static File Serving
