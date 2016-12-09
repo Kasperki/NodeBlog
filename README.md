@@ -1,10 +1,9 @@
 # NodeBlog [![Build Status](https://travis-ci.org/Kasperki/NodeBlog.svg?branch=master)](https://travis-ci.org/Kasperki/NodeBlog)
-My blog made with NodeJS.
-This project is trying to use limited amount of NPM packets.
-Why? Just 4 fun and learning.
-This project is like a small MVC framework.
 
-For disclamer this project is propably not using all of those best practices and has countless antipatterns.
+This project is like a small MVC framework and top of that I have built my blog.
+The project trying to use limited amount of NPM packets. Why? Just 4 fun and learning.
+
+For disclamer this project is propably not using all of the best practices and has countless antipatterns.
 
 # Installation
 
@@ -100,11 +99,13 @@ set NODE_ENV=test && mocha
 
 ## Configs
 
-Some of the configs can be set with environment variables, like current environment, secret keys and database user and password.
-If not set it will use default value that is used in development environment.
+With configs user can easily change the behaviour of the components and project without needing to change the application code.
+Configs can be found from the *config.js* file which is located in the root of the project.
 
-You can configure log output, what directories are being served with static file serving etc.
+Some of the configs can be set with environment variables.
+If environment variable is not found then that config will use development environment default value.
 
+Example of the config file
 ```
 config.env = process.env.NODE_ENV || "dev";
 
@@ -127,7 +128,8 @@ config.web.publicDirectories = ["/web", "/cache"];
 
 ## Controllers
 
-Controllers will control what kind of content routes load and they will check do the user has right access to access the content.
+Controllers will define routes to the application and control what kind of content the routes load. 
+They can also define are the routes protected.
 
 ```
 //Controller method for single route
@@ -190,13 +192,46 @@ load function parameters:
 ```
 ### Replace
 
+Replaces tag with object passed in requestInfo parameters.
+
+Example: { key1: <p>Adds this element to key1</p> }
+```
+<div>{{ key1 }}</div>
+```
+
+Actual response: 
+```
+<div><p>Adds this element to key1</p></div>
+```
+
 ### Extend
+
+Extends .html file with another html file.
+
+Example 
+```
+{% extends html/layout.html %}
+```
+
+will be replaced with content in layout.html file.
 
 ### If blocks
 
+If block only renders elements inside the if block if condition is true.
+
+{% if condition == value %} {% endif %}
+
+Example
+```
+{% if "{{NODE.ENV}}" == "dev" %}
+    <p>This element is only shown in development environment</p>
+{% endif %}
+```
+
 ### Combining & Minifying tag
 
-{% stylesheet output="" %} tags fill combine and minify files to output="main.css" field.
+{% stylesheet output="" %} tags fill combine and minify files to output="main.css" path.
+If the file already exists then nothing is done. When going to stating or production the cache should always be cleared so new files can be generated.
 The minified file will be called main.min.css.
 
 Example
@@ -212,11 +247,78 @@ Example
 ```
 
 
-
 ## Static File Serving
 
+Static File Serving sends files to client if they are in public directory.
+
+If the controller can't find route for incoming request then
+Static File Serving checks does it has access to the requested directory and/or files.
+The public directories are listed in config.js: config.web.publicDirectories = ["/web", "/cache"];
+
+If the requested url is directory then the File server returns html page that has treeview of directories and files.
+If the url points to file then the fileserver add's mime type, size and other info to the response headers and returns that file.
 
 ## Logging
+require('./Logger.js');
 
+Config values:
+
+[Boolean] Enables writing logs to screen 
+config.log.print;
+
+[Boolean] Enables writing logs to file
+config.log.write;
+
+[Byte] What logging levels are viable
+config.log.level;
+
+```
+config.log.levels = 
+{
+    DEBUG : 1,
+    WARNING : 2,
+    ERROR : 4,
+    ALL : 7
+}
+```
+
+For example log.level: 1 only logs Debug messages.
+And log.level: 5 logs all debug and error messages.
+
+Usage
+```
+Logger.Debug("fileToLog", "Message"); //Debug level logging: 00000001
+Logger.Warning("fileToLog", "Message"); //Warning level logging: 00000010
+Logger.Error("fileToLog", "Message"); //Error level logging: 000000100
+```
 
 ## Authentication
+
+Controller routes can require client to be authenticated.
+```
+{ route: {"/route/name : function() }, protected: true}
+```
+
+Creating new user
+```
+CreateUserCommand.js username password
+```
+
+Removing user
+```
+RemoveUserCommand.js username
+```
+
+Creating new user generates random salt then hashes the password with generated salt and stores the salt + hash to the database.
+When logging in the authenticationService will check does the user exists in database.
+If the user exists then it will hash the password with the salt in database and then compares the hashes.
+If another one is wrong generic error will be returned.
+
+When authentication is success a new session will be created. 
+Session generates cookie and sets expiration date. 
+The session will be saved to memory & added to client cookies.
+
+When client tries to access protected routes the client cookies will be checked and valitaded. 
+If they are valid then access is granted. Otherwise 404 will be returned.
+
+
