@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var config = require('../config.js');
+var Logger = require('./Logger.js');
 var exports = module.exports = {};
 
 /**
@@ -18,7 +19,9 @@ exports.connectToDatabase = function(callback)
     mongoose.connect(dbHost, options);
 
     var db = mongoose.connection;
-    db.on('error', console.error.bind(console, 'connection error:'));
+    db.on('error', function () {
+        Logger.Warning(config.log.error, console.error.bind(console, 'connection error:'));
+    });
     
     db.once('open', function() {
         console.log("Connected to DB");

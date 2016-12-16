@@ -3,7 +3,6 @@ CACHE MANIFEST
 /web/img/header.jpg
 /web/img/error.png
 /web/img/me2.png
-/web/img/portfolio/*.png
 
 NETWORK:
 *
