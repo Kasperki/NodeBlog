@@ -20,11 +20,12 @@ exports.connectToDatabase = function(callback)
 
     var db = mongoose.connection;
     db.on('error', function () {
-        Logger.Warning(config.log.error, console.error.bind(console, 'connection error:'));
+        var errorString = console.error.bind(console, 'connection error:');
+        Logger.Warning(config.log.error, "Connection error");
     });
     
     db.once('open', function() {
-        console.log("Connected to DB");
+        Logger.Debug(config.log.error, "Connected to DB");
         if (typeof callback === "function") {
             callback(null, true);
         }
