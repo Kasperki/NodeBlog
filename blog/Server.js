@@ -84,7 +84,8 @@ var server = https.createServer(options, function (request, response)
 }).listen(config.httpsPort);
 
 http.createServer(function (req, res) {
-    res.writeHead(301, { "Location": "https://" + req.headers['host'] + ":" + String(config.httpsPort) + req.url });
+    var hostname = (req.headers.host.match(/:/g)) ? req.headers.host.slice(0, req.headers.host.indexOf(":")) : req.headers.host
+    res.writeHead(301, { "Location": "https://" + hostname + ":" + String(config.httpsPort) + req.url });
     res.end();
 }).listen(config.httpPort);
 

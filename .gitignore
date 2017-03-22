@@ -40,3 +40,5 @@ nbproject
 
 #VisualCode
 .vscode
+obj
+bin

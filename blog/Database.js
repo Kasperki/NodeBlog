@@ -19,9 +19,8 @@ exports.connectToDatabase = function(callback)
     mongoose.connect(dbHost, options);
 
     var db = mongoose.connection;
-    db.on('error', function () {
-        var errorString = console.error.bind(console, 'connection error:');
-        Logger.Warning(config.log.error, "Connection error");
+    db.on('error', function (err) {
+        Logger.Warning(config.log.error, "Connection error: " + err);
     });
     
     db.once('open', function() {

@@ -17,8 +17,10 @@ config.log.levels =
 //Dev
 config.env = process.env.NODE_ENV || "dev";
 
-config.httpPort = process.env.HTTP_PORT || 80;
+config.httpPort = process.env.HTTP_PORT || 666;
 config.httpsPort = process.env.HTTPS_PORT || 443;
+
+config.__base = __dirname + "/blog/";
 
 config.database.host = "mongodb://localhost:27017/";
 config.database.schema = "blog";
@@ -37,7 +39,7 @@ config.security.rechaptasecret = process.env.RECAPTCHASECRET;
 config.cert.server_key = process.env.CERT_SERVER_KEY || __dirname + "/test/cert/server-key.pem";
 config.cert.server_crt = process.env.CERT_SERVER_CRT || __dirname + "/test/cert/server-crt.pem";
 config.cert.ca_crt = process.env.CERT_CA_CRT || __dirname + "/test/cert/ca-crt.pem";
- 
+
 //Test
 config.test = { 
     database : { 

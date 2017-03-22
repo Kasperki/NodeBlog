@@ -19,7 +19,7 @@ MainController.prototype.getRoute = function()
 //MainRoute
 MainController.prototype.main = function (requestInfo)
 {
-    loadHtml.load(requestInfo, './html/index.html', {});
+    loadHtml.load(requestInfo, '/html/index.html', {});
 };
 
 //ValidationTest

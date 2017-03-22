@@ -1,0 +1,197 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{d80cb41e-5b36-470f-9e1c-bfd9506fbcb1}</ProjectGuid>
+    <ProjectHome />
+    <ProjectView>ShowAllFiles</ProjectView>
+    <StartupFile>blog\Server.js</StartupFile>
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <ProjectTypeGuids>{3AF33F2E-1136-4D97-BBB7-1795711AC8B8};{349c5851-65df-11da-9384-00065b846f21};{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}</ProjectTypeGuids>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">14.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
+  <ItemGroup>
+    <Content Include="package.json" />
+    <Content Include="README.md" />
+    <Compile Include="config.js" />
+    <Compile Include="blog\BlogController.js" />
+    <Compile Include="blog\BlogService.js" />
+    <Compile Include="blog\Cookies.js" />
+    <Compile Include="blog\Database.js" />
+    <Compile Include="blog\ErrorPage.js" />
+    <Compile Include="blog\FileServer.js" />
+    <Compile Include="blog\Hash.js" />
+    <Compile Include="blog\HtmlLoader.js" />
+    <Compile Include="blog\Logger.js" />
+    <Compile Include="blog\MainController.js" />
+    <Compile Include="blog\Routing.js" />
+    <Compile Include="blog\Server.js" />
+    <Content Include="logs\access-log.txt" />
+    <Content Include="logs\error-log.txt" />
+    <Compile Include="scripts\install.js" />
+    <Compile Include="test\CookiesTest.js" />
+    <Compile Include="test\HashTest.js" />
+    <Compile Include="test\HtmlLoaderTest.js" />
+    <Compile Include="test\RoutingTest.js" />
+    <Compile Include="test\ServiceTests.js" />
+    <Compile Include="test\TestDBUtils.js" />
+    <Compile Include="test\WDatabaseTest.js" />
+    <Content Include="blog\cache\main.css" />
+    <Content Include="blog\cache\main.min.css" />
+    <Compile Include="blog\cache\main.js" />
+    <Compile Include="blog\cache\main.min.js" />
+    <Content Include="blog\html\blog-admin.html" />
+    <Content Include="blog\html\blog-admin-add.html" />
+    <Content Include="blog\html\blog-list.html" />
+    <Content Include="blog\html\blog.html" />
+    <Content Include="blog\html\error.html" />
+    <Content Include="blog\html\index.html" />
+    <Content Include="blog\html\layout.html" />
+    <Content Include="blog\html\login.html" />
+    <Content Include="blog\html\nav.html" />
+    <Compile Include="blog\UserBundle\AuthenticationService.js" />
+    <Compile Include="blog\UserBundle\CreateUserCommand.js" />
+    <Compile Include="blog\UserBundle\RemoveUserCommand.js" />
+    <Compile Include="blog\UserBundle\UserController.js" />
+    <Compile Include="blog\UserBundle\UserService.js" />
+    <Content Include="blog\web\css\animate.min.css" />
+    <Content Include="blog\web\css\bootstrap.css" />
+    <Content Include="blog\web\css\bootstrap.min.css" />
+    <Content Include="blog\web\css\creative.css" />
+    <Content Include="blog\web\css\main.css" />
+    <Content Include="blog\web\css\prettify.css" />
+    <Content Include="blog\web\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="blog\web\img\error.png" />
+    <Content Include="blog\web\img\githubIcon.png" />
+    <Content Include="blog\web\img\linkedInIcon.png" />
+    <Content Include="blog\web\img\me2.png" />
+    <Content Include="blog\web\img\twitterIcon.png" />
+    <Content Include="blog\web\img\youtubeIcon.png" />
+    <Content Include="blog\web\img\header.jpg" />
+    <Compile Include="blog\web\js\angular-1.5.6-min.js" />
+    <Compile Include="blog\web\js\angular-1.5.6.js" />
+    <Compile Include="blog\web\js\angular-sanitize.js" />
+    <Compile Include="blog\web\js\bootstrap.js" />
+    <Compile Include="blog\web\js\bootstrap.min.js" />
+    <Compile Include="blog\web\js\cbpAnimatedHeader.js" />
+    <Compile Include="blog\web\js\Chart.bundle.min.js" />
+    <Compile Include="blog\web\js\classie.js" />
+    <Compile Include="blog\web\js\creative.js" />
+    <Compile Include="blog\web\js\jquery.easing.min.js" />
+    <Compile Include="blog\web\js\jquery.fittext.js" />
+    <Compile Include="blog\web\js\jquery.js" />
+    <Compile Include="blog\web\js\unravel.js" />
+    <Compile Include="blog\web\js\wow.min.js" />
+    <Content Include="blog\web\font-awesome\css\font-awesome.css" />
+    <Content Include="blog\web\font-awesome\css\font-awesome.min.css" />
+    <Content Include="blog\web\font-awesome\fonts\fontawesome-webfont.svg" />
+    <Content Include="blog\web\img\portfolio\deadbuild.png" />
+    <Content Include="blog\web\img\portfolio\highchase.png" />
+    <Content Include="blog\web\img\portfolio\maze.png" />
+    <Content Include="blog\web\img\portfolio\rgbLeds.png" />
+    <Content Include="blog\web\img\portfolio\ShakyCastles.png" />
+    <Content Include="blog\web\img\portfolio\TrashDiver_2015-11-14_00-46-14-7.png" />
+    <Content Include="blog\web\js\google-code-prettify\prettify.css" />
+    <Compile Include="blog\web\js\google-code-prettify\lang-apollo.js" />
+    <Compile Include="blog\web\js\google-code-prettify\lang-basic.js" />
+    <Compile Include="blog\web\js\google-code-prettify\lang-clj.js" />
+    <Compile Include="blog\web\js\google-code-prettify\lang-css.js" />
+    <Compile Include="blog\web\js\google-code-prettify\lang-dart.js" />
+    <Compile Include="blog\web\js\google-code-prettify\lang-erlang.js" />
+    <Compile Include="blog\web\js\google-code-prettify\lang-go.js" />
+    <Compile Include="blog\web\js\google-code-prettify\lang-hs.js" />
+    <Compile Include="blog\web\js\google-code-prettify\lang-lisp.js" />
+    <Compile Include="blog\web\js\google-code-prettify\lang-llvm.js" />
+    <Compile Include="blog\web\js\google-code-prettify\lang-lua.js" />
+    <Compile Include="blog\web\js\google-code-prettify\lang-matlab.js" />
+    <Compile Include="blog\web\js\google-code-prettify\lang-ml.js" />
+    <Compile Include="blog\web\js\google-code-prettify\lang-mumps.js" />
+    <Compile Include="blog\web\js\google-code-prettify\lang-n.js" />
+    <Compile Include="blog\web\js\google-code-prettify\lang-pascal.js" />
+    <Compile Include="blog\web\js\google-code-prettify\lang-proto.js" />
+    <Compile Include="blog\web\js\google-code-prettify\lang-r.js" />
+    <Compile Include="blog\web\js\google-code-prettify\lang-rd.js" />
+    <Compile Include="blog\web\js\google-code-prettify\lang-scala.js" />
+    <Compile Include="blog\web\js\google-code-prettify\lang-sql.js" />
+    <Compile Include="blog\web\js\google-code-prettify\lang-tcl.js" />
+    <Compile Include="blog\web\js\google-code-prettify\lang-tex.js" />
+    <Compile Include="blog\web\js\google-code-prettify\lang-vb.js" />
+    <Compile Include="blog\web\js\google-code-prettify\lang-vhdl.js" />
+    <Compile Include="blog\web\js\google-code-prettify\lang-wiki.js" />
+    <Compile Include="blog\web\js\google-code-prettify\lang-xq.js" />
+    <Compile Include="blog\web\js\google-code-prettify\lang-yaml.js" />
+    <Compile Include="blog\web\js\google-code-prettify\prettify.js" />
+    <Compile Include="blog\web\js\google-code-prettify\run_prettify.js" />
+    <Content Include="test\file\test.1.html" />
+    <Content Include="test\file\test.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="blog" />
+    <Folder Include="blog\cache" />
+    <Folder Include="blog\html" />
+    <Folder Include="blog\UserBundle" />
+    <Folder Include="blog\web" />
+    <Folder Include="blog\web\css" />
+    <Folder Include="blog\web\font-awesome" />
+    <Folder Include="blog\web\font-awesome\css" />
+    <Folder Include="blog\web\font-awesome\fonts" />
+    <Folder Include="blog\web\fonts" />
+    <Folder Include="blog\web\img" />
+    <Folder Include="blog\web\img\portfolio" />
+    <Folder Include="blog\web\js" />
+    <Folder Include="blog\web\js\google-code-prettify" />
+    <Folder Include="logs" />
+    <Folder Include="NodeBlog" />
+    <Folder Include="scripts" />
+    <Folder Include="test" />
+    <Folder Include="test\cert" />
+    <Folder Include="test\file" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <!--Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them.-->
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="False" />
+  <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsTools.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>0</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:48022/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>True</UseCustomServer>
+          <CustomServerUrl>http://localhost:1337</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}" User="">
+        <WebProjectProperties>
+          <StartPageUrl>
+          </StartPageUrl>
+          <StartAction>CurrentPage</StartAction>
+          <AspNetDebugging>True</AspNetDebugging>
+          <SilverlightDebugging>False</SilverlightDebugging>
+          <NativeDebugging>False</NativeDebugging>
+          <SQLDebugging>False</SQLDebugging>
+          <ExternalProgram>
+          </ExternalProgram>
+          <StartExternalURL>
+          </StartExternalURL>
+          <StartCmdLineArguments>
+          </StartCmdLineArguments>
+          <StartWorkingDirectory>
+          </StartWorkingDirectory>
+          <EnableENC>False</EnableENC>
+          <AlwaysStartWebServerOnDebug>False</AlwaysStartWebServerOnDebug>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

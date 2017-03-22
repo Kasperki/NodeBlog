@@ -17,7 +17,7 @@ var load = function (requestInfo, file, parameters, code, callback)
     if (typeof code === 'undefined' || !code) //TODO NodeJS 6.0 adds default parameters.
         code = 200;
         
-    fs.readFile(file, "utf-8", function (err, html) {
+    fs.readFile(config.__base + file, "utf-8", function (err, html) {
         if (err) {
             throw err; 
         }   
@@ -82,7 +82,7 @@ var extendHtmlFile = function (html, parameters)
         var filePath = regexMatch[i].substr(startIndex, regexMatch[i].length - 2 - startIndex).trim(); 
  
         try {
-            var includingFile = fs.readFileSync(filePath, "utf-8");
+            var includingFile = fs.readFileSync(config.__base + filePath, "utf-8");
             includingFile = replaceParameters(includingFile, parameters);
             includingFile = templateIf(includingFile);
             html = html.replace(new RegExp(regexMatch[i], "g"), includingFile);
@@ -117,7 +117,7 @@ var combineFiles = function (html)
                
         //Check does the string have output="" argument
         if (output != null && output.length > 0) {
-            var outputFile = output[1];
+            var outputFile = config.__base + output[1];
         }
         else {
             html = html.replace(new RegExp(regexMatch[i]), "");
@@ -148,7 +148,7 @@ var combineFiles = function (html)
         while (( match = regexFiles.exec(regexMatch[i]) ) != null )
         {
             if (!first) {
-                inputFiles.push(match[1]);
+                inputFiles.push(config.__base + match[1]);
             }
                 
             first = false;

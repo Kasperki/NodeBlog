@@ -86,7 +86,6 @@ BlogController.prototype.getAllBlogs = function (requestInfo)
 BlogController.prototype.renderList = function (requestInfo)
 {
     BlogService.GetTags(function (err, tags) {
-
         BlogService.GetCategories(function (err, categories) {
             loadHtml.load(requestInfo, './html/blog-list.html', {tags: JSON.stringify(tags), categories: JSON.stringify(categories)});
          });
