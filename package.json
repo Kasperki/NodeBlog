@@ -1,6 +1,6 @@
 {
   "name": "node_blog",
-  "version": "0.0.1",
+  "version": "0.1.1",
   "description": "My blog with few npm modules",
   "main": "blog/Server.js",
   "dependencies": {
@@ -16,6 +16,7 @@
   },
   "scripts": {
     "install" : "node ./scripts/install.js",
+    "start": "node ./blog/Server.js",
     "test": "mocha test/*.js"
   },
   "repository": {
