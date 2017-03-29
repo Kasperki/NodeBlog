@@ -20,8 +20,13 @@ module.exports = function (response, request, route) {
         
         status = null;
         
-        if (route.substring(0, config.web.publicDirectories[i].length) === config.web.publicDirectories[i]) {
-            dirPath = __dirname + route;
+        if (route.substring(0, config.web.publicDirectories[i].route.length) === config.web.publicDirectories[i].route) {
+
+            if (config.web.publicDirectories[i].redirect) {
+                dirPath = config.web.publicDirectories[i].redirect + "/" + route.substring(route.lastIndexOf("/"));
+            } else {
+                dirPath = __dirname + route;
+            }
             
             try {
                 status = fs.lstatSync(dirPath);

@@ -117,7 +117,7 @@ var combineFiles = function (html)
                
         //Check does the string have output="" argument
         if (output != null && output.length > 0) {
-            var outputFile = config.__base + output[1];
+            var outputFile = config.cache.path + output[1];
         }
         else {
             html = html.replace(new RegExp(regexMatch[i]), "");

@@ -1,6 +1,7 @@
 const config = {};
 
 config.database = {};
+config.cache = {};
 config.log = {};
 config.security = {};
 config.web = {};
@@ -27,18 +28,20 @@ config.database.schema = "blog";
 config.database.user = process.env.DB_USER || "root";
 config.database.password = process.env.DB_PASSWORD || "root";
 
+config.log.path = __dirname + "/logs";
 config.log.access = __dirname + "/logs/access-log.txt";
 config.log.error = __dirname + "/logs/error-log.txt";
 config.log.level = config.log.levels.ALL;
 config.log.print = true;
 config.log.write = true;
 
-config.web.publicDirectories = ["/web", "/cache"];
+config.cache.path = __dirname + "/cache";
+config.web.publicDirectories = [{ route: "/web" }, { route: "/cache", "redirect": config.cache.path }];
 config.security.rechaptasecret = process.env.RECAPTCHASECRET;
 
-config.cert.server_key = process.env.CERT_SERVER_KEY || __dirname + "/test/cert/server-key.pem";
-config.cert.server_crt = process.env.CERT_SERVER_CRT || __dirname + "/test/cert/server-crt.pem";
-config.cert.ca_crt = process.env.CERT_CA_CRT || __dirname + "/test/cert/ca-crt.pem";
+config.cert.server_key = process.env.CERT_SERVER_KEY || __dirname + "/../test/cert/server-key.pem";
+config.cert.server_crt = process.env.CERT_SERVER_CRT || __dirname + "/../test/cert/server-crt.pem";
+config.cert.ca_crt = process.env.CERT_CA_CRT || __dirname + "/../test/cert/ca-crt.pem";
 
 //Test
 config.test = { 
