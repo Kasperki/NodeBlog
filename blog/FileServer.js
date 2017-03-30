@@ -19,11 +19,20 @@ module.exports = function (response, request, route) {
     for (var i = 0; i < config.web.publicDirectories.length; i++) {
         
         status = null;
-        
-        if (route.substring(0, config.web.publicDirectories[i].route.length) === config.web.publicDirectories[i].route) {
+
+        var baseRoute = route.substring(0, config.web.publicDirectories[i].route.length);
+
+        if (baseRoute === config.web.publicDirectories[i].route) {
 
             if (config.web.publicDirectories[i].redirect) {
-                dirPath = config.web.publicDirectories[i].redirect + "/" + route.substring(route.lastIndexOf("/"));
+
+                route = route.substring(baseRoute.length);
+
+                if (route.startsWith("/") == false && route.startsWith("\\") == false) {
+                    route = "/" + route;
+                }
+
+                dirPath = config.web.publicDirectories[i].redirect + route;
             } else {
                 dirPath = __dirname + route;
             }
@@ -37,7 +46,7 @@ module.exports = function (response, request, route) {
             }
 
             if (status.isDirectory()) {
-                sendGeneratedHtml(response, route);
+                sendGeneratedHtml(response, baseRoute + route);
                 break;
             }
             else if(status.isFile()) {
@@ -49,7 +58,7 @@ module.exports = function (response, request, route) {
     
     if (status == null) {
         ErrorPage(response, 404, "We have lost the page: " + route);
-        Logger.Warning(config.log.error, "Referer: " + request.headers['referer'] + " -- " + request.connection.remoteAddress + "Path not found:" + route);
+        Logger.Warning(config.log.error, "Referer: " + request.headers['referer'] + " -- " + request.connection.remoteAddress + "Path not found:" + dirPath);
     }
 };
 

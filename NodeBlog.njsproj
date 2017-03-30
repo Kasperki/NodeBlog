@@ -3,22 +3,27 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{d80cb41e-5b36-470f-9e1c-bfd9506fbcb1}</ProjectGuid>
+    <ProjectGuid>{c3a4ec93-e9ae-43ad-8b01-b8f44f859c88}</ProjectGuid>
     <ProjectHome />
     <ProjectView>ShowAllFiles</ProjectView>
-    <StartupFile>blog\Server.js</StartupFile>
+    <StartupFile>app\blog\Server.js</StartupFile>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <ProjectTypeGuids>{3AF33F2E-1136-4D97-BBB7-1795711AC8B8};{349c5851-65df-11da-9384-00065b846f21};{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}</ProjectTypeGuids>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">14.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <StartWebBrowser>True</StartWebBrowser>
+    <Environment>
+    </Environment>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
   <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
   <ItemGroup>
     <Content Include="package.json" />
+    <Content Include="tsconfig.json" />
     <Content Include="README.md" />
     <Compile Include="config.js" />
+    <Compile Include="app\config.js" />
     <Compile Include="blog\BlogController.js" />
     <Compile Include="blog\BlogService.js" />
     <Compile Include="blog\Cookies.js" />
@@ -31,8 +36,6 @@
     <Compile Include="blog\MainController.js" />
     <Compile Include="blog\Routing.js" />
     <Compile Include="blog\Server.js" />
-    <Content Include="logs\access-log.txt" />
-    <Content Include="logs\error-log.txt" />
     <Compile Include="scripts\install.js" />
     <Compile Include="test\CookiesTest.js" />
     <Compile Include="test\HashTest.js" />
@@ -41,10 +44,39 @@
     <Compile Include="test\ServiceTests.js" />
     <Compile Include="test\TestDBUtils.js" />
     <Compile Include="test\WDatabaseTest.js" />
-    <Content Include="blog\cache\main.css" />
-    <Content Include="blog\cache\main.min.css" />
-    <Compile Include="blog\cache\main.js" />
-    <Compile Include="blog\cache\main.min.js" />
+    <Compile Include="app\blog\BlogController.js" />
+    <Compile Include="app\blog\BlogService.js" />
+    <Compile Include="app\blog\Controller.js" />
+    <Compile Include="app\blog\Cookies.js" />
+    <Compile Include="app\blog\Database.js" />
+    <Compile Include="app\blog\ErrorPage.js" />
+    <Compile Include="app\blog\FileServer.js" />
+    <Compile Include="app\blog\Hash.js" />
+    <Compile Include="app\blog\HtmlLoader.js" />
+    <Compile Include="app\blog\Logger.js" />
+    <Compile Include="app\blog\MainController.js" />
+    <Compile Include="app\blog\Routing.js" />
+    <Compile Include="app\blog\Server.js" />
+    <Content Include="app\cache\main.css" />
+    <Content Include="app\cache\main.min.css" />
+    <Compile Include="app\cache\main.js" />
+    <Compile Include="app\cache\main.min.js" />
+    <Content Include="app\logs\access-log.txt" />
+    <Content Include="app\logs\error-log.txt" />
+    <Content Include="app\blog\html\blog-admin-add.html" />
+    <Content Include="app\blog\html\blog-admin.html" />
+    <Content Include="app\blog\html\blog-list.html" />
+    <Content Include="app\blog\html\blog.html" />
+    <Content Include="app\blog\html\error.html" />
+    <Content Include="app\blog\html\index.html" />
+    <Content Include="app\blog\html\layout.html" />
+    <Content Include="app\blog\html\login.html" />
+    <Content Include="app\blog\html\nav.html" />
+    <Compile Include="app\blog\UserBundle\AuthenticationService.js" />
+    <Compile Include="app\blog\UserBundle\CreateUserCommand.js" />
+    <Compile Include="app\blog\UserBundle\RemoveUserCommand.js" />
+    <Compile Include="app\blog\UserBundle\UserController.js" />
+    <Compile Include="app\blog\UserBundle\UserService.js" />
     <Content Include="blog\html\blog-admin.html" />
     <Content Include="blog\html\blog-admin-add.html" />
     <Content Include="blog\html\blog-list.html" />
@@ -131,8 +163,14 @@
     <Content Include="test\file\test.html" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="app" />
+    <Folder Include="app\blog" />
+    <Folder Include="app\blog\html" />
+    <Folder Include="app\blog\UserBundle" />
+    <Folder Include="app\cache" />
+    <Folder Include="app\logs" />
+    <Folder Include="app\wwwroot\" />
     <Folder Include="blog" />
-    <Folder Include="blog\cache" />
     <Folder Include="blog\html" />
     <Folder Include="blog\UserBundle" />
     <Folder Include="blog\web" />
@@ -145,7 +183,6 @@
     <Folder Include="blog\web\img\portfolio" />
     <Folder Include="blog\web\js" />
     <Folder Include="blog\web\js\google-code-prettify" />
-    <Folder Include="logs" />
     <Folder Include="NodeBlog" />
     <Folder Include="scripts" />
     <Folder Include="test" />
