@@ -1,0 +1,172 @@
+<html>
+<head>
+    <title>Kiiskinen - Admin</title>
+    {% extends views/layout.html %}
+</head>
+<body id="body">
+{% extends views/nav.html %}
+    
+<br><br><br>
+<section class="container">
+    <div class="row">
+        <div class="col-lg-12 text-center">
+            <label for="inputTitle">Title</label>
+            <input type="text" id="inputTitle" class="form-control" placeholder="Awesome blog" value="{{ title }}" required>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 text-center form-group">
+            <label for="inputImage">Header Image</label>
+            <input type="text" id="inputImage" class="form-control" placeholder="https://myimage.png" value="{{ image }}" required>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 text-center">
+            <label for="inputCategory">Category</label>
+            <input type="text" id="inputCategory" class="form-control" placeholder="snappy category" value="{{ category }}" required>
+        </div>
+    </div>
+
+    <div class="row" id="tags">
+        <div class="col-lg-12 text-center">
+            <label>Tags</label>
+            <i id="addTag" style="color:green;" class="fa fa-plus-circle"></i>
+            </div>
+        </div>
+
+    <div class="row">
+        <div class="col-lg-12 text-center">
+            <label for="inputDescription">Description</label>
+            <textarea rows="4" cols="50" id="inputDescription" maxlength="150" class="form-control" required>{{ description }}</textarea>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 text-center">
+            <label for="inputText">Body (Use Markdown To write your message)</label>
+            <textarea rows="4" cols="50" id="inputText" class="form-control" required>{{ text }}</textarea>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-6 text-center">
+            <button id="togglePreview">Toggle preview</button>
+        </div>
+        <div class="col-xs-6 text-center">
+            <button id="saveBlog">SAVE</button>
+        </div>
+    </div>
+</section>
+    
+<section id="markDownPreview">
+    <div class="row">
+        <div class="col-lg-12 text-center">
+            <p>Preview</p>
+        </div>
+    </div>
+    
+    <header id="header" style="height:75%">
+        <div class="header-content">
+            <div class="header-content-inner">
+                <h1 id="previewTitle"></h1>
+                <p id="previewDescription">Welcome to my blog!</p>
+            </div>
+        </div>
+    </header>
+    <hr class="heavy">
+    
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div id="previewData"></div>
+            </div>            
+        </div>
+    </div>
+</section>
+
+<script>
+var tags = {{ tags }};
+for (var tag in tags) {
+    $("#tags").append("<div><input id=\"tag\" value='"+ tags[tag] +"\'\"><a id='removeTag' class='fa fa-minus-circle'></a></div>");
+}
+
+//Toggle preview
+$("#togglePreview").click(function() {
+    $("#markDownPreview").toggle();
+});
+$("#header").css('background-image', 'url('+$('#inputImage').val()+')');
+
+$("#addTag").click(function(){
+    
+    var div = document.createElement("div");
+    var input = document.createElement("input");       
+    input.id = "tag";
+    var removeLink = document.createElement("a");
+    removeLink.className = "fa fa-minus-circle";
+    removeLink.id = "removeTag";
+    
+    div.appendChild(input);
+    div.appendChild(removeLink);
+    
+    $(this).parent().append(div);
+});
+
+$("#tags").on('click', '#removeTag', function(){
+    $(this).parent().empty();
+});
+
+//Change header preview
+$("#inputTitle").on('change keyup', function() {
+    $("#previewTitle").text($('#inputTitle').val());
+});
+$("#inputDescription").on('change keyup', function() {
+    $("#previewDescription").text($('#inputDescription').val());
+});
+$("#inputImage").on('change', function() {
+    $("#header").css('background-image', 'url('+$('#inputImage').val()+')');
+});
+
+//Preview markup blog body
+$("#inputText").on('change keyup paste', function() {        
+    $.ajax({
+        url: './blog-preview',
+        type: 'POST',
+        data: $('#inputText').val(),
+        contentType: "text/text",
+        success: function (data) {
+            $("#previewData").html(data);
+            $("#previewData").find("pre").addClass('prettyprint');
+            prettyPrint();
+        },
+   });
+});
+
+//SaveBlog
+$("#saveBlog").click(function() {
+    
+    var tags = [];
+    $("#tags #tag").each(function() {
+        tags.push($(this).val());
+    });
+    
+    $.ajax({
+    url: './blog-save?title={{ title }}',
+    type: 'POST',
+    data: JSON.stringify({ title: $('#inputTitle').val(), image: $('#inputImage').val() , text: $('#inputText').val(), description: $('#inputDescription').val(), category: $('#inputCategory').val(), tags: tags}),
+    contentType: "application/json",
+    success: function (data) {
+        console.log('success');
+
+        if (data === "ok")
+        {
+            window.location.replace("/blog");
+        }
+    },
+   });
+});
+</script>
+<script src="/web/js/creative.js"></script>
+</body>
+

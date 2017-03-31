@@ -44,7 +44,7 @@ BlogController.prototype.renderBlog = function (requestInfo)
             return;
         }
         
-        loadHtml.load(requestInfo, './html/blog.html', null);
+        loadHtml.load(requestInfo, './views/blog.html', null);
     });
 };
 
@@ -87,7 +87,7 @@ BlogController.prototype.renderList = function (requestInfo)
 {
     BlogService.GetTags(function (err, tags) {
         BlogService.GetCategories(function (err, categories) {
-            loadHtml.load(requestInfo, './html/blog-list.html', {tags: JSON.stringify(tags), categories: JSON.stringify(categories)});
+            loadHtml.load(requestInfo, './views/blog-list.html', {tags: JSON.stringify(tags), categories: JSON.stringify(categories)});
          });
     });
 };
@@ -181,19 +181,19 @@ BlogController.prototype.getMonthlyVisits = function (requestInfo)
 //Admim routes
 BlogController.prototype.adminBlog = function (requestInfo)
 {
-    loadHtml.load(requestInfo, './html/blog-admin.html', {});
+    loadHtml.load(requestInfo, './views/blog-admin.html', {});
 };
 
 BlogController.prototype.addBlog = function (requestInfo)
 {
-    loadHtml.load(requestInfo, './html/blog-admin-add.html', {tags: JSON.stringify("")});
+    loadHtml.load(requestInfo, './views/blog-admin-add.html', {tags: JSON.stringify("")});
 };
 
 BlogController.prototype.editBlog = function (requestInfo)
 {
      BlogService.GetBlogPostById(requestInfo.queryParameters['id'], function(err, blog) {
         var blogData = { title: blog.title, text: blog.text, image: blog.image, description: blog.description, category: blog.category, tags: JSON.stringify(blog.tags)};
-        loadHtml.load(requestInfo, './html/blog-admin-add.html', blogData); 
+        loadHtml.load(requestInfo, './views/blog-admin-add.html', blogData); 
     });
 };
 
@@ -231,7 +231,7 @@ BlogController.prototype.deleteBlog = function (requestInfo)
     BlogService.RemoveBlog(id);
     Logger.Debug(config.log.debug, "Blog" + id + " deleted");
 
-    loadHtml.load(requestInfo, './html/blog-admin.html', {});
+    loadHtml.load(requestInfo, './views/blog-admin.html', {});
 }
 
 module.exports = BlogController;

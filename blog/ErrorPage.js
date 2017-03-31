@@ -8,5 +8,5 @@ var loadHtml = require('./HtmlLoader.js');
 */
 module.exports = function (response, errorCode, message) 
 {
-    loadHtml.load({response:response}, "./html/error.html", {errorCode:errorCode, message:message}, errorCode);
+    loadHtml.load({response:response}, "./views/error.html", {errorCode:errorCode, message:message}, errorCode);
 };

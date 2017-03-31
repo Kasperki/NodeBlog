@@ -61,14 +61,14 @@ UserController.prototype.authenticate = function (requestInfo)
 
 UserController.prototype.login = function (requestInfo)
 {
-    loadHtml.load(requestInfo, './html/login.html', null);
+    loadHtml.load(requestInfo, './views/login.html', null);
 };
 
 UserController.prototype.logout = function (requestInfo) 
 {        
     AuthenticationService.RemoveSession(requestInfo.cookies.sessionId);
     Cookies.SetCookies(requestInfo.response,  [{name:"sessionId", content:null, expires:new Date(0)}, {name:"authToken", content:null, expires:new Date(0)}])
-    loadHtml.load(requestInfo, './html/login.html', null);
+    loadHtml.load(requestInfo, './views/login.html', null);
 };
 
 /**

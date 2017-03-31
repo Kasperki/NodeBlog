@@ -210,7 +210,7 @@ Extends .html file with another html file.
 
 Example 
 ```
-{% extends html/layout.html %}
+{% extends views/layout.html %}
 ```
 
 will be replaced with content in layout.html file.

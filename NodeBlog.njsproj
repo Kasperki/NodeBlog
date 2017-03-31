@@ -57,21 +57,8 @@
     <Compile Include="app\blog\MainController.js" />
     <Compile Include="app\blog\Routing.js" />
     <Compile Include="app\blog\Server.js" />
-    <Content Include="app\cache\main.css" />
-    <Content Include="app\cache\main.min.css" />
-    <Compile Include="app\cache\main.js" />
-    <Compile Include="app\cache\main.min.js" />
     <Content Include="app\logs\access-log.txt" />
     <Content Include="app\logs\error-log.txt" />
-    <Content Include="app\blog\html\blog-admin-add.html" />
-    <Content Include="app\blog\html\blog-admin.html" />
-    <Content Include="app\blog\html\blog-list.html" />
-    <Content Include="app\blog\html\blog.html" />
-    <Content Include="app\blog\html\error.html" />
-    <Content Include="app\blog\html\index.html" />
-    <Content Include="app\blog\html\layout.html" />
-    <Content Include="app\blog\html\login.html" />
-    <Content Include="app\blog\html\nav.html" />
     <Compile Include="app\blog\UserBundle\AuthenticationService.js" />
     <Compile Include="app\blog\UserBundle\CreateUserCommand.js" />
     <Compile Include="app\blog\UserBundle\RemoveUserCommand.js" />
@@ -165,7 +152,6 @@
   <ItemGroup>
     <Folder Include="app" />
     <Folder Include="app\blog" />
-    <Folder Include="app\blog\html" />
     <Folder Include="app\blog\UserBundle" />
     <Folder Include="app\cache" />
     <Folder Include="app\logs" />
