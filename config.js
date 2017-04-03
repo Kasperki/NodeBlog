@@ -22,7 +22,7 @@ config.httpPort = process.env.HTTP_PORT || 666;
 config.httpsPort = process.env.HTTPS_PORT || 443;
 
 config.__base = __dirname + "/";
-config.__views = __dirname + "/blog/";
+config.__views = __dirname + "/";
 
 config.database.host = "mongodb://localhost:27017/";
 config.database.schema = "blog";

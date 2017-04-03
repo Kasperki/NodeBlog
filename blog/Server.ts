@@ -1,10 +1,13 @@
+'use strict';
+
 /*
 * Node server
 */
 
 //Using
-var http = require('http');
-var https = require('https');
+
+import * as http from "http";
+import * as https from "https";
 var fs = require('fs');
 var config = require('../config.js'); 
 var Cookies = require('./Cookies.js'); 
@@ -24,22 +27,22 @@ var controllers = [new BlogController(), new MainController(), new UserControlle
 //Initialize database connection
 Database.connectToDatabase();
 
-var Request;
-var Response;
+let Request: http.ServerRequest;
+let Response: http.ClientResponse;
 
-var options = {
+var options: https.ServerOptions = {
     key: fs.readFileSync(config.cert.server_key), 
     cert: fs.readFileSync(config.cert.server_crt), 
     ca: fs.readFileSync(config.cert.ca_crt), 
 };
 
-var server = https.createServer(options, function (request, response)
+var server = https.createServer(options, function (request: http.ServerRequest, response: http.ClientResponse)
 {	
     Request = request;
     Response = response;
         
-    var incomingData = '';
-    request.on('data', function (data) {
+    let incomingData: string = '';
+    request.on('data', function (data: string) {
         incomingData += data;
     });
 
@@ -56,7 +59,7 @@ var server = https.createServer(options, function (request, response)
 
                 var controllerRouteInfo = controllers[i].getRoute()[j];
                 var controllerRoute = Object.keys(controllerRouteInfo.route)[0];
-                var keys = Routing.parseRoute(controllerRoute, route); //Keys from route .../{key}/{key}/...
+                var keys = Routing.parseRoute(controllerRoute, route); //Keys from route .../{key}/{key}/... test
 
                 var requestInfo = {
                     response: response,
@@ -90,7 +93,7 @@ http.createServer(function (req, res) {
 }).listen(config.httpPort);
 
 //Error logging
-process.on('uncaughtException', (err) => {
+process.on('uncaughtException', (err: Error) => {
     console.log(err);
     var message = "Referer: " + Request.headers['referer'] + " -- " + Request.connection.remoteAddress + " - Exception: " + err.stack;
     Logger.Error(config.log.error, message);

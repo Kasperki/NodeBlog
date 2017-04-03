@@ -9,14 +9,15 @@
     "mongoose": "^4.4.6"
   },
   "devDependencies": {
+    "@types/node": "^7.0.12",
+    "clean-css": "^3.4.19",
     "mocha": "2.4.x",
     "node-mocks-http": "^1.5.2",
-    "clean-css": "^3.4.19",
     "uglify-js": "^2.7.0"
   },
   "scripts": {
-    "install" : "node ./scripts/install.js",
-    "start": "node ./blog/Server.js",
+    "install": "node ./scripts/install.js && tsc",
+    "start": "node ./app/blog/Server.js",
     "test": "mocha test/*.js"
   },
   "repository": {
