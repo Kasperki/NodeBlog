@@ -1,12 +1,13 @@
-var fs = require('fs');
-var zlib = require('zlib');
+import * as http from "http";
+import * as fs from "fs";
+import * as zlib from "zlib";
 var mime = require('mime');
 var config = require('../config.js');
 var ErrorPage = require('./ErrorPage.js');
 var Logger = require('./Logger.js');
 
-var dirPath;
-var status;
+var directoryPath: string;
+var status: fs.Stats;
 
 /**
  * Generates routes to all files that are in Public directories
@@ -14,51 +15,56 @@ var status;
  * @param Request request
  * @param string route
  */
-module.exports = function (response, request, route) {
-   
-    for (var i = 0; i < config.web.publicDirectories.length; i++) {
-        
-        status = null;
-
+export function TryLoadResourceFromRoute(request: http.ServerRequest, response: http.ServerResponse, route: string)
+{
+    for (var i = 0; i < config.web.publicDirectories.length; i++)
+    {
         var baseRoute = route.substring(0, config.web.publicDirectories[i].route.length);
-
-        if (baseRoute === config.web.publicDirectories[i].route) {
-
-            if (config.web.publicDirectories[i].redirect) {
-
+        if (baseRoute === config.web.publicDirectories[i].route)
+        {
+            if (config.web.publicDirectories[i].redirect)
+            {
                 route = route.substring(baseRoute.length);
 
-                if (route.startsWith("/") == false && route.startsWith("\\") == false) {
+                if (route.startsWith("/") == false && route.startsWith("\\") == false)
+                {
                     route = "/" + route;
                 }
 
-                dirPath = config.web.publicDirectories[i].redirect + route;
-            } else {
-                dirPath = __dirname + route;
+                directoryPath = config.web.publicDirectories[i].redirect + route;
+            }
+            else
+            {
+                directoryPath = __dirname + route;
             }
             
-            try {
-                status = fs.lstatSync(dirPath);
+            try
+            {
+                status = fs.lstatSync(directoryPath);
             }
-            catch (e) {
+            catch (e)
+            {
                 Logger.Debug(config.log.error, e);
                 continue;
             }
 
-            if (status.isDirectory()) {
+            if (status.isDirectory())
+            {
                 sendGeneratedHtml(response, baseRoute + route);
                 break;
             }
-            else if(status.isFile()) {
+            else if (status.isFile())
+            {
                 sendFile(response, request);
                 break;
-            }  
+            }
         }
     }
     
-    if (status == null) {
+    if (status == null)
+    {
         ErrorPage(response, 404, "We have lost the page: " + route);
-        Logger.Warning(config.log.error, "Referer: " + request.headers['referer'] + " -- " + request.connection.remoteAddress + "Path not found:" + dirPath);
+        Logger.Warning(config.log.error, "Referer: " + request.headers['referer'] + " -- " + request.connection.remoteAddress + "Path not found:" + directoryPath);
     }
 };
 
@@ -67,14 +73,15 @@ module.exports = function (response, request, route) {
  * @param Response response
  * @param string route
  */
-function sendGeneratedHtml(response, route)
+function sendGeneratedHtml(response: http.ServerResponse, route: string)
 {
-    var paths = fs.readdirSync(dirPath);
+    var paths = fs.readdirSync(directoryPath);
 
     var generatedHtml = "<html>";
     generatedHtml += "<a href=\"" + route.substring(0,route.lastIndexOf("/")) + "\">..</a><br>";
 
-    for (i = 0; i < paths.length; i++) {
+    for (let i = 0; i < paths.length; i++)
+    {
         generatedHtml += "<a href=\"" + route + "/" + paths[i] + "\">" + paths[i] + "</a><br>";
     }
 
@@ -89,16 +96,17 @@ function sendGeneratedHtml(response, route)
  * Sends the file in response
  * @param Response response
  */
-function sendFile(response, request)
+function sendFile(response: http.ServerResponse, request: http.ServerRequest)
 {
-    try {
-        var buf = fs.readFileSync(dirPath);
-        var type = mime.lookup(dirPath);
+    try
+    {
+        var buf = fs.readFileSync(directoryPath);
+        var type = mime.lookup(directoryPath);
 
-        var fileExtension = dirPath.substr(dirPath.lastIndexOf('.')+1);
+        var fileExtension = directoryPath.substr(directoryPath.lastIndexOf('.')+1);
 
         response.statusCode = 200;
-        response.setHeader('Content-Length', status["size"]);
+        response.setHeader('Content-Length', status["size"].toString());
         response.setHeader('Content-Type', type);
         response.setHeader('X-Content-Type-Options', 'nosniff');
         response.setHeader('X-XSS-Protection', '1; mode=block');
@@ -116,15 +124,16 @@ function sendFile(response, request)
 
         response.end(buf, 'binary');
     }
-    catch (e) {
+    catch (e)
+    {
         Logger.Debug(config.log.error, e);
     }
 }
 
-function encodeToGZIP (buffer, response) 
+function encodeToGZIP(buffer: Buffer, response: http.ServerResponse) 
 {
     var buf = zlib.gzipSync(buffer);
     response.setHeader('Content-Encoding', 'gzip');
-    response.setHeader('Content-Length', buf.length);
+    response.setHeader('Content-Length', buf.length.toString());
     return buf;
 }

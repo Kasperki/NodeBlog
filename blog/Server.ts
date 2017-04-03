@@ -1,14 +1,10 @@
-'use strict';
-
 /*
 * Node server
 */
 
-//Using
-
 import * as http from "http";
 import * as https from "https";
-var fs = require('fs');
+import * as fs from "fs";
 var config = require('../config.js'); 
 var Cookies = require('./Cookies.js'); 
 var BlogController = require('./BlogController.js');
@@ -17,7 +13,7 @@ var UserController = require('./UserBundle/UserController.js');
 var AuthenticationService = require('../blog/UserBundle/AuthenticationService.js');
 var Database = require('./Database.js');
 var ErrorPage = require('./ErrorPage.js');
-var FileServer = require('./FileServer.js');
+import * as FileServer from "./FileServer";
 var Logger = require('./Logger.js');
 var Routing = require('./Routing.js');
 
@@ -28,7 +24,7 @@ var controllers = [new BlogController(), new MainController(), new UserControlle
 Database.connectToDatabase();
 
 let Request: http.ServerRequest;
-let Response: http.ClientResponse;
+let Response: http.ServerResponse;
 
 var options: https.ServerOptions = {
     key: fs.readFileSync(config.cert.server_key), 
@@ -36,7 +32,24 @@ var options: https.ServerOptions = {
     ca: fs.readFileSync(config.cert.ca_crt), 
 };
 
-var server = https.createServer(options, function (request: http.ServerRequest, response: http.ClientResponse)
+class RequestData
+{
+    request: http.ServerRequest;
+    response: http.ServerResponse;
+    data: string;
+    queryParameters: string[];
+    cookies: any;
+    keys: string[];
+    parameters: any;
+
+    constructor(request: http.ServerRequest, response: http.ServerResponse)
+    {
+        this.response = response;
+        this.request = request;
+    }
+}
+
+var server = https.createServer(options, function (request: http.ServerRequest, response: http.ServerResponse)
 {	
     Request = request;
     Response = response;
@@ -61,35 +74,32 @@ var server = https.createServer(options, function (request: http.ServerRequest, 
                 var controllerRoute = Object.keys(controllerRouteInfo.route)[0];
                 var keys = Routing.parseRoute(controllerRoute, route); //Keys from route .../{key}/{key}/... test
 
-                var requestInfo = {
-                    response: response,
-                    request: request,
-                    data: incomingData,
-                    queryParameters: url['query'],
-                    cookies: cookies,
-                    keys: keys,
-                    parameters: {loggedIn: authenticated ? true : false, userName: authenticated ? authenticated.username : null, "NODE.ENV" : String(config.env)}
-                }
+                let requestData = new RequestData(request, response);
+                requestData.data = incomingData;
+                requestData.queryParameters = url['query'];
+                requestData.cookies = cookies;
+                requestData.keys = keys;
+                requestData.parameters = { loggedIn: authenticated ? true : false, userName: authenticated ? authenticated.username : null, "NODE.ENV": String(config.env) };
 
                 if (keys && (!controllerRouteInfo.protected || authenticated)) {
 
                     var access = request.connection.remoteAddress + " " + request.headers['user-agent']  + "  " + request.method + " HTTP:" + request.httpVersion + " " + request.url;  
                     Logger.Log(config.log.access, access);
 
-                    controllerRouteInfo.route[controllerRoute](requestInfo);
+                    controllerRouteInfo.route[controllerRoute](requestData);
                     return;
                 }
             }
         }
-        
-        FileServer(response, request, route);      
+
+        FileServer.TryLoadResourceFromRoute(request, response, route);      
     });
 }).listen(config.httpsPort);
 
-http.createServer(function (req, res) {
-    var hostname = (req.headers.host.match(/:/g)) ? req.headers.host.slice(0, req.headers.host.indexOf(":")) : req.headers.host
-    res.writeHead(301, { "Location": "https://" + hostname + ":" + String(config.httpsPort) + req.url });
-    res.end();
+http.createServer(function (request: http.ServerRequest, response: http.ServerResponse) {
+    var hostname = (request.headers.host.match(/:/g)) ? request.headers.host.slice(0, request.headers.host.indexOf(":")) : request.headers.host
+    response.writeHead(301, { "Location": "https://" + hostname + ":" + String(config.httpsPort) + request.url });
+    response.end();
 }).listen(config.httpPort);
 
 //Error logging

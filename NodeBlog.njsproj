@@ -29,7 +29,7 @@
     <Compile Include="blog\Cookies.js" />
     <Compile Include="blog\Database.js" />
     <Compile Include="blog\ErrorPage.js" />
-    <Compile Include="blog\FileServer.js" />
+    <Compile Include="blog\FileServer.ts" />
     <Compile Include="blog\Hash.js" />
     <Compile Include="blog\HtmlLoader.js" />
     <Compile Include="blog\Logger.js" />
