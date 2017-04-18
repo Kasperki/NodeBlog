@@ -1,6 +1,8 @@
 var mongoose = require('mongoose');
 var exports = module.exports = {};
 
+mongoose.Promise = global.Promise;
+
 //Create a schema for Blog
 var blogSchema = mongoose.Schema({
     title: { type: String, index: true, unique: true },
@@ -63,18 +65,14 @@ exports.UpdateBlogPost = function (title, image, text, description, category, ta
  * @param int limit
  * @param callback (err, Blog[] result)
  */
-exports.GetLatestBlogPost = function (limit, callback) {
-    
+exports.GetLatestBlogPost = function (limit)
+{
     if (limit < 0)
+    {
         throw new Error("Limit can't be negative");
-    
-    Blog.find('title text date').sort({ date: -1 }).limit(limit).exec(function (err, result) {
-        if (err) throw err;
+    }
 
-        if (typeof callback === "function") {
-            callback(err, result);
-        }
-    });
+    return Blog.find('title text date').sort({ date: -1 }).limit(limit).exec();
 };
 
 /**
@@ -106,23 +104,15 @@ exports.GetBlogPostById = function (id, callback) {
  * @param string title
  * @param callback (err, Blog result)
  */
-exports.GetBlogPostByTitle = function (title, callback) {
+exports.GetBlogPostByTitle = async function (title) {
     
     if (typeof title !== 'string')
     {
-        if (typeof callback === "function") {
-            callback(new Error('title: ' + title + " is not string"), null);
-        }       
-        return;
+        throw new Error('title: ' + title + " is not string"); 
     }
-       
-    Blog.find({ 'title': title }, 'title image text description category date visits', function (err, result) {
-        if (err) throw err;
-                
-        if (typeof callback === "function") {
-            callback(null, result[0]);
-        }
-    });
+
+    let result = await Blog.find({ 'title': title }, 'title image text description category date visits').exec();
+    return result[0];
 };
 
 /**
@@ -177,60 +167,48 @@ exports.GetBlogPostsByTag = function (tag, callback) {
  * Gets array of all categories
  * @param callback (err, Tags[Name, Count] result)
  */
-exports.GetCategories = function (callback) {
-    
-    Blog.find().exec(function (err, result) {
-        if (err) throw err;
+exports.GetCategories = async function ()
+{    
+    let result = await Blog.find().exec();
+    var categories = {};
 
-        if (typeof callback === "function") {
-            
-            var categories = {};
-
-            for (var i = 0; i < result.length; i++)
-            {
-                if (!categories[result[i].category]) { 
-                    categories[result[i].category] = 1; 
-                }
-                else {
-                    categories[result[i].category] += 1;
-                }
-            }
-            
-            callback(err, categories);
+    for (var i = 0; i < result.length; i++)
+    {
+        if (!categories[result[i].category]) { 
+            categories[result[i].category] = 1; 
         }
-    });
+        else {
+            categories[result[i].category] += 1;
+        }
+    }
+            
+    return categories;
 };
 
 /**
  * Gets array of all tags
  * @param callback (err, Tags[Name, Count] result)
  */
-exports.GetTags = function (callback) {
-    
-    Blog.find().exec(function (err, result) {
-        if (err) throw err;
+exports.GetTags = async function ()
+{
+    let result = await Blog.find().exec(); 
+    let tags = {};
 
-        if (typeof callback === "function") {
-            
-            var tags = {};
-
-            for (var i = 0; i < result.length; i++)
-            {
-                if (result[i].tags != null) {
-                    result[i].tags.forEach(function(tag) {
-                        if (!tags[tag]) { 
-                            tags[tag] = 1; 
-                        }
-                        else {
-                            tags[tag] += 1;
-                        }
-                    });
+    for (let i = 0; i < result.length; i++)
+    {
+        if (result[i].tags != null) {
+            result[i].tags.forEach(function(tag) {
+                if (!tags[tag]) { 
+                    tags[tag] = 1; 
                 }
-            }
-            
-            callback(err, tags);
+                else {
+                    tags[tag] += 1;
+                }
+            });
         }
-    });
+    }
+            
+    return tags;
 };
 
 /**

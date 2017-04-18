@@ -1,10 +1,17 @@
 ﻿export abstract class BaseController
 {
+    //TODO CACHE HERE REQUEST DATA SO WE DON*T HAVE TO PASS IT TO EVERY CONTROLLER ROUTE, THX!
     protected abstract routes: Route[];
 
     public get GetRoutes(): Route[]
     {
         return this.routes;
+    }
+
+    public JSONResponse(requestInfo: RequestData, data: any)
+    {
+        requestInfo.response.writeHead(200, { 'Content-Type': 'application/json' });
+        requestInfo.response.end(JSON.stringify(data));
     }
 }
 
