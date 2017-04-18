@@ -101,44 +101,40 @@ export class BlogController extends BaseController
         this.JSONResponse(requestInfo, blogs);
     };
 
-
-    //TODO --- CHANGE TO ASYC AWAIT
-
-    private getByCategory(requestInfo: RequestData) {
+    private getByCategory = async (requestInfo: RequestData) =>
+    {
         var category = requestInfo.queryParameters['category'];
 
-        BlogService.GetBlogPostsByCategory(category, function (err: Error, blogPosts: any) {
-            requestInfo.response.writeHead(200, { 'Content-Type': 'application/json' });
-            var blogs = this.filterBlogsPerPage(requestInfo, blogPosts);
-            requestInfo.response.end(JSON.stringify(blogs));
-        });
+        let blogPosts = await BlogService.GetBlogPostsByCategory(category);
+        var blogs = this.filterBlogsPerPage(requestInfo, blogPosts);
+        this.JSONResponse(requestInfo, blogs)
     };
 
-    private getByTag(requestInfo: RequestData) {
+    private getByTag = async (requestInfo: RequestData) =>
+    {
         var tag = requestInfo.queryParameters['tag'];
 
-        BlogService.GetBlogPostsByTag(tag, function (err: Error, blogPosts: any) {
-            requestInfo.response.writeHead(200, { 'Content-Type': 'application/json' });
-            var blogs = this.filterBlogsPerPage(requestInfo, blogPosts);
-            requestInfo.response.end(JSON.stringify(blogs));
-        });
+        let blogPosts = await BlogService.GetBlogPostsByTag(tag);
+        var blogs = this.filterBlogsPerPage(requestInfo, blogPosts);
+        this.JSONResponse(requestInfo, blogs)
     };
 
-    private getAllVisits(requestInfo: RequestData) {
-        BlogService.GetAllVisits(function (err: Error, result: any) {
-            requestInfo.response.writeHead(200, { 'Content-Type': 'application/json' });
-            requestInfo.response.end(JSON.stringify(result));
-        });
+    private getAllVisits = async (requestInfo: RequestData) => 
+    {
+        let result = await BlogService.GetAllVisits();
+        this.JSONResponse(requestInfo, result)
     };
 
-    private getAllVisitsPerWeek(requestInfo: RequestData) {
+    private getAllVisitsPerWeek = (requestInfo: RequestData) =>
+    {
         BlogService.GetVisitsPerWeekByAllBlogs(function (err: Error, result: any) {
             requestInfo.response.writeHead(200, { 'Content-Type': 'application/json' });
             requestInfo.response.end(JSON.stringify(result));
         });
     };
 
-    private getMonthlyVisits(requestInfo: RequestData) {
+    private getMonthlyVisits = (requestInfo: RequestData) =>
+    {
         var id = requestInfo.queryParameters['id'];
 
         BlogService.GetVisitsPerMonthByBlog(id, function (err: Error, result: any) {

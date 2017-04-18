@@ -124,19 +124,10 @@ exports.GetBlogPostsByCategory = function (category, callback) {
     
     if (typeof category !== 'string')
     {
-        if (typeof callback === "function") {
-            callback(new Error('category: ' + category + " is not string"), null);
-        }       
-        return;
+        throw new Error('category: ' + category + " is not string");
     }
     
-    Blog.find({'category': category}).sort({ date: -1 }).exec(function (err, result) {
-        if (err) throw err;
-
-        if (typeof callback === "function") {
-            callback(err, result);
-        }
-    });
+    return Blog.find({ 'category': category }).sort({ date: -1 }).exec();
 };
 
 /**
@@ -148,19 +139,10 @@ exports.GetBlogPostsByTag = function (tag, callback) {
     
     if (typeof tag !== 'string')
     {
-        if (typeof callback === "function") {
-            callback(new Error('category: ' + tag + " is not string"), null);
-        }       
-        return;
+        throw new Error('category: ' + tag + " is not string"), null);
     }
     
-    Blog.find({'tags': tag}).sort({ date: -1 }).exec(function (err, result) {
-        if (err) throw err;
-
-        if (typeof callback === "function") {
-            callback(err, result);
-        }
-    });
+    return Blog.find({ 'tags': tag }).sort({ date: -1 }).exec();
 };
 
 /**
@@ -242,58 +224,50 @@ exports.RemoveBlog = function (id, callback) {
  * Returns blog titles with visit count
  * return array[Title]: visitCount;
  */
-exports.GetAllVisits = function(callback)
+exports.GetAllVisits = async function()
 {
     var allData = {};
     
-    this.GetLatestBlogPost(0, function(err, blogs) {
-        for (var i = 0; i < blogs.length; i++)
-         {
-            allData[blogs[i].title] =  blogs[i].visits.length;
-         }
+    let blogs = await GetLatestBlogPost(0) 
+    for (var i = 0; i < blogs.length; i++)
+    {
+        allData[blogs[i].title] =  blogs[i].visits.length;
+    }
 
-        if (typeof callback === "function") {
-            callback(err, allData);
-        }
-    });
-};
+    return allData;
+}
 
 /**
  * Returns all blog visits cumulatively weekly
- * @param id blogs id
  * return array[yyyy/week]: visitCount 
  */
-exports.GetVisitsPerWeekByAllBlogs = function(callback)
+exports.GetVisitsPerWeekByAllBlogs = function()
 {
-     var blogData = {}
+    var blogData = {}
 
-     this.GetLatestBlogPost(0, function(err, blogs) 
-     {
-        var startingYear = 2016;
-        var startYear = new Date(startingYear,6,1);
-        var endYear = Date.now();
+    let blogs = await GetLatestBlogPost(0);
 
-        var cumulative = 0;
+    var startYear = new Date(2016,6,1);
+    var endYear = Date.now();
+    var cumulative = 0;
 
-        for (var date = startYear; date < endYear; date.setDate(date.getDate() + 7))
-        {
-            blogData[date.getFullYear() + "/" + getWeek(date)] = 0;
+    for (var date = startYear; date < endYear; date.setDate(date.getDate() + 7))
+    {
+        blogData[date.getFullYear() + "/" + getWeek(date)] = 0;
+    }
+
+    for (var i = 0; i < blogs.length; i++)
+    {
+        for (var index in blogs[i].visits)
+        { 
+            cumulative++;
+            var date = new Date(blogs[i].visits[index]);
+            blogData[date.getFullYear() + "/" + getWeek(date)] = cumulative;
         }
-
-        for (var i = 0; i < blogs.length; i++) {
-            for (var index in blogs[i].visits)
-            { 
-                cumulative++;
-                var date = new Date(blogs[i].visits[index]);
-                blogData[date.getFullYear() + "/" + getWeek(date)] = cumulative;
-            };
-        }
+    }
         
-        if (typeof callback === "function") {
-            callback(err, blogData);
-        }
-    });
-};
+    return blogData;
+}
 
 /**
  * Returns blogs visits monthly
