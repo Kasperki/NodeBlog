@@ -13,20 +13,20 @@ const BLOGS_PER_PAGE = 8;
 
 export class BlogController extends BaseController
 {
-    private renderBlog = async (requestInfo: RequestData) =>
+    private renderBlog = async () =>
     {
         try
         {
-            let blog = await BlogService.GetBlogPostByTitle(requestInfo.keys['title']);
+            let blog = await BlogService.GetBlogPostByTitle(this.requestData.keys['title']);
 
             if (blog)
             {
-                loadHtml.load(requestInfo, './views/blog.html', null);
+                loadHtml.load(this.requestData, './views/blog.html', null);
             }
             else
             {
-                ErrorPage(requestInfo.response, 404, "We have lost the page: /blog/" + requestInfo.keys['title']);
-                Logger.Warning(config.log.error, "renderBlog -- Blog not found: /blog/" + requestInfo.keys['title']);
+                ErrorPage(this.requestData.response, 404, "We have lost the page: /blog/" + this.requestData.keys['title']);
+                Logger.Warning(config.log.error, "renderBlog -- Blog not found: /blog/" + this.requestData.keys['title']);
             }
         }
         catch (e)
@@ -36,42 +36,42 @@ export class BlogController extends BaseController
         }
     }
 
-    private getBlog = async (requestInfo: RequestData) =>
+    private getBlog = async () =>
     {
         try
         {
-            let blog = await BlogService.GetBlogPostByTitle(requestInfo.queryParameters['title']);
+            let blog = await BlogService.GetBlogPostByTitle(this.requestData.queryParameters['title']);
 
             if (blog)
             {
                 BlogService.AddVisit(blog);
                 blog.text = marked(blog.text);
-                this.JSONResponse(requestInfo, blog);
+                this.JSONResponse(blog);
             }
             else
             {
-                ErrorPage(requestInfo.response, 404, "We have lost the page: /blog/" + requestInfo.queryParameters['title']);
-                Logger.Warning(config.log.error, "getBlog -- Blog not found: /blog/" + requestInfo.queryParameters['title']);
+                ErrorPage(this.requestData.response, 404, "We have lost the page: /blog/" + this.requestData.queryParameters['title']);
+                Logger.Warning(config.log.error, "getBlog -- Blog not found: /blog/" + this.requestData.queryParameters['title']);
             }
         }
         catch (e)
         {
-            ErrorPage(requestInfo.response, 404, "We have lost the page: /blog/" + requestInfo.queryParameters['title']);
-            Logger.Warning(config.log.error, "getBlog -- Blog not found: /blog/" + requestInfo.queryParameters['title']);
+            ErrorPage(this.requestData.response, 404, "We have lost the page: /blog/" + this.requestData.queryParameters['title']);
+            Logger.Warning(config.log.error, "getBlog -- Blog not found: /blog/" + this.requestData.queryParameters['title']);
             return;
         }
     }
 
-    private renderList = async (requestInfo: RequestData) =>
+    private renderList = async () =>
     {
         let tags = await BlogService.GetTags();
         let categories = await BlogService.GetCategories();
-        loadHtml.load(requestInfo, './views/blog-list.html', { tags: JSON.stringify(tags), categories: JSON.stringify(categories) });
+        loadHtml.load(this.requestData, './views/blog-list.html', { tags: JSON.stringify(tags), categories: JSON.stringify(categories) });
     }
 
-    private filterBlogsPerPage(requestInfo: RequestData, blogPosts: any): { blogs: any, pagesCount: number }
+    private filterBlogsPerPage(blogPosts: any): { blogs: any, pagesCount: number }
     {
-        var pageNumber = requestInfo.queryParameters['page'];
+        var pageNumber = this.requestData.queryParameters['page'];
 
         if (!pageNumber)
             pageNumber = 0;
@@ -94,86 +94,86 @@ export class BlogController extends BaseController
         return { blogs: blogs, pagesCount: pagesCount };
     }
 
-    public getBlogListJson = async (requestInfo: RequestData) =>
+    public getBlogListJson = async () =>
     {
         let blogPosts = await BlogService.GetLatestBlogPost(0);
-        let blogs = this.filterBlogsPerPage(requestInfo, blogPosts);
-        this.JSONResponse(requestInfo, blogs);
+        let blogs = this.filterBlogsPerPage(blogPosts);
+        this.JSONResponse(blogs);
     }
 
-    private getByCategory = async (requestInfo: RequestData) =>
+    private getByCategory = async () =>
     {
-        var category = requestInfo.queryParameters['category'];
+        var category = this.requestData.queryParameters['category'];
 
         let blogPosts = await BlogService.GetBlogPostsByCategory(category);
-        var blogs = this.filterBlogsPerPage(requestInfo, blogPosts);
-        this.JSONResponse(requestInfo, blogs)
+        var blogs = this.filterBlogsPerPage(blogPosts);
+        this.JSONResponse(blogs)
     }
 
-    private getByTag = async (requestInfo: RequestData) =>
+    private getByTag = async () =>
     {
-        var tag = requestInfo.queryParameters['tag'];
+        var tag = this.requestData.queryParameters['tag'];
 
         let blogPosts = await BlogService.GetBlogPostsByTag(tag);
-        var blogs = this.filterBlogsPerPage(requestInfo, blogPosts);
-        this.JSONResponse(requestInfo, blogs)
+        var blogs = this.filterBlogsPerPage(blogPosts);
+        this.JSONResponse(blogs)
     }
 
-    private getAllVisits = async (requestInfo: RequestData) => 
+    private getAllVisits = async () => 
     {
         let result = await BlogService.GetAllVisits();
-        this.JSONResponse(requestInfo, result)
+        this.JSONResponse(result)
     }
 
-    private getAllVisitsPerWeek = async (requestInfo: RequestData) =>
+    private getAllVisitsPerWeek = async () =>
     {
         let result = await BlogService.GetVisitsPerWeekByAllBlogs();
-        this.JSONResponse(requestInfo, result);
+        this.JSONResponse(result);
     }
 
-    private getMonthlyVisits = async (requestInfo: RequestData) =>
+    private getMonthlyVisits = async () =>
     {
-        var id = requestInfo.queryParameters['id'];
+        var id = this.requestData.queryParameters['id'];
 
         try {
             let result = await BlogService.GetVisitsPerMonthByBlog(id);
-            this.JSONResponse(requestInfo, result);
+            this.JSONResponse(result);
         }
         catch (e) {
-            this.JSONResponse(requestInfo, e.message);
+            this.JSONResponse(e.message);
         }
     }
 
     //Admin routes
 
-    private adminBlog = (requestInfo: RequestData) =>
+    private adminBlog = () =>
     {
-        loadHtml.load(requestInfo, './views/blog-admin.html', {});
+        loadHtml.load(this.requestData, './views/blog-admin.html', {});
     }
 
-    private addBlog = (requestInfo: RequestData) =>
+    private addBlog = () =>
     {
-        loadHtml.load(requestInfo, './views/blog-admin-add.html', { tags: JSON.stringify("") });
+        loadHtml.load(this.requestData, './views/blog-admin-add.html', { tags: JSON.stringify("") });
     }
 
-    private editBlog = async (requestInfo: RequestData) =>
+    private editBlog = async () =>
     {
-        let blog = await BlogService.GetBlogPostById(requestInfo.queryParameters['id']);
+        let blog = await BlogService.GetBlogPostById(this.requestData.queryParameters['id']);
         let blogData = { title: blog.title, text: blog.text, image: blog.image, description: blog.description, category: blog.category, tags: JSON.stringify(blog.tags) };
-        loadHtml.load(requestInfo, './views/blog-admin-add.html', blogData);
+        loadHtml.load(this.requestData, './views/blog-admin-add.html', blogData);
     }
 
-    private previewBlog = (requestInfo: RequestData) =>
+    private previewBlog = () =>
     {
-        let html = marked(requestInfo.data);
-        this.Response(requestInfo, String(html));
+        let html = marked(this.requestData.data);
+        this.Response(String(html));
     }
 
-    private saveBlog = async (requestInfo: RequestData) =>
+    private saveBlog = async () =>
     {
-        var jsonBlog = requestInfo.data.length ? JSON.parse(requestInfo.data) : '';
+        var jsonBlog = this.requestData.data.length ? JSON.parse(this.requestData.data) : '';
 
-        let blogPost = await BlogService.GetBlogPostByTitle(requestInfo.queryParameters['title']);
+        let blogPost = await BlogService.GetBlogPostByTitle(this.requestData.queryParameters['title']);
 
         if (blogPost == null)
         {
@@ -186,16 +186,16 @@ export class BlogController extends BaseController
             });
         }
 
-        this.Response(requestInfo, "ok");
+        this.Response("ok");
     }
 
-    private deleteBlog = (requestInfo: RequestData) => 
+    private deleteBlog = () => 
     {
-        var id = requestInfo.queryParameters['id'];
+        var id = this.requestData.queryParameters['id'];
         BlogService.RemoveBlog(id);
 
         Logger.Debug(config.log.debug, "Blog" + id + " deleted");
-        loadHtml.load(requestInfo, './views/blog-admin.html', {});
+        loadHtml.load(this.requestData, './views/blog-admin.html', {});
     }
 
     public routes: Route[] = [

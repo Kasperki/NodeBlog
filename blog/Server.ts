@@ -42,11 +42,13 @@ var server = https.createServer(options, function (request: http.ServerRequest, 
     Response = response;
         
     let incomingData: string = '';
-    request.on('data', function (data: string) {
+    request.on('data', function (data: string)
+    {
         incomingData += data;
     });
 
-    request.on('end', function () {
+    request.on('end', function ()
+    {
 
         var url: urlModule.Url = urlModule.parse(String(request.url), true);
         var route = url.pathname;        
@@ -54,9 +56,10 @@ var server = https.createServer(options, function (request: http.ServerRequest, 
         var cookies = Cookies.ParseCookies(request);      
         var authenticated = AuthenticationService.IsTokenValid(cookies.sessionId, cookies.authToken, request);
 
-        for (var i = 0; i < controllers.length; i++) {
-            for (var j = 0; j < controllers[i].GetRoutes.length; j++) {
-
+        for (var i = 0; i < controllers.length; i++)
+        {
+            for (var j = 0; j < controllers[i].GetRoutes.length; j++)
+            {
                 var controllerRoute = controllers[i].GetRoutes[j];
                 var keys = Routing.parseRoute(controllerRoute.route, route); //Keys from route .../{key}/{key}/... test
 
@@ -67,12 +70,13 @@ var server = https.createServer(options, function (request: http.ServerRequest, 
                 requestData.keys = keys;
                 requestData.parameters = { loggedIn: authenticated ? true : false, userName: authenticated ? authenticated.username : null, "NODE.ENV": String(config.env) };
 
-                if (keys && (!controllerRoute.authenticated || authenticated)) {
-
+                if (keys && (!controllerRoute.authenticated || authenticated))
+                {
                     var access = request.connection.remoteAddress + " " + request.headers['user-agent']  + "  " + request.method + " HTTP:" + request.httpVersion + " " + request.url;  
                     Logger.Log(config.log.access, access);
 
-                    controllerRoute.action(requestData);
+                    controllers[i].requestData = requestData;
+                    controllerRoute.action();
                     return;
                 }
             }

@@ -15,50 +15,54 @@ var Logger = require('../Logger.js');
 
 export class UserController extends BaseController
 {
-    authenticate = (requestInfo: RequestData) =>
+    authenticate = () =>
     {
         //TODO NEEDS BRUTE FORCE LOGIN PROTECTION.
-        var userInfo = requestInfo.data.length ? JSON.parse(requestInfo.data) : '';
+        var userInfo = this.requestData.data.length ? JSON.parse(this.requestData.data) : '';
 
-        this.verifyReCapthca(userInfo.recaptcha, requestInfo.request.connection.remoteAddress, function (err: Error, validCapthca) {
-            if (validCapthca) {
-                UserService.ValidateLogin(userInfo.username, userInfo.password, function (err: Error, success: boolean) {
-                    if (success) {
+        this.verifyReCapthca(userInfo.recaptcha, this.requestData.request.connection.remoteAddress, (err: Error, validCapthca) =>
+        {
+            if (validCapthca)
+            {
+                UserService.ValidateLogin(userInfo.username, userInfo.password, function (err: Error, success: boolean)
+                {
+                    if (success)
+                    {
                         var session = AuthenticationService.CreateSession(userInfo.username);
-                        Cookies.SetCookies(requestInfo.response, [
+                        Cookies.SetCookies(this.requestData.response, [
                             { name: "sessionId", content: session.id, expires: session.expires, options: { secure: true, httponly: true } },
                             { name: "authToken", content: session.token, expires: session.expires, options: { secure: true, httponly: true } }
                         ]);
 
-                        Logger.Log(config.log.access, "User: " + userInfo.username + " logged in from: " + requestInfo.request.connection.remoteAddress);
-                        requestInfo.response.writeHead(200, { 'Content-Type': 'text/plain' });
-                        requestInfo.response.end("Ok");
+                        Logger.Log(config.log.access, "User: " + userInfo.username + " logged in from: " + this.requestData.request.connection.remoteAddress);
+                        this.Response("Ok");
                     }
-                    else {
-                        Logger.Warning(config.log.error, "Invalid login: " + userInfo.username + " from: " + requestInfo.request.connection.remoteAddress);
-                        requestInfo.response.writeHead(200, { 'Content-Type': 'text/plain' });
-                        requestInfo.response.end("Invalid");
+                    else
+                    {
+                        Logger.Warning(config.log.error, "Invalid login: " + userInfo.username + " from: " + this.requestData.request.connection.remoteAddress);
+                        this.Response("Invalid");
                     }
                 });
             }
-            else {
-                Logger.Warning(config.log.error, "Invalid capthca from: " + requestInfo.request.connection.remoteAddress);
-                requestInfo.response.writeHead(403, { 'Content-Type': 'text/plain' });
-                requestInfo.response.end("Invalid");
+            else
+            {
+                Logger.Warning(config.log.error, "Invalid capthca from: " + this.requestData.request.connection.remoteAddress);
+                this.requestData.response.writeHead(403, { 'Content-Type': 'text/plain' });
+                this.requestData.response.end("Invalid");
             }
         });
     }
 
-    login = (requestInfo: RequestData) => 
+    login = () => 
     {
-        loadHtml.load(requestInfo, './views/login.html', null);
+        loadHtml.load(this.requestData, './views/login.html', null);
     }
 
-    logout = (requestInfo: RequestData) =>
+    logout = () =>
     {
-        AuthenticationService.RemoveSession(requestInfo.cookies.sessionId);
-        Cookies.SetCookies(requestInfo.response, [{ name: "sessionId", content: null, expires: new Date(0) }, { name: "authToken", content: null, expires: new Date(0) }])
-        loadHtml.load(requestInfo, './views/login.html', null);
+        AuthenticationService.RemoveSession(this.requestData.cookies.sessionId);
+        Cookies.SetCookies(this.requestData.response, [{ name: "sessionId", content: null, expires: new Date(0) }, { name: "authToken", content: null, expires: new Date(0) }])
+        loadHtml.load(this.requestData, './views/login.html', null);
     }
 
     /**

@@ -1,6 +1,6 @@
 ﻿export abstract class BaseController
 {
-    //TODO CACHE HERE REQUEST DATA SO WE DON*T HAVE TO PASS IT TO EVERY CONTROLLER ROUTE, THX!
+    public requestData: RequestData;
     protected abstract routes: Route[];
 
     public get GetRoutes(): Route[]
@@ -8,26 +8,26 @@
         return this.routes;
     }
 
-    public Response(requestInfo: RequestData, data: string)
+    public Response(data: string)
     {
-        requestInfo.response.writeHead(200, { 'Content-Type': 'text/html' });
-        requestInfo.response.end(data);
+        this.requestData.response.writeHead(200, { 'Content-Type': 'text/html' });
+        this.requestData.response.end(data);
     }
 
-    public JSONResponse(requestInfo: RequestData, data: any)
+    public JSONResponse(data: any)
     {
-        requestInfo.response.writeHead(200, { 'Content-Type': 'application/json' });
-        requestInfo.response.end(JSON.stringify(data));
+        this.requestData.response.writeHead(200, { 'Content-Type': 'application/json' });
+        this.requestData.response.end(JSON.stringify(data));
     }
 }
 
 export class Route
 {
-    route: string;
-    authenticated: boolean;
-    public action: (requestData: RequestData) => void;
+    public route: string;
+    public authenticated: boolean;
+    public action: () => void;
 
-    constructor(route: string, action: (requestData: RequestData) => void, authenticated: boolean = false)
+    constructor(route: string, action: () => void, authenticated: boolean = false)
     {
         this.route = route;
         this.authenticated = authenticated;
