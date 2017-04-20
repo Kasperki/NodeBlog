@@ -8,6 +8,12 @@
         return this.routes;
     }
 
+    public Response(requestInfo: RequestData, data: string)
+    {
+        requestInfo.response.writeHead(200, { 'Content-Type': 'text/html' });
+        requestInfo.response.end(data);
+    }
+
     public JSONResponse(requestInfo: RequestData, data: any)
     {
         requestInfo.response.writeHead(200, { 'Content-Type': 'application/json' });

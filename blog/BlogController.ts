@@ -69,7 +69,7 @@ export class BlogController extends BaseController
         loadHtml.load(requestInfo, './views/blog-list.html', { tags: JSON.stringify(tags), categories: JSON.stringify(categories) });
     }
 
-    private filterBlogsPerPage (requestInfo: RequestData, blogPosts: any)
+    private filterBlogsPerPage(requestInfo: RequestData, blogPosts: any): { blogs: any, pagesCount: number }
     {
         var pageNumber = requestInfo.queryParameters['page'];
 
@@ -99,7 +99,7 @@ export class BlogController extends BaseController
         let blogPosts = await BlogService.GetLatestBlogPost(0);
         let blogs = this.filterBlogsPerPage(requestInfo, blogPosts);
         this.JSONResponse(requestInfo, blogs);
-    };
+    }
 
     private getByCategory = async (requestInfo: RequestData) =>
     {
@@ -108,7 +108,7 @@ export class BlogController extends BaseController
         let blogPosts = await BlogService.GetBlogPostsByCategory(category);
         var blogs = this.filterBlogsPerPage(requestInfo, blogPosts);
         this.JSONResponse(requestInfo, blogs)
-    };
+    }
 
     private getByTag = async (requestInfo: RequestData) =>
     {
@@ -117,79 +117,84 @@ export class BlogController extends BaseController
         let blogPosts = await BlogService.GetBlogPostsByTag(tag);
         var blogs = this.filterBlogsPerPage(requestInfo, blogPosts);
         this.JSONResponse(requestInfo, blogs)
-    };
+    }
 
     private getAllVisits = async (requestInfo: RequestData) => 
     {
         let result = await BlogService.GetAllVisits();
         this.JSONResponse(requestInfo, result)
-    };
+    }
 
-    private getAllVisitsPerWeek = (requestInfo: RequestData) =>
+    private getAllVisitsPerWeek = async (requestInfo: RequestData) =>
     {
-        BlogService.GetVisitsPerWeekByAllBlogs(function (err: Error, result: any) {
-            requestInfo.response.writeHead(200, { 'Content-Type': 'application/json' });
-            requestInfo.response.end(JSON.stringify(result));
-        });
-    };
+        let result = await BlogService.GetVisitsPerWeekByAllBlogs();
+        this.JSONResponse(requestInfo, result);
+    }
 
-    private getMonthlyVisits = (requestInfo: RequestData) =>
+    private getMonthlyVisits = async (requestInfo: RequestData) =>
     {
         var id = requestInfo.queryParameters['id'];
 
-        BlogService.GetVisitsPerMonthByBlog(id, function (err: Error, result: any) {
-            requestInfo.response.writeHead(200, { 'Content-Type': 'application/json' });
-            requestInfo.response.end(JSON.stringify(result));
-        });
-    };
+        try {
+            let result = await BlogService.GetVisitsPerMonthByBlog(id);
+            this.JSONResponse(requestInfo, result);
+        }
+        catch (e) {
+            this.JSONResponse(requestInfo, e.message);
+        }
+    }
 
     //Admin routes
 
-    private adminBlog(requestInfo: RequestData) {
+    private adminBlog = (requestInfo: RequestData) =>
+    {
         loadHtml.load(requestInfo, './views/blog-admin.html', {});
-    };
+    }
 
-    private addBlog(requestInfo: RequestData) {
+    private addBlog = (requestInfo: RequestData) =>
+    {
         loadHtml.load(requestInfo, './views/blog-admin-add.html', { tags: JSON.stringify("") });
-    };
+    }
 
-    private editBlog(requestInfo: RequestData) {
-        BlogService.GetBlogPostById(requestInfo.queryParameters['id'], function (err: Error, blog: any) {
-            var blogData = { title: blog.title, text: blog.text, image: blog.image, description: blog.description, category: blog.category, tags: JSON.stringify(blog.tags) };
-            loadHtml.load(requestInfo, './views/blog-admin-add.html', blogData);
-        });
-    };
+    private editBlog = async (requestInfo: RequestData) =>
+    {
+        let blog = await BlogService.GetBlogPostById(requestInfo.queryParameters['id']);
+        let blogData = { title: blog.title, text: blog.text, image: blog.image, description: blog.description, category: blog.category, tags: JSON.stringify(blog.tags) };
+        loadHtml.load(requestInfo, './views/blog-admin-add.html', blogData);
+    }
 
-    private previewBlog(requestInfo: RequestData) {
-        var html = marked(requestInfo.data);
-        requestInfo.response.writeHead(200, { 'Content-Type': 'text/html' });
-        requestInfo.response.end(html);
-    };
+    private previewBlog = (requestInfo: RequestData) =>
+    {
+        let html = marked(requestInfo.data);
+        this.Response(requestInfo, String(html));
+    }
 
-    private saveBlog(requestInfo: RequestData) {
+    private saveBlog = async (requestInfo: RequestData) =>
+    {
         var jsonBlog = requestInfo.data.length ? JSON.parse(requestInfo.data) : '';
 
-        BlogService.GetBlogPostByTitle(requestInfo.queryParameters['title'], function (err: Error, blogPost: any) {
+        let blogPost = await BlogService.GetBlogPostByTitle(requestInfo.queryParameters['title']);
 
-            if (blogPost == null) {
-                BlogService.AddBlogPost(jsonBlog.title, jsonBlog.image, jsonBlog.text, jsonBlog.description, jsonBlog.category, jsonBlog.tags);
-            }
-            else {
-                BlogService.UpdateBlogPost(jsonBlog.title, jsonBlog.image, jsonBlog.text, jsonBlog.description, jsonBlog.category, jsonBlog.tags, function (err: Error, success: any) {
-                    Logger.Debug(config.log.debug, "Blog " + jsonBlog.title + " updated");
-                });
-            }
+        if (blogPost == null)
+        {
+            BlogService.AddBlogPost(jsonBlog.title, jsonBlog.image, jsonBlog.text, jsonBlog.description, jsonBlog.category, jsonBlog.tags);
+        }
+        else
+        {
+            BlogService.UpdateBlogPost(jsonBlog.title, jsonBlog.image, jsonBlog.text, jsonBlog.description, jsonBlog.category, jsonBlog.tags, function (err: Error, success: any) {
+                Logger.Debug(config.log.debug, "Blog " + jsonBlog.title + " updated");
+            });
+        }
 
-            requestInfo.response.writeHead(200, { 'Content-Type': 'text/html' });
-            requestInfo.response.end("ok");
-        });
-    };
+        this.Response(requestInfo, "ok");
+    }
 
-    private deleteBlog(requestInfo: RequestData) {
+    private deleteBlog = (requestInfo: RequestData) => 
+    {
         var id = requestInfo.queryParameters['id'];
         BlogService.RemoveBlog(id);
-        Logger.Debug(config.log.debug, "Blog" + id + " deleted");
 
+        Logger.Debug(config.log.debug, "Blog" + id + " deleted");
         loadHtml.load(requestInfo, './views/blog-admin.html', {});
     }
 

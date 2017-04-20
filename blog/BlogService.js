@@ -61,6 +61,17 @@ exports.UpdateBlogPost = function (title, image, text, description, category, ta
 }
 
 /**
+ * Remove blog post
+ * @param Blog blog
+ * @param callback (err, Blog[] result)
+ */
+exports.RemoveBlog = function (id, callback) {
+    Blog.find({ _id: id }).remove(function (err, raw) {
+    });
+};
+
+
+/**
  * Gets array of latests blogs by limit
  * @param int limit
  * @param callback (err, Blog[] result)
@@ -80,23 +91,15 @@ exports.GetLatestBlogPost = function (limit)
  * @param string id
  * @param callback (err, Blog result)
  */
-exports.GetBlogPostById = function (id, callback) {
-    
+exports.GetBlogPostById = async function (id)
+{
     if (!mongoose.Types.ObjectId.isValid(id))
     {
-        if (typeof callback === "function") {
-            callback(new Error('id: ' + id + " is not valid"), null);
-        }       
-        return;
+        throw new Error('id: ' + id + " is not valid");
     }
        
-    Blog.find({ '_id': id }, 'title image text description category tags date visits', function (err, result) {
-        if (err) throw err;
-                
-        if (typeof callback === "function") {
-            callback(null, result[0]);
-        }
-    });
+    let result = await Blog.find({ '_id': id }, 'title image text description category tags date visits');
+    return result[0];
 };
 
 /**
@@ -104,7 +107,8 @@ exports.GetBlogPostById = function (id, callback) {
  * @param string title
  * @param callback (err, Blog result)
  */
-exports.GetBlogPostByTitle = async function (title) {
+exports.GetBlogPostByTitle = async function (title)
+{
     
     if (typeof title !== 'string')
     {
@@ -139,7 +143,7 @@ exports.GetBlogPostsByTag = function (tag, callback) {
     
     if (typeof tag !== 'string')
     {
-        throw new Error('category: ' + tag + " is not string"), null);
+        throw new Error('category: ' + tag + " is not string");
     }
     
     return Blog.find({ 'tags': tag }).sort({ date: -1 }).exec();
@@ -210,15 +214,6 @@ exports.AddVisit = function (blog, callback) {
   });
 };
 
-/**
- * Remove blog post
- * @param Blog blog
- * @param callback (err, Blog[] result)
- */
-exports.RemoveBlog = function (id, callback) {
-  Blog.find({ _id: id }).remove(function (err, raw) {
-  });
-};
 
 /**
  * Returns blog titles with visit count
@@ -228,7 +223,7 @@ exports.GetAllVisits = async function()
 {
     var allData = {};
     
-    let blogs = await GetLatestBlogPost(0) 
+    let blogs = await this.GetLatestBlogPost(0) 
     for (var i = 0; i < blogs.length; i++)
     {
         allData[blogs[i].title] =  blogs[i].visits.length;
@@ -241,11 +236,11 @@ exports.GetAllVisits = async function()
  * Returns all blog visits cumulatively weekly
  * return array[yyyy/week]: visitCount 
  */
-exports.GetVisitsPerWeekByAllBlogs = function()
+exports.GetVisitsPerWeekByAllBlogs = async function()
 {
     var blogData = {}
 
-    let blogs = await GetLatestBlogPost(0);
+    let blogs = await this.GetLatestBlogPost(0);
 
     var startYear = new Date(2016,6,1);
     var endYear = Date.now();
@@ -274,34 +269,29 @@ exports.GetVisitsPerWeekByAllBlogs = function()
  * @param id blogs id
  * return array[yyyy/mm]: visitCount 
  */
-exports.GetVisitsPerMonthByBlog = function(id, callback)
+exports.GetVisitsPerMonthByBlog = async function(id)
 {
         var blogData = {}
 
-        this.GetBlogPostById(id, function (err, blog) 
+        let blog = await this.GetBlogPostById(id);
+        if (blog != null) 
         {
-            if (blog != null) 
-            {
-                var startYear = new Date(2015,12,1);
-                var endYear = Date.now();
+            var startYear = new Date(2015,12,1);
+            var endYear = Date.now();
 
-                for (var i = startYear; i < endYear; i.setMonth(i.getMonth() + 1))
-                {
-                    blogData[i.getFullYear() + "/" + (i.getMonth() + 1)] = 0;
-                }
-
-                for (var index in blog.visits)
-                {   
-                    var date = new Date(blog.visits[index]);
-                    blogData[date.getFullYear() + "/" + (date.getMonth() + 1)]++;
-                }
-            }
-        
-            if (typeof callback === "function") 
+            for (var i = startYear; i < endYear; i.setMonth(i.getMonth() + 1))
             {
-                callback(err, blogData);
+                blogData[i.getFullYear() + "/" + (i.getMonth() + 1)] = 0;
             }
-     });
+
+            for (var index in blog.visits)
+            {   
+                var date = new Date(blog.visits[index]);
+                blogData[date.getFullYear() + "/" + (date.getMonth() + 1)]++;
+            }
+        }
+
+        return blogData;
 }
 
 /**

@@ -15,13 +15,8 @@ var Logger = require('../Logger.js');
 
 export class UserController extends BaseController
 {
-    routes: Route[] = [
-        new Route("/auth", this.authenticate),
-        new Route("/login", this.login),
-        new Route("/logout", this.logout)
-    ];
-
-    authenticate(requestInfo: RequestData) {
+    authenticate = (requestInfo: RequestData) =>
+    {
         //TODO NEEDS BRUTE FORCE LOGIN PROTECTION.
         var userInfo = requestInfo.data.length ? JSON.parse(requestInfo.data) : '';
 
@@ -52,17 +47,19 @@ export class UserController extends BaseController
                 requestInfo.response.end("Invalid");
             }
         });
-    };
+    }
 
-    login(requestInfo: RequestData) {
+    login = (requestInfo: RequestData) => 
+    {
         loadHtml.load(requestInfo, './views/login.html', null);
-    };
+    }
 
-    logout(requestInfo: RequestData) {
+    logout = (requestInfo: RequestData) =>
+    {
         AuthenticationService.RemoveSession(requestInfo.cookies.sessionId);
         Cookies.SetCookies(requestInfo.response, [{ name: "sessionId", content: null, expires: new Date(0) }, { name: "authToken", content: null, expires: new Date(0) }])
         loadHtml.load(requestInfo, './views/login.html', null);
-    };
+    }
 
     /**
      * Verifys google reCaptcha response
@@ -70,7 +67,8 @@ export class UserController extends BaseController
      * @param string remoteip
      * @callback (Error err,boolean isValid);
      */
-    verifyReCapthca(recaptchaResponse: string, remoteip: string, callback: (e: Error | null, message: boolean) => void) {
+    verifyReCapthca = (recaptchaResponse: string, remoteip: string, callback: (e: Error | null, message: boolean) => void) =>
+    {
         var post_data = querystring.stringify({
             'secret': config.security.rechaptasecret,
             'response': recaptchaResponse,
@@ -99,7 +97,7 @@ export class UserController extends BaseController
                     }
                 }
 
-                callback(null, false);
+                callback(null, false); //callback(null, false);
                 return;
             });
         });
@@ -107,4 +105,10 @@ export class UserController extends BaseController
         post_req.write(post_data);
         post_req.end();
     }
+
+    routes: Route[] = [
+        new Route("/auth", this.authenticate),
+        new Route("/login", this.login),
+        new Route("/logout", this.logout)
+    ];
 }
