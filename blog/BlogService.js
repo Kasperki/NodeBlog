@@ -1,6 +1,8 @@
 var mongoose = require('mongoose');
 var exports = module.exports = {};
 
+mongoose.Promise = global.Promise;
+
 //Create a schema for Blog
 var blogSchema = mongoose.Schema({
     title: { type: String, index: true, unique: true },
@@ -59,22 +61,29 @@ exports.UpdateBlogPost = function (title, image, text, description, category, ta
 }
 
 /**
+ * Remove blog post
+ * @param Blog blog
+ * @param callback (err, Blog[] result)
+ */
+exports.RemoveBlog = function (id, callback) {
+    Blog.find({ _id: id }).remove(function (err, raw) {
+    });
+};
+
+
+/**
  * Gets array of latests blogs by limit
  * @param int limit
  * @param callback (err, Blog[] result)
  */
-exports.GetLatestBlogPost = function (limit, callback) {
-    
+exports.GetLatestBlogPost = function (limit)
+{
     if (limit < 0)
+    {
         throw new Error("Limit can't be negative");
-    
-    Blog.find('title text date').sort({ date: -1 }).limit(limit).exec(function (err, result) {
-        if (err) throw err;
+    }
 
-        if (typeof callback === "function") {
-            callback(err, result);
-        }
-    });
+    return Blog.find('title text date').sort({ date: -1 }).limit(limit).exec();
 };
 
 /**
@@ -82,23 +91,15 @@ exports.GetLatestBlogPost = function (limit, callback) {
  * @param string id
  * @param callback (err, Blog result)
  */
-exports.GetBlogPostById = function (id, callback) {
-    
+exports.GetBlogPostById = async function (id)
+{
     if (!mongoose.Types.ObjectId.isValid(id))
     {
-        if (typeof callback === "function") {
-            callback(new Error('id: ' + id + " is not valid"), null);
-        }       
-        return;
+        throw new Error('id: ' + id + " is not valid");
     }
        
-    Blog.find({ '_id': id }, 'title image text description category tags date visits', function (err, result) {
-        if (err) throw err;
-                
-        if (typeof callback === "function") {
-            callback(null, result[0]);
-        }
-    });
+    let result = await Blog.find({ '_id': id }, 'title image text description category tags date visits');
+    return result[0];
 };
 
 /**
@@ -106,23 +107,16 @@ exports.GetBlogPostById = function (id, callback) {
  * @param string title
  * @param callback (err, Blog result)
  */
-exports.GetBlogPostByTitle = function (title, callback) {
+exports.GetBlogPostByTitle = async function (title)
+{
     
     if (typeof title !== 'string')
     {
-        if (typeof callback === "function") {
-            callback(new Error('title: ' + title + " is not string"), null);
-        }       
-        return;
+        throw new Error('title: ' + title + " is not string"); 
     }
-       
-    Blog.find({ 'title': title }, 'title image text description category date visits', function (err, result) {
-        if (err) throw err;
-                
-        if (typeof callback === "function") {
-            callback(null, result[0]);
-        }
-    });
+
+    let result = await Blog.find({ 'title': title }, 'title image text description category date visits').exec();
+    return result[0];
 };
 
 /**
@@ -134,19 +128,10 @@ exports.GetBlogPostsByCategory = function (category, callback) {
     
     if (typeof category !== 'string')
     {
-        if (typeof callback === "function") {
-            callback(new Error('category: ' + category + " is not string"), null);
-        }       
-        return;
+        throw new Error('category: ' + category + " is not string");
     }
     
-    Blog.find({'category': category}).sort({ date: -1 }).exec(function (err, result) {
-        if (err) throw err;
-
-        if (typeof callback === "function") {
-            callback(err, result);
-        }
-    });
+    return Blog.find({ 'category': category }).sort({ date: -1 }).exec();
 };
 
 /**
@@ -158,79 +143,58 @@ exports.GetBlogPostsByTag = function (tag, callback) {
     
     if (typeof tag !== 'string')
     {
-        if (typeof callback === "function") {
-            callback(new Error('category: ' + tag + " is not string"), null);
-        }       
-        return;
+        throw new Error('category: ' + tag + " is not string");
     }
     
-    Blog.find({'tags': tag}).sort({ date: -1 }).exec(function (err, result) {
-        if (err) throw err;
-
-        if (typeof callback === "function") {
-            callback(err, result);
-        }
-    });
+    return Blog.find({ 'tags': tag }).sort({ date: -1 }).exec();
 };
 
 /**
  * Gets array of all categories
  * @param callback (err, Tags[Name, Count] result)
  */
-exports.GetCategories = function (callback) {
-    
-    Blog.find().exec(function (err, result) {
-        if (err) throw err;
+exports.GetCategories = async function ()
+{    
+    let result = await Blog.find().exec();
+    var categories = {};
 
-        if (typeof callback === "function") {
-            
-            var categories = {};
-
-            for (var i = 0; i < result.length; i++)
-            {
-                if (!categories[result[i].category]) { 
-                    categories[result[i].category] = 1; 
-                }
-                else {
-                    categories[result[i].category] += 1;
-                }
-            }
-            
-            callback(err, categories);
+    for (var i = 0; i < result.length; i++)
+    {
+        if (!categories[result[i].category]) { 
+            categories[result[i].category] = 1; 
         }
-    });
+        else {
+            categories[result[i].category] += 1;
+        }
+    }
+            
+    return categories;
 };
 
 /**
  * Gets array of all tags
  * @param callback (err, Tags[Name, Count] result)
  */
-exports.GetTags = function (callback) {
-    
-    Blog.find().exec(function (err, result) {
-        if (err) throw err;
+exports.GetTags = async function ()
+{
+    let result = await Blog.find().exec(); 
+    let tags = {};
 
-        if (typeof callback === "function") {
-            
-            var tags = {};
-
-            for (var i = 0; i < result.length; i++)
-            {
-                if (result[i].tags != null) {
-                    result[i].tags.forEach(function(tag) {
-                        if (!tags[tag]) { 
-                            tags[tag] = 1; 
-                        }
-                        else {
-                            tags[tag] += 1;
-                        }
-                    });
+    for (let i = 0; i < result.length; i++)
+    {
+        if (result[i].tags != null) {
+            result[i].tags.forEach(function(tag) {
+                if (!tags[tag]) { 
+                    tags[tag] = 1; 
                 }
-            }
-            
-            callback(err, tags);
+                else {
+                    tags[tag] += 1;
+                }
+            });
         }
-    });
+    }
+            
+    return tags;
 };
 
 /**
@@ -250,106 +214,84 @@ exports.AddVisit = function (blog, callback) {
   });
 };
 
-/**
- * Remove blog post
- * @param Blog blog
- * @param callback (err, Blog[] result)
- */
-exports.RemoveBlog = function (id, callback) {
-  Blog.find({ _id: id }).remove(function (err, raw) {
-  });
-};
 
 /**
  * Returns blog titles with visit count
  * return array[Title]: visitCount;
  */
-exports.GetAllVisits = function(callback)
+exports.GetAllVisits = async function()
 {
     var allData = {};
     
-    this.GetLatestBlogPost(0, function(err, blogs) {
-        for (var i = 0; i < blogs.length; i++)
-         {
-            allData[blogs[i].title] =  blogs[i].visits.length;
-         }
+    let blogs = await this.GetLatestBlogPost(0) 
+    for (var i = 0; i < blogs.length; i++)
+    {
+        allData[blogs[i].title] =  blogs[i].visits.length;
+    }
 
-        if (typeof callback === "function") {
-            callback(err, allData);
-        }
-    });
-};
+    return allData;
+}
 
 /**
  * Returns all blog visits cumulatively weekly
- * @param id blogs id
  * return array[yyyy/week]: visitCount 
  */
-exports.GetVisitsPerWeekByAllBlogs = function(callback)
+exports.GetVisitsPerWeekByAllBlogs = async function()
 {
-     var blogData = {}
+    var blogData = {}
 
-     this.GetLatestBlogPost(0, function(err, blogs) 
-     {
-        var startingYear = 2016;
-        var startYear = new Date(startingYear,6,1);
-        var endYear = Date.now();
+    let blogs = await this.GetLatestBlogPost(0);
 
-        var cumulative = 0;
+    var startYear = new Date(2016,6,1);
+    var endYear = Date.now();
+    var cumulative = 0;
 
-        for (var date = startYear; date < endYear; date.setDate(date.getDate() + 7))
-        {
-            blogData[date.getFullYear() + "/" + getWeek(date)] = 0;
+    for (var date = startYear; date < endYear; date.setDate(date.getDate() + 7))
+    {
+        blogData[date.getFullYear() + "/" + getWeek(date)] = 0;
+    }
+
+    for (var i = 0; i < blogs.length; i++)
+    {
+        for (var index in blogs[i].visits)
+        { 
+            cumulative++;
+            var date = new Date(blogs[i].visits[index]);
+            blogData[date.getFullYear() + "/" + getWeek(date)] = cumulative;
         }
-
-        for (var i = 0; i < blogs.length; i++) {
-            for (var index in blogs[i].visits)
-            { 
-                cumulative++;
-                var date = new Date(blogs[i].visits[index]);
-                blogData[date.getFullYear() + "/" + getWeek(date)] = cumulative;
-            };
-        }
+    }
         
-        if (typeof callback === "function") {
-            callback(err, blogData);
-        }
-    });
-};
+    return blogData;
+}
 
 /**
  * Returns blogs visits monthly
  * @param id blogs id
  * return array[yyyy/mm]: visitCount 
  */
-exports.GetVisitsPerMonthByBlog = function(id, callback)
+exports.GetVisitsPerMonthByBlog = async function(id)
 {
         var blogData = {}
 
-        this.GetBlogPostById(id, function (err, blog) 
+        let blog = await this.GetBlogPostById(id);
+        if (blog != null) 
         {
-            if (blog != null) 
-            {
-                var startYear = new Date(2015,12,1);
-                var endYear = Date.now();
+            var startYear = new Date(2015,12,1);
+            var endYear = Date.now();
 
-                for (var i = startYear; i < endYear; i.setMonth(i.getMonth() + 1))
-                {
-                    blogData[i.getFullYear() + "/" + (i.getMonth() + 1)] = 0;
-                }
-
-                for (var index in blog.visits)
-                {   
-                    var date = new Date(blog.visits[index]);
-                    blogData[date.getFullYear() + "/" + (date.getMonth() + 1)]++;
-                }
-            }
-        
-            if (typeof callback === "function") 
+            for (var i = startYear; i < endYear; i.setMonth(i.getMonth() + 1))
             {
-                callback(err, blogData);
+                blogData[i.getFullYear() + "/" + (i.getMonth() + 1)] = 0;
             }
-     });
+
+            for (var index in blog.visits)
+            {   
+                var date = new Date(blog.visits[index]);
+                blogData[date.getFullYear() + "/" + (date.getMonth() + 1)]++;
+            }
+        }
+
+        return blogData;
 }
 
 /**

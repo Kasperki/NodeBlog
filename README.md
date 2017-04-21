@@ -8,7 +8,7 @@ For disclamer this project is propably not using all of the best practices and h
 # Installation
 
 * Prequistes
-    * Node
+    * Node 7.XX
     * MongoDB
     * Git
 
