@@ -2,9 +2,11 @@ env:
 - NODE_ENV=test
 language: node_js
 node_js:
-  - "5"
+  - "7"
 services:
   - mongodb
+before_install:
+  - npm install -g typescript@2.2.2
 before_script:
   - sleep 15
   - mongo testdb --eval 'db.addUser("root", "root");'

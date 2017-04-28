@@ -18,7 +18,7 @@
   "scripts": {
     "install": "node tsc && ./scripts/install.js",
     "start": "node ./app/blog/Server.js",
-    "test": "mocha test/*.js"
+    "test": "node tsc && mocha test/*.js"
   },
   "repository": {
     "type": "git",
