@@ -16,9 +16,9 @@
     "uglify-js": "^2.7.0"
   },
   "scripts": {
-    "install": "node tsc && ./scripts/install.js",
+    "install": "tsc && node ./scripts/install.js",
     "start": "node ./app/blog/Server.js",
-    "test": "node tsc && mocha test/*.js"
+    "test": "tsc && mocha test/*.js"
   },
   "repository": {
     "type": "git",
