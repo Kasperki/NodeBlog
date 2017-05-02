@@ -18,7 +18,7 @@ var AuthenticationService = require('../blog/UserBundle/AuthenticationService.js
 var Database = require('./Database.js');
 import * as FileServer from "./FileServer";
 var Logger = require('./Logger.js');
-import * as Routing from "./routing";
+import * as Routing from "./Routing";
 
 //Initialize controllers
 var controllers: BaseController[] = [new BlogController(), new MainController(), new UserController()];
