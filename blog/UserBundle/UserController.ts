@@ -1,6 +1,5 @@
 import { BaseController } from "../BaseController";
 import { Route } from "../BaseController";
-import { RequestData } from "../BaseController";
 
 import * as https from "https";
 var querystring = require("querystring");
@@ -9,8 +8,6 @@ var loadHtml = require('../HtmlLoader.js');
 var Cookies = require('../Cookies.js');
 var AuthenticationService = require('./AuthenticationService.js');
 var UserService = require('./UserService.js');
-var BlogController = require('../BlogController');
-var ErrorPage = require('../ErrorPage.js');
 var Logger = require('../Logger.js');
 
 export class UserController extends BaseController

@@ -1,6 +1,5 @@
 import { BaseController } from "./BaseController";
 import { Route } from "./BaseController";
-import { RequestData } from "./BaseController";
 
 var marked = require('marked');
 var config = require('../config.js');
@@ -17,7 +16,9 @@ export class BlogController extends BaseController
     {
         try
         {
-            let blog = await BlogService.GetBlogPostByTitle(this.requestData.keys['title']);
+            let tesat = this.requestData.routeData.keys['title'];
+
+            let blog = await BlogService.GetBlogPostByTitle(this.requestData.routeData.keys['title']);
 
             if (blog)
             {
@@ -25,8 +26,8 @@ export class BlogController extends BaseController
             }
             else
             {
-                ErrorPage(this.requestData.response, 404, "We have lost the page: /blog/" + this.requestData.keys['title']);
-                Logger.Warning(config.log.error, "renderBlog -- Blog not found: /blog/" + this.requestData.keys['title']);
+                ErrorPage(this.requestData.response, 404, "We have lost the page: /blog/" + this.requestData.routeData.keys['title']);
+                Logger.Warning(config.log.error, "renderBlog -- Blog not found: /blog/" + this.requestData.routeData.keys['title']);
             }
         }
         catch (e)
@@ -40,7 +41,7 @@ export class BlogController extends BaseController
     {
         try
         {
-            let blog = await BlogService.GetBlogPostByTitle(this.requestData.queryParameters['title']);
+            let blog = await BlogService.GetBlogPostByTitle(this.requestData.routeData.queryParameters['title']);
 
             if (blog)
             {
@@ -50,14 +51,14 @@ export class BlogController extends BaseController
             }
             else
             {
-                ErrorPage(this.requestData.response, 404, "We have lost the page: /blog/" + this.requestData.queryParameters['title']);
-                Logger.Warning(config.log.error, "getBlog -- Blog not found: /blog/" + this.requestData.queryParameters['title']);
+                ErrorPage(this.requestData.response, 404, "We have lost the page: /blog/" + this.requestData.routeData.queryParameters['title']);
+                Logger.Warning(config.log.error, "getBlog -- Blog not found: /blog/" + this.requestData.routeData.queryParameters['title']);
             }
         }
         catch (e)
         {
-            ErrorPage(this.requestData.response, 404, "We have lost the page: /blog/" + this.requestData.queryParameters['title']);
-            Logger.Warning(config.log.error, "getBlog -- Blog not found: /blog/" + this.requestData.queryParameters['title']);
+            ErrorPage(this.requestData.response, 404, "We have lost the page: /blog/" + this.requestData.routeData.queryParameters['title']);
+            Logger.Warning(config.log.error, "getBlog -- Blog not found: /blog/" + this.requestData.routeData.queryParameters['title']);
             return;
         }
     }
@@ -71,7 +72,7 @@ export class BlogController extends BaseController
 
     private filterBlogsPerPage(blogPosts: any): { blogs: any, pagesCount: number }
     {
-        var pageNumber = this.requestData.queryParameters['page'];
+        var pageNumber = this.requestData.routeData.queryParameters['page'];
 
         if (!pageNumber)
             pageNumber = 0;
@@ -103,7 +104,7 @@ export class BlogController extends BaseController
 
     private getByCategory = async () =>
     {
-        var category = this.requestData.queryParameters['category'];
+        var category = this.requestData.routeData.queryParameters['category'];
 
         let blogPosts = await BlogService.GetBlogPostsByCategory(category);
         var blogs = this.filterBlogsPerPage(blogPosts);
@@ -112,7 +113,7 @@ export class BlogController extends BaseController
 
     private getByTag = async () =>
     {
-        var tag = this.requestData.queryParameters['tag'];
+        var tag = this.requestData.routeData.queryParameters['tag'];
 
         let blogPosts = await BlogService.GetBlogPostsByTag(tag);
         var blogs = this.filterBlogsPerPage(blogPosts);
@@ -133,7 +134,7 @@ export class BlogController extends BaseController
 
     private getMonthlyVisits = async () =>
     {
-        var id = this.requestData.queryParameters['id'];
+        var id = this.requestData.routeData.queryParameters['id'];
 
         try {
             let result = await BlogService.GetVisitsPerMonthByBlog(id);
@@ -158,7 +159,7 @@ export class BlogController extends BaseController
 
     private editBlog = async () =>
     {
-        let blog = await BlogService.GetBlogPostById(this.requestData.queryParameters['id']);
+        let blog = await BlogService.GetBlogPostById(this.requestData.routeData.queryParameters['id']);
         let blogData = { title: blog.title, text: blog.text, image: blog.image, description: blog.description, category: blog.category, tags: JSON.stringify(blog.tags) };
         loadHtml.load(this.requestData, './views/blog-admin-add.html', blogData);
     }
@@ -173,7 +174,7 @@ export class BlogController extends BaseController
     {
         var jsonBlog = this.requestData.data.length ? JSON.parse(this.requestData.data) : '';
 
-        let blogPost = await BlogService.GetBlogPostByTitle(this.requestData.queryParameters['title']);
+        let blogPost = await BlogService.GetBlogPostByTitle(this.requestData.routeData.queryParameters['title']);
 
         if (blogPost == null)
         {
@@ -191,7 +192,7 @@ export class BlogController extends BaseController
 
     private deleteBlog = () => 
     {
-        var id = this.requestData.queryParameters['id'];
+        var id = this.requestData.routeData.queryParameters['id'];
         BlogService.RemoveBlog(id);
 
         Logger.Debug(config.log.debug, "Blog" + id + " deleted");

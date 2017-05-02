@@ -1,6 +1,5 @@
 import { BaseController } from "./BaseController";
 import { Route } from "./BaseController";
-import { RequestData } from "./BaseController";
 
 var loadHtml = require('./HtmlLoader.js');
 var AuthenticationService = require('../blog/UserBundle/AuthenticationService.js');
@@ -18,7 +17,7 @@ export class MainController extends BaseController
 
         if (this.requestData.request.connection.remoteAddress.startsWith("::ffff:127.0.0.1"))
         {
-            var session = AuthenticationService.IsTokenValid(this.requestData.queryParameters["sessionId"], this.requestData.queryParameters["authToken"]);
+            var session = AuthenticationService.IsTokenValid(this.requestData.routeData.queryParameters["sessionId"], this.requestData.routeData.queryParameters["authToken"]);
         }
 
         var jsonResponse = "NotValid";

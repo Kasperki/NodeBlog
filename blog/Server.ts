@@ -16,10 +16,9 @@ import { MainController } from "./MainController";
 import { UserController } from "./UserBundle/UserController.js";
 var AuthenticationService = require('../blog/UserBundle/AuthenticationService.js');
 var Database = require('./Database.js');
-var ErrorPage = require('./ErrorPage.js');
 import * as FileServer from "./FileServer";
 var Logger = require('./Logger.js');
-var Routing = require('./Routing.js');
+import * as Routing from "./routing";
 
 //Initialize controllers
 var controllers: BaseController[] = [new BlogController(), new MainController(), new UserController()];
@@ -36,7 +35,7 @@ var options: https.ServerOptions = {
     ca: fs.readFileSync(config.cert.ca_crt),
 };
 
-var server = https.createServer(options, function (request: http.ServerRequest, response: http.ServerResponse)
+https.createServer(options, function (request: http.ServerRequest, response: http.ServerResponse)
 {	
     Request = request;
     Response = response;
@@ -49,28 +48,30 @@ var server = https.createServer(options, function (request: http.ServerRequest, 
 
     request.on('end', function ()
     {
-
-        var url: urlModule.Url = urlModule.parse(String(request.url), true);
-        var route = url.pathname;        
+        let url: urlModule.Url = urlModule.parse(String(request.url), true);   
                 
-        var cookies = Cookies.ParseCookies(request);      
-        var authenticated = AuthenticationService.IsTokenValid(cookies.sessionId, cookies.authToken, request);
-
         for (var i = 0; i < controllers.length; i++)
         {
             for (var j = 0; j < controllers[i].GetRoutes.length; j++)
             {
-                var controllerRoute = controllers[i].GetRoutes[j];
-                var keys = Routing.parseRoute(controllerRoute.route, route); //Keys from route .../{key}/{key}/... test
+                let controllerRoute = controllers[i].GetRoutes[j];
+                let routeData = Routing.parseRoute(controllerRoute.route, url);
+
+                if (routeData == null)
+                {
+                    continue;
+                }
+
+                let cookies = Cookies.ParseCookies(request);
+                let authenticated = AuthenticationService.IsTokenValid(cookies.sessionId, cookies.authToken, request);
 
                 let requestData = new RequestData(request, response);
                 requestData.data = incomingData;
-                requestData.queryParameters = url.query;
+                requestData.routeData = routeData;
                 requestData.cookies = cookies;
-                requestData.keys = keys;
                 requestData.parameters = { loggedIn: authenticated ? true : false, userName: authenticated ? authenticated.username : null, "NODE.ENV": String(config.env) };
 
-                if (keys && (!controllerRoute.authenticated || authenticated))
+                if (!controllerRoute.authenticated || authenticated)
                 {
                     var access = request.connection.remoteAddress + " " + request.headers['user-agent']  + "  " + request.method + " HTTP:" + request.httpVersion + " " + request.url;  
                     Logger.Log(config.log.access, access);
@@ -82,7 +83,7 @@ var server = https.createServer(options, function (request: http.ServerRequest, 
             }
         }
 
-        FileServer.TryLoadResourceFromRoute(request, response, String(route));      
+        FileServer.TryLoadResourceFromRoute(request, response, String(url.pathname));      
     });
 }).listen(config.httpsPort);
 

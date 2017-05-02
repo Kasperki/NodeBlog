@@ -22,6 +22,7 @@
   <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
   <ItemGroup>
     <Content Include="package.json" />
+    <Content Include="tsconfig.test.json" />
     <Content Include="tsconfig.json" />
     <Content Include="README.md" />
     <Compile Include="blog\BlogController.ts" />
@@ -37,7 +38,6 @@
     <Compile Include="blog\HtmlLoader.js" />
     <Compile Include="blog\Logger.js" />
     <Compile Include="blog\MainController.ts" />
-    <Compile Include="blog\Routing.js" />
     <Compile Include="blog\Server.ts" />
     <Compile Include="scripts\install.js" />
     <Compile Include="test\CookiesTest.js" />
@@ -67,6 +67,9 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="blog\BaseController.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="blog\Routing.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
   </ItemGroup>

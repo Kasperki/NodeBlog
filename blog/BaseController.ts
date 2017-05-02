@@ -36,15 +36,15 @@ export class Route
 }
 
 import * as http from "http";
+import * as routing from "./Routing";
 
 export class RequestData
 {
     request: http.ServerRequest;
     response: http.ServerResponse;
+    routeData: routing.RouteData;
     data: string;
-    queryParameters: any;
     cookies: any;
-    keys: any;
     parameters: any;
 
     constructor(request: http.ServerRequest, response: http.ServerResponse)
