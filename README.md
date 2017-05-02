@@ -1,4 +1,4 @@
-# NodeBlog [![Build Status](https://travis-ci.org/Kasperki/NodeBlog.svg?branch=master)](https://travis-ci.org/Kasperki/NodeBlog)
+# NodeBlog [![Build Status](https://travis-ci.org/Kasperki/NodeBlog.svg?branch=master)](https://travis-ci.org/Kasperki/NodeBlog) [![NSP Status](https://nodesecurity.io/orgs/kasper/projects/dd7a200b-0aa5-4f80-bfa7-1ef008879492/badge)](https://nodesecurity.io/orgs/kasper/projects/dd7a200b-0aa5-4f80-bfa7-1ef008879492)
 
 This project is like a small MVC framework and top of that I have built my blog.
 The project trying to use limited amount of NPM packets. Why? Just 4 fun and learning.
