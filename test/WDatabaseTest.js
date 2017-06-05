@@ -1,7 +1,7 @@
 const assert = require('assert');
 var mongoose = require('mongoose');
 var config = require('../config.js');
-var database = require('../blog/Database.js');
+var database = require('../app/blog/Database.js');
 
 //NOTE: This test case is F***ED. Getting done() called multiple times error.
 //Firstly Name is WDatabse so no error on before hooks... 
@@ -16,7 +16,7 @@ describe('Database', function () {
 
    it('Should connect to database', function (done) {
           
-        database.connectToDatabase();
+        database.ConnectToDatabase();
          
         mongoose.connection.on('connected', function () {  
             done();
@@ -38,7 +38,7 @@ describe('#connectToDatabase()', function () {
 
     it('Should disconnect from database', function (done) {
         
-        database.disconnectFromDatabase();
+        database.DisconnectFromDatabase();
         
         mongoose.connection.on('disconnected', function () {  
             done();

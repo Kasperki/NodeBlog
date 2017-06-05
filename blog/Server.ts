@@ -15,7 +15,7 @@ import { BlogController } from "./BlogController";
 import { MainController } from "./MainController";
 import { UserController } from "./UserBundle/UserController.js";
 var AuthenticationService = require('../blog/UserBundle/AuthenticationService.js');
-var Database = require('./Database.js');
+import * as Database from './Database';
 import * as FileServer from "./FileServer";
 var Logger = require('./Logger.js');
 import * as Routing from "./Routing";
@@ -24,7 +24,7 @@ import * as Routing from "./Routing";
 var controllers: BaseController[] = [new BlogController(), new MainController(), new UserController()];
 
 //Initialize database connection
-Database.connectToDatabase();
+Database.ConnectToDatabase(null);
 
 let Request: http.ServerRequest;
 let Response: http.ServerResponse;

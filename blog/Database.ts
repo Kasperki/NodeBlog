@@ -1,13 +1,12 @@
 var mongoose = require('mongoose');
 var config = require('../config.js');
 var Logger = require('./Logger.js');
-var exports = module.exports = {};
 
 /**
  * Makes connection to database
  * @param callback (err, boolean)
  */
-exports.connectToDatabase = function(callback) 
+export function ConnectToDatabase (callback: any) 
 {
     var dbHost = config.database.host + config.database.schema; 
     
@@ -19,7 +18,7 @@ exports.connectToDatabase = function(callback)
     mongoose.connect(dbHost, options);
 
     var db = mongoose.connection;
-    db.on('error', function (err) {
+    db.on('error', function (err: Error) {
         Logger.Warning(config.log.error, "Connection error: " + err);
     });
     
@@ -31,7 +30,7 @@ exports.connectToDatabase = function(callback)
     });
 }
 
-exports.disconnectFromDatabase = function ()
+export function DisconnectFromDatabase ()
 {
     mongoose.connection.close();
 }

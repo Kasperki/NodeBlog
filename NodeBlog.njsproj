@@ -27,6 +27,7 @@
     <Content Include="README.md" />
     <Compile Include="blog\BlogController.ts" />
     <Compile Include="blog\Cookies.ts" />
+    <Compile Include="blog\Database.ts" />
     <Compile Include="blog\ErrorPage.ts" />
     <Compile Include="blog\UserBundle\CreateUserCommand.ts" />
     <Compile Include="blog\UserBundle\RemoveUserCommand.ts" />
@@ -34,7 +35,6 @@
     <Compile Include="config.js" />
     <Compile Include="app\config.js" />
     <Compile Include="blog\BlogService.js" />
-    <Compile Include="blog\Database.js" />
     <Compile Include="blog\FileServer.ts" />
     <Compile Include="blog\Hash.js" />
     <Compile Include="blog\HtmlLoader.js" />

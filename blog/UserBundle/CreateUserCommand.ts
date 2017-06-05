@@ -1,4 +1,4 @@
-var Database = require('../Database.js');
+import * as Database from '../Database';
 var UserService = require('./UserService.js');
 
 /**
@@ -17,7 +17,7 @@ function CreateUser(username: string, password: string)
     }
     
     //Initialize database connection and create user
-    Database.connectToDatabase(function (err: Error, connected: boolean) {      
+    Database.ConnectToDatabase(function (err: Error, connected: boolean) {      
         UserService.AddUser(username, password, function (err: Error, saved: boolean) {            
             
             if (err)
@@ -29,7 +29,7 @@ function CreateUser(username: string, password: string)
                 console.log("User:" + username + " created");
             }
                 
-            Database.disconnectFromDatabase();
+            Database.DisconnectFromDatabase();
         });
     });
 }

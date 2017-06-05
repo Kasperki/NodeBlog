@@ -1,4 +1,4 @@
-var Database = require('../Database.js');
+import * as Database from '../Database';
 var UserService = require('./UserService.js');
 
 /**
@@ -12,10 +12,10 @@ function RemoveUser(username: string)
     }
 
     //Initialize database connection and remove user
-    Database.connectToDatabase(function (err: Error, connected: boolean) {      
+    Database.ConnectToDatabase(function (err: Error, connected: boolean) {      
         UserService.RemoveUser(username, function (err: Error, result: boolean) {            
             console.log("User:" + username + " removed");
-            Database.disconnectFromDatabase();
+            Database.DisconnectFromDatabase();
         });
     });
 }
