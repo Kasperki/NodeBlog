@@ -28,6 +28,8 @@
     <Compile Include="blog\BlogController.ts" />
     <Compile Include="blog\Cookies.ts" />
     <Compile Include="blog\ErrorPage.ts" />
+    <Compile Include="blog\UserBundle\CreateUserCommand.ts" />
+    <Compile Include="blog\UserBundle\RemoveUserCommand.ts" />
     <Compile Include="blog\UserBundle\UserController.ts" />
     <Compile Include="config.js" />
     <Compile Include="app\config.js" />
@@ -48,8 +50,6 @@
     <Compile Include="test\TestDBUtils.js" />
     <Compile Include="test\WDatabaseTest.js" />
     <Compile Include="blog\UserBundle\AuthenticationService.js" />
-    <Compile Include="blog\UserBundle\CreateUserCommand.js" />
-    <Compile Include="blog\UserBundle\RemoveUserCommand.js" />
     <Compile Include="blog\UserBundle\UserService.js" />
     <Content Include="test\file\test.1.html" />
     <Content Include="test\file\test.html" />

@@ -6,7 +6,7 @@ var UserService = require('./UserService.js');
  * @param string username
  * @param string password
  */
-function CreateUser(username, password) 
+function CreateUser(username: string, password: string) 
 {    
     if (!username) {
         throw new Error("Missing username");
@@ -17,13 +17,17 @@ function CreateUser(username, password)
     }
     
     //Initialize database connection and create user
-    Database.connectToDatabase(function (err, connected) {      
-        UserService.AddUser(username, password, function (err, saved) {            
+    Database.connectToDatabase(function (err: Error, connected: boolean) {      
+        UserService.AddUser(username, password, function (err: Error, saved: boolean) {            
             
             if (err)
+            {
                 console.log(err);
-            else 
+            }
+            else
+            {
                 console.log("User:" + username + " created");
+            }
                 
             Database.disconnectFromDatabase();
         });
