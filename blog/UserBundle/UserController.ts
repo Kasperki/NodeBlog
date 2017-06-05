@@ -5,7 +5,7 @@ import * as https from "https";
 var querystring = require("querystring");
 var config = require('../../config.js');
 var loadHtml = require('../HtmlLoader.js');
-var Cookies = require('../Cookies.js');
+import * as Cookies from '../Cookies';
 var AuthenticationService = require('./AuthenticationService.js');
 var UserService = require('./UserService.js');
 var Logger = require('../Logger.js');
@@ -27,8 +27,8 @@ export class UserController extends BaseController
                     {
                         var session = AuthenticationService.CreateSession(userInfo.username);
                         Cookies.SetCookies(this.requestData.response, [
-                            { name: "sessionId", content: session.id, expires: session.expires, options: { secure: true, httponly: true } },
-                            { name: "authToken", content: session.token, expires: session.expires, options: { secure: true, httponly: true } }
+                            new Cookies.Cookie("sessionId", session.id, session.expires),
+                            new Cookies.Cookie("authToken", session.token, session.expires),
                         ]);
 
                         Logger.Log(config.log.access, "User: " + userInfo.username + " logged in from: " + this.requestData.request.connection.remoteAddress);
@@ -58,7 +58,7 @@ export class UserController extends BaseController
     logout = () =>
     {
         AuthenticationService.RemoveSession(this.requestData.cookies.sessionId);
-        Cookies.SetCookies(this.requestData.response, [{ name: "sessionId", content: null, expires: new Date(0) }, { name: "authToken", content: null, expires: new Date(0) }])
+        Cookies.SetCookies(this.requestData.response, [new Cookies.Cookie("sessionId", "", new Date(0)), new Cookies.Cookie("authToken", "", new Date(0))])
         loadHtml.load(this.requestData, './views/login.html', null);
     }
 

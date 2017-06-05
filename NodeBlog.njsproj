@@ -26,12 +26,12 @@
     <Content Include="tsconfig.json" />
     <Content Include="README.md" />
     <Compile Include="blog\BlogController.ts" />
+    <Compile Include="blog\Cookies.ts" />
     <Compile Include="blog\ErrorPage.ts" />
     <Compile Include="blog\UserBundle\UserController.ts" />
     <Compile Include="config.js" />
     <Compile Include="app\config.js" />
     <Compile Include="blog\BlogService.js" />
-    <Compile Include="blog\Cookies.js" />
     <Compile Include="blog\Database.js" />
     <Compile Include="blog\FileServer.ts" />
     <Compile Include="blog\Hash.js" />
@@ -58,6 +58,7 @@
     <Folder Include="app" />
     <Folder Include="app\wwwroot\" />
     <Folder Include="blog" />
+    <Folder Include="blog\Infastructure\" />
     <Folder Include="blog\UserBundle" />
     <Folder Include="NodeBlog" />
     <Folder Include="scripts" />
@@ -67,6 +68,9 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="blog\BaseController.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="blog\Infastructure\Dictionary.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="blog\Routing.ts">

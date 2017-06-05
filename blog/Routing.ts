@@ -1,7 +1,4 @@
-﻿interface IDictionary
-{
-    [index: string]: string;
-}
+﻿import { IDictionary } from "./Infastructure/Dictionary";
 
 export class RouteData
 {

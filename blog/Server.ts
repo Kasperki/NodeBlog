@@ -10,7 +10,7 @@ import { RequestData } from "./BaseController";
 import * as urlModule from "url";
 
 var config = require('../config.js'); 
-var Cookies = require('./Cookies.js'); 
+import * as Cookies from './Cookies'; 
 import { BlogController } from "./BlogController";
 import { MainController } from "./MainController";
 import { UserController } from "./UserBundle/UserController.js";
@@ -67,7 +67,7 @@ https.createServer(options, function (request: http.ServerRequest, response: htt
 
                 //TODO do once per request?
                 let cookies = Cookies.ParseCookies(request);
-                let authenticated = AuthenticationService.IsTokenValid(cookies.sessionId, cookies.authToken, request);
+                let authenticated = AuthenticationService.IsTokenValid(cookies["sessionId"], cookies["authToken"], request); //TODO SET THESE 2 STRINGS AND CONSTANTS
 
                 requestData.routeData = routeData;
                 requestData.cookies = cookies;
