@@ -5,7 +5,7 @@ var marked = require('marked');
 var config = require('../config.js');
 var loadHtml = require('./HtmlLoader.js');
 var BlogService = require('./BlogService.js');
-var ErrorPage = require('./ErrorPage.js');
+import * as ErrorPage from "./ErrorPage";
 var Logger = require('./Logger.js');
 
 const BLOGS_PER_PAGE = 8;
@@ -26,7 +26,7 @@ export class BlogController extends BaseController
             }
             else
             {
-                ErrorPage(this.requestData.response, 404, "We have lost the page: /blog/" + this.requestData.routeData.keys['title']);
+                ErrorPage.ThrowErrorPage(this.requestData, 404, "We have lost the page: /blog/" + this.requestData.routeData.keys['title']);
                 Logger.Warning(config.log.error, "renderBlog -- Blog not found: /blog/" + this.requestData.routeData.keys['title']);
             }
         }
@@ -51,13 +51,13 @@ export class BlogController extends BaseController
             }
             else
             {
-                ErrorPage(this.requestData.response, 404, "We have lost the page: /blog/" + this.requestData.routeData.queryParameters['title']);
+                ErrorPage.ThrowErrorPage(this.requestData, 404, "We have lost the page: /blog/" + this.requestData.routeData.queryParameters['title']);
                 Logger.Warning(config.log.error, "getBlog -- Blog not found: /blog/" + this.requestData.routeData.queryParameters['title']);
             }
         }
         catch (e)
         {
-            ErrorPage(this.requestData.response, 404, "We have lost the page: /blog/" + this.requestData.routeData.queryParameters['title']);
+            ErrorPage.ThrowErrorPage(this.requestData, 404, "We have lost the page: /blog/" + this.requestData.routeData.queryParameters['title']);
             Logger.Warning(config.log.error, "getBlog -- Blog not found: /blog/" + this.requestData.routeData.queryParameters['title']);
             return;
         }

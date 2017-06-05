@@ -3,7 +3,8 @@ import * as fs from "fs";
 import * as zlib from "zlib";
 var mime = require('mime');
 var config = require('../config.js');
-var ErrorPage = require('./ErrorPage.js');
+import { RequestData } from './BaseController';
+import * as ErrorPage from './ErrorPage';
 var Logger = require('./Logger.js');
 
 var directoryPath: string;
@@ -15,7 +16,7 @@ var status: fs.Stats;
  * @param Request request
  * @param string route
  */
-export function TryLoadResourceFromRoute(request: http.ServerRequest, response: http.ServerResponse, route: string)
+export function TryLoadResourceFromRoute(requestData: RequestData, route: string)
 {
     for (var i = 0; i < config.web.publicDirectories.length; i++)
     {
@@ -50,12 +51,12 @@ export function TryLoadResourceFromRoute(request: http.ServerRequest, response: 
 
             if (status.isDirectory())
             {
-                sendGeneratedHtml(response, baseRoute + route);
+                sendGeneratedHtml(requestData.response, baseRoute + route);
                 break;
             }
             else if (status.isFile())
             {
-                sendFile(response, request);
+                sendFile(requestData.response, requestData.request);
                 break;
             }
         }
@@ -63,8 +64,8 @@ export function TryLoadResourceFromRoute(request: http.ServerRequest, response: 
     
     if (status == null)
     {
-        ErrorPage(response, 404, "We have lost the page: " + route);
-        Logger.Warning(config.log.error, "Referer: " + request.headers['referer'] + " -- " + request.connection.remoteAddress + "Path not found:" + directoryPath);
+        ErrorPage.ThrowErrorPage(requestData, 404, "We have lost the page: " + route);
+        Logger.Warning(config.log.error, "Referer: " + requestData.request.headers['referer'] + " -- " + requestData.request.connection.remoteAddress + "Path not found:" + directoryPath);
     }
 };
 

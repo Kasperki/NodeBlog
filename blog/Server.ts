@@ -49,7 +49,10 @@ https.createServer(options, function (request: http.ServerRequest, response: htt
     request.on('end', function ()
     {
         let url: urlModule.Url = urlModule.parse(String(request.url), true);   
-                
+
+        let requestData = new RequestData(request, response);
+        requestData.data = incomingData;
+
         for (var i = 0; i < controllers.length; i++)
         {
             for (var j = 0; j < controllers[i].GetRoutes.length; j++)
@@ -62,11 +65,10 @@ https.createServer(options, function (request: http.ServerRequest, response: htt
                     continue;
                 }
 
+                //TODO do once per request?
                 let cookies = Cookies.ParseCookies(request);
                 let authenticated = AuthenticationService.IsTokenValid(cookies.sessionId, cookies.authToken, request);
 
-                let requestData = new RequestData(request, response);
-                requestData.data = incomingData;
                 requestData.routeData = routeData;
                 requestData.cookies = cookies;
                 requestData.parameters = { loggedIn: authenticated ? true : false, userName: authenticated ? authenticated.username : null, "NODE.ENV": String(config.env) };
@@ -83,7 +85,7 @@ https.createServer(options, function (request: http.ServerRequest, response: htt
             }
         }
 
-        FileServer.TryLoadResourceFromRoute(request, response, String(url.pathname));      
+        FileServer.TryLoadResourceFromRoute(requestData, String(url.pathname));      
     });
 }).listen(config.httpsPort);
 
