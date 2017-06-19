@@ -1,5 +1,5 @@
 import * as Database from '../Database';
-var UserService = require('./UserService.js');
+import * as UserService from "./UserService";
 
 /**
  * Creates user
@@ -18,8 +18,8 @@ function CreateUser(username: string, password: string)
     
     //Initialize database connection and create user
     Database.ConnectToDatabase(function (err: Error, connected: boolean) {      
-        UserService.AddUser(username, password, function (err: Error, saved: boolean) {            
-            
+        UserService.AddUser(username, password, function (err: Error, saved: boolean)
+        {                
             if (err)
             {
                 console.log(err);

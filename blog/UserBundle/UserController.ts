@@ -2,12 +2,12 @@ import { BaseController } from "../BaseController";
 import { Route } from "../BaseController";
 
 import * as https from "https";
-var querystring = require("querystring");
+import * as querystring from "querystring";
 var config = require('../../config.js');
 var loadHtml = require('../HtmlLoader.js');
 import * as Cookies from '../Cookies';
 var AuthenticationService = require('./AuthenticationService.js');
-var UserService = require('./UserService.js');
+import * as UserService from "./UserService.js";
 var Logger = require('../Logger.js');
 
 export class UserController extends BaseController
@@ -15,31 +15,30 @@ export class UserController extends BaseController
     authenticate = () =>
     {
         //TODO NEEDS BRUTE FORCE LOGIN PROTECTION.
-        var userInfo = this.requestData.data.length ? JSON.parse(this.requestData.data) : '';
+        let userInfo = this.requestData.data.length ? JSON.parse(this.requestData.data) : '';
 
-        this.verifyReCapthca(userInfo.recaptcha, this.requestData.request.connection.remoteAddress, (err: Error, validCapthca) =>
+        this.verifyReCapthca(String(userInfo.recaptcha), this.requestData.request.connection.remoteAddress, function (e, validCapthca) =>
         {
             if (validCapthca)
             {
-                UserService.ValidateLogin(userInfo.username, userInfo.password, function (err: Error, success: boolean)
-                {
-                    if (success)
-                    {
-                        var session = AuthenticationService.CreateSession(userInfo.username);
-                        Cookies.SetCookies(this.requestData.response, [
-                            new Cookies.Cookie("sessionId", session.id, session.expires),
-                            new Cookies.Cookie("authToken", session.token, session.expires),
-                        ]);
+                let success = UserService.ValidateLogin(userInfo.username, userInfo.password);
 
-                        Logger.Log(config.log.access, "User: " + userInfo.username + " logged in from: " + this.requestData.request.connection.remoteAddress);
-                        this.Response("Ok");
-                    }
-                    else
-                    {
-                        Logger.Warning(config.log.error, "Invalid login: " + userInfo.username + " from: " + this.requestData.request.connection.remoteAddress);
-                        this.Response("Invalid");
-                    }
-                });
+                if (success)
+                {
+                    var session = AuthenticationService.CreateSession(userInfo.username);
+                    Cookies.SetCookies(this.requestData.response, [
+                        new Cookies.Cookie("sessionId", session.id, session.expires),
+                        new Cookies.Cookie("authToken", session.token, session.expires),
+                    ]);
+
+                    Logger.Log(config.log.access, "User: " + userInfo.username + " logged in from: " + this.requestData.request.connection.remoteAddress);
+                    this.Response("Ok");
+                }
+                else
+                {
+                    Logger.Warning(config.log.error, "Invalid login: " + userInfo.username + " from: " + this.requestData.request.connection.remoteAddress);
+                    this.Response("Invalid");
+                }
             }
             else
             {
@@ -68,7 +67,7 @@ export class UserController extends BaseController
      * @param string remoteip
      * @callback (Error err,boolean isValid);
      */
-    verifyReCapthca = (recaptchaResponse: string, remoteip: string, callback: (e: Error | null, message: boolean) => void) =>
+    verifyReCapthca = () => (recaptchaResponse: string, remoteip: string, callback: (e: Error | null, validCapthca: boolean)) =>
     {
         var post_data = querystring.stringify({
             'secret': config.security.rechaptasecret,
@@ -87,18 +86,22 @@ export class UserController extends BaseController
             }
         };
 
-        var post_req = https.request(post_options, function (res) {
+        var post_req = https.request(post_options, function (res)
+        {
             res.setEncoding('utf8');
-            res.on('data', function (data) {
-                if (res.statusCode === 200) {
+            res.on('data', function (data)
+            {
+                if (res.statusCode === 200)
+                {
                     var response = data.length ? JSON.parse(String(data)) : '';
-                    if (response.success === true) {
+                    if (response.success === true)
+                    {
                         callback(null, true);
                         return;
                     }
                 }
 
-                callback(null, false); //callback(null, false);
+                callback(null, false);
                 return;
             });
         });

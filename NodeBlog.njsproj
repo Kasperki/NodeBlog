@@ -36,7 +36,6 @@
     <Compile Include="app\config.js" />
     <Compile Include="blog\BlogService.js" />
     <Compile Include="blog\FileServer.ts" />
-    <Compile Include="blog\Hash.js" />
     <Compile Include="blog\HtmlLoader.js" />
     <Compile Include="blog\Logger.js" />
     <Compile Include="blog\MainController.ts" />
@@ -50,7 +49,6 @@
     <Compile Include="test\TestDBUtils.js" />
     <Compile Include="test\WDatabaseTest.js" />
     <Compile Include="blog\UserBundle\AuthenticationService.js" />
-    <Compile Include="blog\UserBundle\UserService.js" />
     <Content Include="test\file\test.1.html" />
     <Content Include="test\file\test.html" />
   </ItemGroup>
@@ -60,6 +58,7 @@
     <Folder Include="blog" />
     <Folder Include="blog\Infastructure\" />
     <Folder Include="blog\UserBundle" />
+    <Folder Include="blog\UserBundle\Model\" />
     <Folder Include="NodeBlog" />
     <Folder Include="scripts" />
     <Folder Include="test" />
@@ -74,6 +73,15 @@
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="blog\Routing.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="blog\UserBundle\Model\IUser.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="blog\UserBundle\Model\User.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="blog\UserBundle\UserService.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
   </ItemGroup>

@@ -1,5 +1,5 @@
 const assert = require('assert');
-var hash = require('../blog/Hash.js');
+var hash = require('../app/blog/Hash.js');
 
 describe('Hash', function () {
     describe('GenSalt()', function () {

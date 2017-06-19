@@ -1,4 +1,4 @@
-var mongoose = require('mongoose');
+import * as mongoose from "mongoose";
 var config = require('../config.js');
 var Logger = require('./Logger.js');
 
@@ -9,12 +9,13 @@ var Logger = require('./Logger.js');
 export function ConnectToDatabase (callback: any) 
 {
     var dbHost = config.database.host + config.database.schema; 
-    
-    var options = {
+
+    var options = <mongoose.ConnectionOptions>
+    {
         user: config.database.user,
-        pass: config.database.password
+        pass: config.database.password,
     }
-    
+
     mongoose.connect(dbHost, options);
 
     var db = mongoose.connection;

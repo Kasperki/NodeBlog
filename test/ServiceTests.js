@@ -2,8 +2,9 @@ var assert = require('assert');
 var dbutils = require('./TestDBUtils.js');
 var blogService = require('../blog/BlogService.js');
 var authenticationService = require('../blog/UserBundle/AuthenticationService.js');
-var userService = require('../blog/UserBundle/UserService.js');
-var hash = require('../blog/Hash.js');
+var User = require('../app/blog/UserBundle/Model/User.js');
+var userService = require('../app/blog/UserBundle/UserService.js');
+var hash = require('../app/blog/Hash.js');
 
 describe('TestsWithMongoose', function () {
 
@@ -32,15 +33,14 @@ describe('BlogService', function () {
 
   describe('#GetLatestBlogPost()', function () {
         it('Should return empty array if no blog posts', function (done) {        
-            blogService.GetLatestBlogPost(1, function(err, result) {
-                assert.equal(result.length, 0);
-                done();
-            });
+            var result = blogService.GetLatestBlogPost(1)
+            assert.equal(result.length, 0);
+            done();
         });
         it('Should throw error if limit is negative', function (done) {        
             assert.throws(
             () => {
-                blogService.GetLatestBlogPost(-1, function(err, result) {});
+                blogService.GetLatestBlogPost(-1);
             },
             /Limit can't be negative/
             );
@@ -53,10 +53,9 @@ describe('BlogService', function () {
                 dbutils.fixtures(new blogService.Blog({title:i}));
             }
             
-            blogService.GetLatestBlogPost(0, function(err, result) {
-                assert.equal(result.length, expected);
-                done();
-            });
+            var result = blogService.GetLatestBlogPost(0);
+            assert.equal(result.length, expected);
+            done();
         });
         it('Should return expected number of blog posts', function (done) {        
             
@@ -65,26 +64,23 @@ describe('BlogService', function () {
                 dbutils.fixtures(new blogService.Blog({title:i}));
             }
             
-            blogService.GetLatestBlogPost(expected, function(err, result) {
-                assert.equal(result.length, expected);
-                done();
-            });
+            var result = blogService.GetLatestBlogPost(expected);
+            assert.equal(result.length, expected);
+            done();
         });
         it('Should return sorted by datetime array');
     });
     
     describe('#GetBlogPostById()', function () {
         it('Should return Error if id is not valid', function (done) {        
-            blogService.GetBlogPostById("666", function(err, result) {
-                assert.equal(err.message, "id: 666 is not valid");
-                done();
-            });
+            blogService.GetBlogPostById("666"); //TODO ASSERT THROWS
+            assert.equal(err.message, "id: 666 is not valid");
+            done();
         });
         it('Should return null if no blog posts found', function (done) {        
-            blogService.GetBlogPostById('56cb91bdc3464f14678934ca', function(err, result) {
-                assert.equal(result, null);
-                done();
-            });
+            var result = blogService.GetBlogPostById('56cb91bdc3464f14678934ca')
+            assert.equal(result, null);
+            done();
         });
         it('Should return searched blog post by id', function (done) {        
                       
@@ -202,7 +198,7 @@ describe('UserService', function () {
     describe('#ValidateLogin()', function () {
         it('Should return true if login infomation is correct', function(done){
             var username = "dude1"; var password = "kekHash";
-            dbutils.fixtures(new userService.User({username: username, password: hash.HashSync(password)}));
+            dbutils.fixtures(new User({username: username, password: hash.HashSync(password)}));
             
             userService.ValidateLogin(username, password, function(err, result) {
               assert.strictEqual(result, true);
@@ -211,7 +207,7 @@ describe('UserService', function () {
         });
         it('Should return false if login infomation is incorrect', function(done){
             var username = "dude2"; var password = "kekHash";
-            dbutils.fixtures(new userService.User({username: username, password: hash.HashSync(password)}));
+            dbutils.fixtures(new User({username: username, password: hash.HashSync(password)}));
             
             userService.ValidateLogin(username, "notMyPassword", function(err, result) {
               assert.strictEqual(result, false);
@@ -220,7 +216,7 @@ describe('UserService', function () {
         });
         it('Should return false if login infomation is incorrect', function(done){
             var username = "dude2"; var password = "kekHash";
-            dbutils.fixtures(new userService.User({username: username, password: hash.HashSync(password)}));
+            dbutils.fixtures(new User({username: username, password: hash.HashSync(password)}));
             
             userService.ValidateLogin(username, "kekhash", function(err, result) {
               assert.strictEqual(result, false);
@@ -229,7 +225,7 @@ describe('UserService', function () {
         });
         it('Should return false if login infomation is incorrect', function(done){
             var username = "dude2"; var password = "kekHash";
-            dbutils.fixtures(new userService.User({username: username, password: hash.HashSync(password)}));
+            dbutils.fixtures(new User({username: username, password: hash.HashSync(password)}));
             
             userService.ValidateLogin("Dude2", password, function(err, result) {
               assert.strictEqual(result, false);

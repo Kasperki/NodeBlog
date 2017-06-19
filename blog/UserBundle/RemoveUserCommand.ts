@@ -1,5 +1,5 @@
 import * as Database from '../Database';
-var UserService = require('./UserService.js');
+import * as UserService from "./UserService";
 
 /**
  * Remove user from db

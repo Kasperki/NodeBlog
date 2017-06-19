@@ -4,6 +4,7 @@
   "description": "My blog with few npm modules",
   "main": "blog/Server.js",
   "dependencies": {
+    "@types/mongoose": "^4.7.17",
     "marked": "^0.3.5",
     "mime": "^1.3.4",
     "mongoose": "^4.9.5"
