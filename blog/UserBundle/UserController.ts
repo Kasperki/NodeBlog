@@ -12,14 +12,15 @@ var Logger = require('../Logger.js');
 
 export class UserController extends BaseController
 {
+
     authenticate = () =>
     {
         //TODO NEEDS BRUTE FORCE LOGIN PROTECTION.
         let userInfo = this.requestData.data.length ? JSON.parse(this.requestData.data) : '';
 
-        this.verifyReCapthca(String(userInfo.recaptcha), this.requestData.request.connection.remoteAddress, function (e, validCapthca) =>
+        this.verifyReCapthca(String(userInfo.recaptcha), this.requestData.request.connection.remoteAddress, (e: Error | null, validCapthca: boolean): void =>
         {
-            if (validCapthca)
+            if(validCapthca)
             {
                 let success = UserService.ValidateLogin(userInfo.username, userInfo.password);
 
@@ -57,7 +58,7 @@ export class UserController extends BaseController
     logout = () =>
     {
         AuthenticationService.RemoveSession(this.requestData.cookies.sessionId);
-        Cookies.SetCookies(this.requestData.response, [new Cookies.Cookie("sessionId", "", new Date(0)), new Cookies.Cookie("authToken", "", new Date(0))])
+        Cookies.SetCookies(this.requestData.response, [new Cookies.Cookie("sessionId", "", new Date(0)), new Cookies.Cookie("authToken", "", new Date(0))]);
         loadHtml.load(this.requestData, './views/login.html', null);
     }
 
@@ -67,7 +68,7 @@ export class UserController extends BaseController
      * @param string remoteip
      * @callback (Error err,boolean isValid);
      */
-    verifyReCapthca = () => (recaptchaResponse: string, remoteip: string, callback: (e: Error | null, validCapthca: boolean)) =>
+    verifyReCapthca = (recaptchaResponse: string, remoteip: string, callback: (e: Error | null, validCapthca: boolean) => void): void =>
     {
         var post_data = querystring.stringify({
             'secret': config.security.rechaptasecret,
