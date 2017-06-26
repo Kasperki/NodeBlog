@@ -202,16 +202,16 @@ exports.GetTags = async function ()
  * @param Blog blog
  * @param callback (err, Blog[] result)
  */
-exports.AddVisit = function (blog, callback) {
- 
- if (blog.visits == null)
- {
-     blog.visits = [];
- }
+exports.AddVisit = function (blog, callback)
+{
+     if (blog.visits == null)
+     {
+         blog.visits = [];
+     }
 
-  blog.visits.push(Date.now());
-  Blog.update({ _id: blog._id }, { $set: { visits: blog.visits }}, function (err, raw) {
-  });
+      blog.visits.push(Date.now());
+      Blog.update({ _id: blog._id }, { $set: { visits: blog.visits }}, function (err, raw) {
+      });
 };
 
 
@@ -271,27 +271,27 @@ exports.GetVisitsPerWeekByAllBlogs = async function()
  */
 exports.GetVisitsPerMonthByBlog = async function(id)
 {
-        var blogData = {}
+    var blogData = {}
 
-        let blog = await this.GetBlogPostById(id);
-        if (blog != null) 
+    let blog = await this.GetBlogPostById(id);
+    if (blog != null) 
+    {
+        var startYear = new Date(2015,12,1);
+        var endYear = Date.now();
+
+        for (var i = startYear; i < endYear; i.setMonth(i.getMonth() + 1))
         {
-            var startYear = new Date(2015,12,1);
-            var endYear = Date.now();
-
-            for (var i = startYear; i < endYear; i.setMonth(i.getMonth() + 1))
-            {
-                blogData[i.getFullYear() + "/" + (i.getMonth() + 1)] = 0;
-            }
-
-            for (var index in blog.visits)
-            {   
-                var date = new Date(blog.visits[index]);
-                blogData[date.getFullYear() + "/" + (date.getMonth() + 1)]++;
-            }
+            blogData[i.getFullYear() + "/" + (i.getMonth() + 1)] = 0;
         }
 
-        return blogData;
+        for (var index in blog.visits)
+        {   
+            var date = new Date(blog.visits[index]);
+            blogData[date.getFullYear() + "/" + (date.getMonth() + 1)]++;
+        }
+    }
+
+    return blogData;
 }
 
 /**

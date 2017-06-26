@@ -70,6 +70,9 @@
     <TypeScriptCompile Include="blog\Infastructure\Dictionary.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
+    <TypeScriptCompile Include="blog\Logger.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="blog\Routing.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
