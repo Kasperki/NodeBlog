@@ -38,7 +38,7 @@ config.log.write = true;
 
 config.cache.path = __dirname + "/cache";
 config.web.publicDirectories = [{ route: "/web", "redirect": __dirname + "/wwwroot" }, { route: "/wwwroot", "redirect": __dirname + "/wwwroot" }, { route: "/cache", "redirect": config.cache.path }];
-config.security.rechaptasecret = process.env.RECAPTCHASECRET;
+config.security.rechaptasecret = process.env.RECAPTCHASECRET || "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe";
 
 config.cert.server_key = process.env.CERT_SERVER_KEY || __dirname + "/../test/cert/server-key.pem";
 config.cert.server_crt = process.env.CERT_SERVER_CRT || __dirname + "/../test/cert/server-crt.pem";

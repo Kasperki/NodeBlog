@@ -14,7 +14,7 @@ import * as Cookies from './Cookies';
 import { BlogController } from "./BlogController";
 import { MainController } from "./MainController";
 import { UserController } from "./UserBundle/UserController.js";
-var AuthenticationService = require('../blog/UserBundle/AuthenticationService.js');
+import { SessionManager } from "../blog/UserBundle/AuthenticationService";
 import * as Database from './Database';
 import * as FileServer from "./FileServer";
 var Logger = require('./Logger.js');
@@ -67,7 +67,7 @@ https.createServer(options, function (request: http.ServerRequest, response: htt
 
                 //TODO do once per request?
                 let cookies = Cookies.ParseCookies(request);
-                let authenticated = AuthenticationService.IsTokenValid(cookies["sessionId"], cookies["authToken"], request); //TODO SET THESE 2 STRINGS AND CONSTANTS
+                let authenticated = SessionManager.Instance.IsTokenValid(cookies);
 
                 requestData.routeData = routeData;
                 requestData.cookies = cookies;

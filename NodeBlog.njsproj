@@ -22,7 +22,6 @@
   <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
   <ItemGroup>
     <Content Include="package.json" />
-    <Content Include="tsconfig.test.json" />
     <Content Include="tsconfig.json" />
     <Content Include="README.md" />
     <Compile Include="blog\BlogController.ts" />
@@ -48,7 +47,6 @@
     <Compile Include="test\ServiceTests.js" />
     <Compile Include="test\TestDBUtils.js" />
     <Compile Include="test\WDatabaseTest.js" />
-    <Compile Include="blog\UserBundle\AuthenticationService.js" />
     <Content Include="test\file\test.1.html" />
     <Content Include="test\file\test.html" />
   </ItemGroup>
@@ -73,6 +71,9 @@
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="blog\Routing.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="blog\UserBundle\AuthenticationService.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="blog\UserBundle\Model\IUser.ts">

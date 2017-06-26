@@ -19,6 +19,12 @@
         this.requestData.response.writeHead(200, { 'Content-Type': 'application/json' });
         this.requestData.response.end(JSON.stringify(data));
     }
+
+    public BadResponse(message: string)
+    {
+        this.requestData.response.writeHead(400, { 'Content-Type': 'text/plain' });
+        this.requestData.response.end(message);
+    }
 }
 
 export class Route

@@ -5,8 +5,7 @@ import * as https from "https";
 import * as querystring from "querystring";
 var config = require('../../config.js');
 var loadHtml = require('../HtmlLoader.js');
-import * as Cookies from '../Cookies';
-var AuthenticationService = require('./AuthenticationService.js');
+import { SessionManager } from "./AuthenticationService";
 import * as UserService from "./UserService.js";
 var Logger = require('../Logger.js');
 
@@ -20,17 +19,13 @@ export class UserController extends BaseController
 
         this.verifyReCapthca(String(userInfo.recaptcha), this.requestData.request.connection.remoteAddress, (e: Error | null, validCapthca: boolean): void =>
         {
-            if(validCapthca)
+            if (validCapthca)
             {
                 let success = UserService.ValidateLogin(userInfo.username, userInfo.password);
 
                 if (success)
                 {
-                    var session = AuthenticationService.CreateSession(userInfo.username);
-                    Cookies.SetCookies(this.requestData.response, [
-                        new Cookies.Cookie("sessionId", session.id, session.expires),
-                        new Cookies.Cookie("authToken", session.token, session.expires),
-                    ]);
+                    var session = SessionManager.Instance.CreateSession(this.requestData.response, userInfo.username);
 
                     Logger.Log(config.log.access, "User: " + userInfo.username + " logged in from: " + this.requestData.request.connection.remoteAddress);
                     this.Response("Ok");
@@ -38,14 +33,13 @@ export class UserController extends BaseController
                 else
                 {
                     Logger.Warning(config.log.error, "Invalid login: " + userInfo.username + " from: " + this.requestData.request.connection.remoteAddress);
-                    this.Response("Invalid");
+                    this.BadResponse("Invalid");
                 }
             }
             else
             {
                 Logger.Warning(config.log.error, "Invalid capthca from: " + this.requestData.request.connection.remoteAddress);
-                this.requestData.response.writeHead(403, { 'Content-Type': 'text/plain' });
-                this.requestData.response.end("Invalid");
+                this.BadResponse("Invalid");
             }
         });
     }
@@ -57,8 +51,7 @@ export class UserController extends BaseController
 
     logout = () =>
     {
-        AuthenticationService.RemoveSession(this.requestData.cookies.sessionId);
-        Cookies.SetCookies(this.requestData.response, [new Cookies.Cookie("sessionId", "", new Date(0)), new Cookies.Cookie("authToken", "", new Date(0))]);
+        SessionManager.Instance.RemoveSession(this.requestData.response, this.requestData.cookies.sessionId);
         loadHtml.load(this.requestData, './views/login.html', null);
     }
 
@@ -76,7 +69,8 @@ export class UserController extends BaseController
             'remoteip': remoteip
         });
 
-        var post_options = {
+        var post_options =
+        {
             host: "www.google.com",
             port: 443,
             path: '/recaptcha/api/siteverify',
@@ -102,6 +96,7 @@ export class UserController extends BaseController
                     }
                 }
 
+                Logger.Warning(config.log.error, data);
                 callback(null, false);
                 return;
             });

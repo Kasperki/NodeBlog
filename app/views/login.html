@@ -40,7 +40,14 @@
         <div class="row">   
             <div class="col-lg-4 text-center"></div>
             <div class="col-lg-4 text-center">
-                <div id="recaptcha-service" class="g-recaptcha" data-callback="recaptchaCallback" data-sitekey="6LcM8R8TAAAAAIn5JrS2FxkRPj_XTTmSv6y0ng6a"></div>
+
+                {% if "{{NODE.ENV}}" == "prod" %}
+                    <div id="recaptcha-service" class="g-recaptcha" data-callback="recaptchaCallback" data-sitekey="6LcM8R8TAAAAAIn5JrS2FxkRPj_XTTmSv6y0ng6a"></div>
+                {% endif %}
+
+                {% if "{{NODE.ENV}}" == "dev" %}
+                    <div id="recaptcha-service" class="g-recaptcha" data-callback="recaptchaCallback" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
+                {% endif %}
             </div> 
         </div>
     </section>
