@@ -4,7 +4,7 @@ import { Route } from "./BaseController";
 var marked = require('marked');
 var config = require('../config.js');
 var loadHtml = require('./HtmlLoader.js');
-var BlogService = require('./BlogService.js');
+import * as BlogService from "./BlogService";
 import * as ErrorPage from "./ErrorPage";
 import { ErrorLogger } from "./Logger";
 

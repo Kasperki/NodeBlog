@@ -98,6 +98,6 @@ class Logger
 
     private FormatLogMessage = (message: string, level: LogLevel): string =>
     {
-        return "[" + new Date() + "] -- " + level.toString() + " :: " + message + "\n";
+        return "[" + new Date() + "] -- " + LogLevel[level] + " :: " + message + "\n";
     }
 }

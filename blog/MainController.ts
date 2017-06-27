@@ -11,27 +11,7 @@ export class MainController extends BaseController
         loadHtml.load(this.requestData, '/views/index.html', {});
     }
 
-    validateToken = (): void =>
-    {
-        this.requestData.response.writeHead(200, { 'Content-Type': 'application/json' });
-
-        if (this.requestData.request.connection.remoteAddress.startsWith("::ffff:127.0.0.1"))
-        {
-            var session = AuthenticationService.IsTokenValid(this.requestData.routeData.queryParameters["sessionId"], this.requestData.routeData.queryParameters["authToken"]);
-        }
-
-        var jsonResponse = "NotValid";
-
-        if (session !== null) {
-            console.log(session);
-            jsonResponse = session;
-        }
-
-        this.JSONResponse(jsonResponse);
-    };
-
     routes: Route[] = [
-        new Route("/", this.main),
-        new Route("/validateToken", this.validateToken)
+        new Route("/", this.main)
     ];
 }

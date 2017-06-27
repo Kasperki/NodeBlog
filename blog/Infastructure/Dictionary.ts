@@ -1,4 +1,4 @@
-﻿export interface IDictionary
+﻿export interface IDictionary<T>
 {
-    [index: string]: string;
+    [index: string]: T;
 }

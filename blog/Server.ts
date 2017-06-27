@@ -108,4 +108,4 @@ process.on('uncaughtException', (err: Error) =>
     process.exit(1);
 });
 
-console.log("Server running on port:" + config.log.httpPort);
+console.log("Server running on port:" + config.httpPort);

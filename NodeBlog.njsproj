@@ -36,7 +36,6 @@
     <Compile Include="blog\BlogService.js" />
     <Compile Include="blog\FileServer.ts" />
     <Compile Include="blog\HtmlLoader.js" />
-    <Compile Include="blog\Logger.js" />
     <Compile Include="blog\MainController.ts" />
     <Compile Include="blog\Server.ts" />
     <Compile Include="scripts\install.js" />
@@ -55,6 +54,7 @@
     <Folder Include="app\wwwroot\" />
     <Folder Include="blog" />
     <Folder Include="blog\Infastructure\" />
+    <Folder Include="blog\Model\" />
     <Folder Include="blog\UserBundle" />
     <Folder Include="blog\UserBundle\Model\" />
     <Folder Include="NodeBlog" />
@@ -67,10 +67,19 @@
     <TypeScriptCompile Include="blog\BaseController.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
+    <TypeScriptCompile Include="blog\BlogService.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="blog\Infastructure\Dictionary.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="blog\Logger.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="blog\Model\Blog.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="blog\Model\IBlog.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="blog\Routing.ts">

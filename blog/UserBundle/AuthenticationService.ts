@@ -80,7 +80,7 @@ export class SessionManager
      * @param string token
      * @returns Session
      */
-    public IsTokenValid = (cookies: IDictionary): Session | null =>
+    public IsTokenValid = (cookies: IDictionary<string>): Session | null =>
     {
         let id = cookies[this.sessionIDKey];
         let token = cookies[this.authTokenKey];
