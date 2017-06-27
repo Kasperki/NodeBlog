@@ -8,9 +8,9 @@ import { ErrorLogger } from "./Logger";
  */
 export function ConnectToDatabase (callback: any) 
 {
-    var dbHost = config.database.host + config.database.schema; 
+    let dbHost = config.database.host + config.database.schema; 
 
-    var options = <mongoose.ConnectionOptions>
+    let options = <mongoose.ConnectionOptions>
     {
         user: config.database.user,
         pass: config.database.password,
@@ -18,7 +18,7 @@ export function ConnectToDatabase (callback: any)
 
     mongoose.connect(dbHost, options);
 
-    var db = mongoose.connection;
+    let db = mongoose.connection;
     db.on('error', function (err: Error)
     {
         ErrorLogger().Warning("Connection error: " + err);

@@ -5,8 +5,8 @@ import * as https from "https";
 import * as querystring from "querystring";
 var config = require('../../config.js');
 var loadHtml = require('../HtmlLoader.js');
-import { SessionManager } from "./AuthenticationService";
-import * as UserService from "./UserService.js";
+import { SessionManager } from "./SessionManager";
+import UserService from "./UserService";
 import { AccessLogger } from "../Logger";
 import { ErrorLogger } from "../Logger";
 
@@ -22,11 +22,9 @@ export class UserController extends BaseController
         {
             if (validCapthca)
             {
-                let success = UserService.ValidateLogin(userInfo.username, userInfo.password);
-
-                if (success)
+                if (UserService.prototype.ValidateLogin(userInfo.username, userInfo.password))
                 {
-                    var session = SessionManager.Instance.CreateSession(this.requestData.response, userInfo.username);
+                    SessionManager.Instance.CreateSession(this.requestData.response, userInfo.username);
 
                     AccessLogger().Log("User: " + userInfo.username + " logged in from: " + this.requestData.request.connection.remoteAddress);
                     this.Response("Ok");
@@ -45,12 +43,12 @@ export class UserController extends BaseController
         });
     }
 
-    login = () => 
+    login = (): void => 
     {
         loadHtml.load(this.requestData, './views/login.html', null);
     }
 
-    logout = () =>
+    logout = (): void =>
     {
         SessionManager.Instance.RemoveSession(this.requestData.response, this.requestData.cookies.sessionId);
         loadHtml.load(this.requestData, './views/login.html', null);
@@ -64,13 +62,13 @@ export class UserController extends BaseController
      */
     verifyReCapthca = (recaptchaResponse: string, remoteip: string, callback: (e: Error | null, validCapthca: boolean) => void): void =>
     {
-        var post_data = querystring.stringify({
+        let post_data = querystring.stringify({
             'secret': config.security.rechaptasecret,
             'response': recaptchaResponse,
             'remoteip': remoteip
         });
-
-        var post_options =
+        
+        let post_options =
         {
             host: "www.google.com",
             port: 443,
@@ -82,7 +80,7 @@ export class UserController extends BaseController
             }
         };
 
-        var post_req = https.request(post_options, function (res)
+        let post_req = https.request(post_options, function (res)
         {
             res.setEncoding('utf8');
             res.on('data', function (data)

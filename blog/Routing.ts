@@ -34,7 +34,7 @@ export function parseRoute(controllerRoute: string, url: urlModule.Url): RouteDa
     {
         if (regexMatchCtrlRoute[i].charAt(1) === "{" && regexMatchCtrlRoute[i].charAt(regexMatchCtrlRoute[i].length - 1) === "}")
         {
-            var key = regexMatchCtrlRoute[i].substr(2, regexMatchCtrlRoute[i].length - 3).trim();
+            let key = regexMatchCtrlRoute[i].substr(2, regexMatchCtrlRoute[i].length - 3).trim();
             routeData.keys[key] = decodeURI(regexMatchRoute[i].substr(1));
             continue;
         }

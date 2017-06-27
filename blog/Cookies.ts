@@ -43,9 +43,10 @@ export function ParseCookies(request: http.ServerRequest) : IDictionary<string>
     var cookies = request.headers.cookie;
     var list: IDictionary<string> = {};
 
-    cookies && cookies.split(';').forEach(function (cookie: string) {
-        var parts = cookie.split('=');
-        var cookieKey = parts.shift();
+    cookies && cookies.split(';').forEach(function (cookie: string)
+    {
+        let parts = cookie.split('=');
+        let cookieKey = parts.shift();
 
         if (cookieKey)
         {
@@ -63,9 +64,9 @@ export function ParseCookies(request: http.ServerRequest) : IDictionary<string>
 */
 export function SetCookies(response: http.ServerResponse, cookies: Cookie[])
 {
-    var setCookiesArray = [];
+    let setCookiesArray = [];
 
-    for (var i = 0; i < cookies.length; i++)
+    for (let i = 0; i < cookies.length; i++)
     {
         var cookie = "";
         cookie += cookies[i].name + "=" + cookies[i].content + ";";

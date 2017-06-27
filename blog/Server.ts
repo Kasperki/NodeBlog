@@ -13,8 +13,8 @@ var config = require('../config.js');
 import * as Cookies from './Cookies'; 
 import { BlogController } from "./BlogController";
 import { MainController } from "./MainController";
-import { UserController } from "./UserBundle/UserController.js";
-import { SessionManager } from "../blog/UserBundle/AuthenticationService";
+import { UserController } from "./UserBundle/UserController";
+import { SessionManager } from "../blog/UserBundle/SessionManager";
 import * as Database from './Database';
 import * as FileServer from "./FileServer";
 import { AccessLogger } from "./Logger";
@@ -30,7 +30,7 @@ Database.ConnectToDatabase(null);
 let Request: http.ServerRequest;
 let Response: http.ServerResponse;
 
-var options: https.ServerOptions = {
+let options: https.ServerOptions = {
     key: fs.readFileSync(config.cert.server_key), 
     cert: fs.readFileSync(config.cert.server_crt), 
     ca: fs.readFileSync(config.cert.ca_crt),
@@ -93,7 +93,7 @@ https.createServer(options, function (request: http.ServerRequest, response: htt
 //Redirect http to https
 http.createServer(function (request: http.ServerRequest, response: http.ServerResponse)
 {
-    var hostname = (request.headers.host.match(/:/g)) ? request.headers.host.slice(0, request.headers.host.indexOf(":")) : request.headers.host
+    let hostname = (request.headers.host.match(/:/g)) ? request.headers.host.slice(0, request.headers.host.indexOf(":")) : request.headers.host
     response.writeHead(301, { "Location": "https://" + hostname + ":" + String(config.httpsPort) + request.url });
     response.end();
 }).listen(config.httpPort);
@@ -102,7 +102,7 @@ http.createServer(function (request: http.ServerRequest, response: http.ServerRe
 process.on('uncaughtException', (err: Error) =>
 {
     console.log(err);
-    var message = "Referer: " + Request.headers['referer'] + " -- " + Request.connection.remoteAddress + " - Exception: " + err.stack;
+    let message = "Referer: " + Request.headers['referer'] + " -- " + Request.connection.remoteAddress + " - Exception: " + err.stack;
 
     ErrorLogger().Error(message);
     process.exit(1);

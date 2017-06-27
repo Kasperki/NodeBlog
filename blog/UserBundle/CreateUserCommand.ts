@@ -1,5 +1,5 @@
 import * as Database from '../Database';
-import * as UserService from "./UserService";
+import UserService from "./UserService";
 
 /**
  * Creates user
@@ -17,8 +17,8 @@ function CreateUser(username: string, password: string)
     }
     
     //Initialize database connection and create user
-    Database.ConnectToDatabase(function (err: Error, connected: boolean) {      
-        UserService.AddUser(username, password, function (err: Error, saved: boolean)
+    Database.ConnectToDatabase(function (err: Error, connected: boolean) {
+        UserService.prototype.AddUser(username, password, function (err: Error, saved: boolean)
         {                
             if (err)
             {

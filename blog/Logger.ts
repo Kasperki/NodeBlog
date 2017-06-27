@@ -1,4 +1,4 @@
-﻿var fs = require('fs');
+﻿import * as fs from "fs";
 var config = require('../config.js');
 
 enum LogLevel
@@ -71,7 +71,7 @@ class Logger
 
     private LogTo = (message: string, level: LogLevel): void =>
     {
-        var log = this.FormatLogMessage(message, level);
+        let log = this.FormatLogMessage(message, level);
 
         if (this.printLogs)
         {

@@ -20,7 +20,7 @@ var load = function (requestInfo, file, parameters, code, callback)
     fs.readFile(config.__views + file, "utf-8", function (err, html) {
         if (err) {
             throw err; 
-        }   
+        }
         
         if (parameters != null) {
             for (var attrname in requestInfo.parameters) { parameters[attrname] = requestInfo.parameters[attrname]; }

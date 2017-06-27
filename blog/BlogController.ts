@@ -2,7 +2,6 @@ import { BaseController } from "./BaseController";
 import { Route } from "./BaseController";
 
 var marked = require('marked');
-var config = require('../config.js');
 var loadHtml = require('./HtmlLoader.js');
 import * as BlogService from "./BlogService";
 import * as ErrorPage from "./ErrorPage";
@@ -16,8 +15,6 @@ export class BlogController extends BaseController
     {
         try
         {
-            let tesat = this.requestData.routeData.keys['title'];
-
             let blog = await BlogService.GetBlogPostByTitle(this.requestData.routeData.keys['title']);
 
             if (blog)

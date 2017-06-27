@@ -37,11 +37,11 @@ export function HashSync(data: string, salt?: string)
  */
 export function CompareSync(data: string, hash: string)
 {
-    var same = true;
+    let same = true;
 
-    var salt = hash.substr(0, hash.length - 256);
-    var data_hash = HashSync(data, salt);
-    var data_hash_length = data_hash.length;
+    let salt = hash.substr(0, hash.length - 256);
+    let data_hash = HashSync(data, salt);
+    let data_hash_length = data_hash.length;
 
     same = data_hash_length == hash.length;
 
@@ -49,7 +49,7 @@ export function CompareSync(data: string, hash: string)
 
     // to prevent timing attacks, should check entire string
     // don't exit after found to be false
-    for (var i = 0; i < max_length; ++i)
+    for (let i = 0; i < max_length; ++i)
     {
         if (data_hash_length >= i && hash.length >= i && data_hash[i] != hash[i])
         {

@@ -1,5 +1,5 @@
 import * as Database from '../Database';
-import * as UserService from "./UserService";
+import UserService from "./UserService";
 
 /**
  * Remove user from db
@@ -12,8 +12,8 @@ function RemoveUser(username: string)
     }
 
     //Initialize database connection and remove user
-    Database.ConnectToDatabase(function (err: Error, connected: boolean) {      
-        UserService.RemoveUser(username, function (err: Error, result: boolean) {            
+    Database.ConnectToDatabase(function (err: Error, connected: boolean) {
+        UserService.prototype.RemoveUser(username, function (err: Error, result: boolean) {            
             console.log("User:" + username + " removed");
             Database.DisconnectFromDatabase();
         });

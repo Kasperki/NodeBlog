@@ -18,9 +18,9 @@ var status: fs.Stats;
  */
 export function TryLoadResourceFromRoute(requestData: RequestData, route: string)
 {
-    for (var i = 0; i < config.web.publicDirectories.length; i++)
+    for (let i = 0; i < config.web.publicDirectories.length; i++)
     {
-        var baseRoute = route.substring(0, config.web.publicDirectories[i].route.length);
+        let baseRoute = route.substring(0, config.web.publicDirectories[i].route.length);
         if (baseRoute === config.web.publicDirectories[i].route)
         {
             if (config.web.publicDirectories[i].redirect)
@@ -76,7 +76,7 @@ export function TryLoadResourceFromRoute(requestData: RequestData, route: string
  */
 function sendGeneratedHtml(response: http.ServerResponse, route: string)
 {
-    var paths = fs.readdirSync(directoryPath);
+    let paths = fs.readdirSync(directoryPath);
 
     var generatedHtml = "<html>";
     generatedHtml += "<a href=\"" + route.substring(0,route.lastIndexOf("/")) + "\">..</a><br>";
@@ -101,10 +101,10 @@ function sendFile(response: http.ServerResponse, request: http.ServerRequest)
 {
     try
     {
-        var buf = fs.readFileSync(directoryPath);
-        var type = mime.lookup(directoryPath);
+        let buf = fs.readFileSync(directoryPath);
+        let type = mime.lookup(directoryPath);
 
-        var fileExtension = directoryPath.substr(directoryPath.lastIndexOf('.')+1);
+        let fileExtension = directoryPath.substr(directoryPath.lastIndexOf('.')+1);
 
         response.statusCode = 200;
         response.setHeader('Content-Length', status["size"].toString());
@@ -133,7 +133,7 @@ function sendFile(response: http.ServerResponse, request: http.ServerRequest)
 
 function encodeToGZIP(buffer: Buffer, response: http.ServerResponse) 
 {
-    var buf = zlib.gzipSync(buffer);
+    let buf = zlib.gzipSync(buffer);
     response.setHeader('Content-Encoding', 'gzip');
     response.setHeader('Content-Length', buf.length.toString());
     return buf;

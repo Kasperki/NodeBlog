@@ -1,5 +1,4 @@
-﻿var crypto = require("crypto");
-var config = require('../../config.js');
+﻿import * as crypto from "crypto";
 import { AccessLogger } from "../Logger";
 import * as http from "http";
 import * as Cookies from '../Cookies';
@@ -60,7 +59,7 @@ export class SessionManager
      */
     public RemoveSession = (response: http.ServerResponse, id: string): void =>
     {
-        for (var i = 0; i < this.Sessions.length; i++)
+        for (let i = 0; i < this.Sessions.length; i++)
         {
             if (this.Sessions[i].id === id)
             {
@@ -90,7 +89,7 @@ export class SessionManager
             return null;
         }
 
-        for (var i = 0; i < this.Sessions.length; i++)
+        for (let i = 0; i < this.Sessions.length; i++)
         {
             if (this.Sessions[i].id === id && this.Sessions[i].token === token)
             {

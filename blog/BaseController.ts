@@ -8,19 +8,19 @@
         return this.routes;
     }
 
-    public Response(data: string)
+    public Response(data: string): void
     {
         this.requestData.response.writeHead(200, { 'Content-Type': 'text/html' });
         this.requestData.response.end(data);
     }
 
-    public JSONResponse(data: any)
+    public JSONResponse(data: any): void
     {
         this.requestData.response.writeHead(200, { 'Content-Type': 'application/json' });
         this.requestData.response.end(JSON.stringify(data));
     }
 
-    public BadResponse(message: string)
+    public BadResponse(message: string): void
     {
         this.requestData.response.writeHead(400, { 'Content-Type': 'text/plain' });
         this.requestData.response.end(message);
