@@ -9,13 +9,24 @@ enum LogLevel
     ALL = 7
 }
 
-export class Logger
+export function AccessLogger(): Logger
+{
+    return new Logger(config.log.access);
+}
+
+export function ErrorLogger(): Logger
+{
+    return new Logger(config.log.error);
+}
+
+class Logger
 {
     private writeLogs: boolean;
     private printLogs: boolean;
     private loggingLevel: number;
+    private path: string;
 
-    constructor()
+    constructor(path: string)
     {
         //Do we write logs to disk
         this.writeLogs = config.log.print;
@@ -25,33 +36,40 @@ export class Logger
 
         //Current logging level
         this.loggingLevel = config.log.level;
+
+        this.path = path;
     }
 
-    Debug = (path: string, message: string): void =>
+    Debug = (message: string): void =>
     {
         if (this.IsLoggingLevelTrue(LogLevel.DEBUG))
         {
-            this.Log(path, message, LogLevel.DEBUG);
+            this.LogTo(message, LogLevel.DEBUG);
         }
     }
     
-    Warning = (path: string, message: string): void =>
+    Warning = (message: string): void =>
     {
         if (this.IsLoggingLevelTrue(LogLevel.WARNING))
         {
-            this.Log(path, message, LogLevel.WARNING);
+            this.LogTo(message, LogLevel.WARNING);
         }
     }
 
-    Error = (path: string, message: string): void =>
+    Error = (message: string): void =>
     {
         if (this.IsLoggingLevelTrue(LogLevel.ERROR))
         {
-            this.Log(path, message, LogLevel.ERROR);
+            this.LogTo(message, LogLevel.ERROR);
         }
     }
 
-    Log = (path: string, message: string, level: LogLevel): void =>
+    Log = (message: string): void =>
+    {
+        this.LogTo(message, LogLevel.ALL);
+    }
+
+    private LogTo = (message: string, level: LogLevel): void =>
     {
         var log = this.FormatLogMessage(message, level);
 
@@ -64,23 +82,22 @@ export class Logger
         {
             try
             {
-                fs.writeFileSync(path, log, { encoding: "utf-8", flag: "a" });
+                fs.writeFileSync(this.path, log, { encoding: "utf-8", flag: "a" });
             }
             catch (e)
             {
-                console.log("Can't log: " + path + " does not exists" + e);
+                console.log("Can't log: " + this.path + " does not exists" + e);
             }
         }
     }
 
-    private IsLoggingLevelTrue(level: LogLevel): boolean
+    private IsLoggingLevelTrue = (level: LogLevel): boolean =>
     {
         return (this.loggingLevel & level) === level;
     }
 
-    private FormatLogMessage(message: string, level: LogLevel): string
+    private FormatLogMessage = (message: string, level: LogLevel): string =>
     {
-        var log = "[" + new Date() + "] -- " + level.toString() + " :: " + message + "\n";
-        return log;
+        return "[" + new Date() + "] -- " + level.toString() + " :: " + message + "\n";
     }
 }

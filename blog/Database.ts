@@ -1,6 +1,6 @@
 import * as mongoose from "mongoose";
 var config = require('../config.js');
-var Logger = require('./Logger.js');
+import { ErrorLogger } from "./Logger";
 
 /**
  * Makes connection to database
@@ -19,13 +19,16 @@ export function ConnectToDatabase (callback: any)
     mongoose.connect(dbHost, options);
 
     var db = mongoose.connection;
-    db.on('error', function (err: Error) {
-        Logger.Warning(config.log.error, "Connection error: " + err);
+    db.on('error', function (err: Error)
+    {
+        ErrorLogger().Warning("Connection error: " + err);
     });
     
-    db.once('open', function() {
-        Logger.Debug(config.log.error, "Connected to DB");
-        if (typeof callback === "function") {
+    db.once('open', function ()
+    {
+        ErrorLogger().Debug("Connected to DB");
+        if (typeof callback === "function")
+        {
             callback(null, true);
         }
     });

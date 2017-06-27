@@ -7,7 +7,8 @@ var config = require('../../config.js');
 var loadHtml = require('../HtmlLoader.js');
 import { SessionManager } from "./AuthenticationService";
 import * as UserService from "./UserService.js";
-var Logger = require('../Logger.js');
+import { AccessLogger } from "../Logger";
+import { ErrorLogger } from "../Logger";
 
 export class UserController extends BaseController
 {
@@ -27,18 +28,18 @@ export class UserController extends BaseController
                 {
                     var session = SessionManager.Instance.CreateSession(this.requestData.response, userInfo.username);
 
-                    Logger.Log(config.log.access, "User: " + userInfo.username + " logged in from: " + this.requestData.request.connection.remoteAddress);
+                    AccessLogger().Log("User: " + userInfo.username + " logged in from: " + this.requestData.request.connection.remoteAddress);
                     this.Response("Ok");
                 }
                 else
                 {
-                    Logger.Warning(config.log.error, "Invalid login: " + userInfo.username + " from: " + this.requestData.request.connection.remoteAddress);
+                    ErrorLogger().Warning("Invalid login: " + userInfo.username + " from: " + this.requestData.request.connection.remoteAddress);
                     this.BadResponse("Invalid");
                 }
             }
             else
             {
-                Logger.Warning(config.log.error, "Invalid capthca from: " + this.requestData.request.connection.remoteAddress);
+                ErrorLogger().Warning("Invalid capthca from: " + this.requestData.request.connection.remoteAddress);
                 this.BadResponse("Invalid");
             }
         });
@@ -96,7 +97,7 @@ export class UserController extends BaseController
                     }
                 }
 
-                Logger.Warning(config.log.error, data);
+                ErrorLogger().Warning(String(data));
                 callback(null, false);
                 return;
             });

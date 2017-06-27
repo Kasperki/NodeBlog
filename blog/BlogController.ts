@@ -6,7 +6,7 @@ var config = require('../config.js');
 var loadHtml = require('./HtmlLoader.js');
 var BlogService = require('./BlogService.js');
 import * as ErrorPage from "./ErrorPage";
-var Logger = require('./Logger.js');
+import { ErrorLogger } from "./Logger";
 
 const BLOGS_PER_PAGE = 8;
 
@@ -27,12 +27,12 @@ export class BlogController extends BaseController
             else
             {
                 ErrorPage.ThrowErrorPage(this.requestData, 404, "We have lost the page: /blog/" + this.requestData.routeData.keys['title']);
-                Logger.Warning(config.log.error, "renderBlog -- Blog not found: /blog/" + this.requestData.routeData.keys['title']);
+                ErrorLogger().Warning("renderBlog -- Blog not found: /blog/" + this.requestData.routeData.keys['title']);
             }
         }
         catch (e)
         {
-            Logger.Error(config.log.error, "getBlog -- error::" + e.message);
+            ErrorLogger().Error("getBlog -- error::" + e.message);
             return;
         }
     }
@@ -52,13 +52,13 @@ export class BlogController extends BaseController
             else
             {
                 ErrorPage.ThrowErrorPage(this.requestData, 404, "We have lost the page: /blog/" + this.requestData.routeData.queryParameters['title']);
-                Logger.Warning(config.log.error, "getBlog -- Blog not found: /blog/" + this.requestData.routeData.queryParameters['title']);
+                ErrorLogger().Warning("getBlog -- Blog not found: /blog/" + this.requestData.routeData.queryParameters['title']);
             }
         }
         catch (e)
         {
             ErrorPage.ThrowErrorPage(this.requestData, 404, "We have lost the page: /blog/" + this.requestData.routeData.queryParameters['title']);
-            Logger.Warning(config.log.error, "getBlog -- Blog not found: /blog/" + this.requestData.routeData.queryParameters['title']);
+            ErrorLogger().Warning("getBlog -- Blog not found: /blog/" + this.requestData.routeData.queryParameters['title']);
             return;
         }
     }
@@ -183,7 +183,7 @@ export class BlogController extends BaseController
         else
         {
             BlogService.UpdateBlogPost(jsonBlog.title, jsonBlog.image, jsonBlog.text, jsonBlog.description, jsonBlog.category, jsonBlog.tags, function (err: Error, success: any) {
-                Logger.Debug(config.log.debug, "Blog " + jsonBlog.title + " updated");
+                ErrorLogger().Debug("Blog " + jsonBlog.title + " updated");
             });
         }
 
@@ -195,7 +195,7 @@ export class BlogController extends BaseController
         var id = this.requestData.routeData.queryParameters['id'];
         BlogService.RemoveBlog(id);
 
-        Logger.Debug(config.log.debug, "Blog" + id + " deleted");
+        ErrorLogger().Debug("Blog" + id + " deleted");
         loadHtml.load(this.requestData, './views/blog-admin.html', {});
     }
 

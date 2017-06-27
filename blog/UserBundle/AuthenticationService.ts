@@ -1,6 +1,6 @@
 ﻿var crypto = require("crypto");
 var config = require('../../config.js');
-var Logger = require('../Logger.js');
+import { AccessLogger } from "../Logger";
 import * as http from "http";
 import * as Cookies from '../Cookies';
 import * as mongoose from "mongoose";
@@ -104,7 +104,7 @@ export class SessionManager
             }
         }
 
-        Logger.Warning(config.log.error, "Invalid token: id:" + id + " token: " + token);
+        AccessLogger().Warning("Invalid token: id:" + id + " token: " + token);
         return null;
     }
 
