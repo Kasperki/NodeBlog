@@ -8,5 +8,5 @@ var userSchema = new mongoose.Schema({
 });
 
 //User model
-var User = mongoose.model<IUser.IUserModel>("User", userSchema);
+var User = mongoose.model<IUser.IUserModel>("User", userSchema, "user");
 export = User;

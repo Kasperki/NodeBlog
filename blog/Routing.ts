@@ -3,7 +3,7 @@
 export class RouteData
 {
     public url: urlModule.Url;
-    public keys: IDictionary;
+    public keys: IDictionary<string>;
     public queryParameters: any;
 
     constructor(url: urlModule.Url)

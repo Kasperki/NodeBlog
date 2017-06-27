@@ -38,10 +38,10 @@ class CookieOptions
 /**
 * http://stackoverflow.com/a/3409200
 */
-export function ParseCookies(request: http.ServerRequest) : IDictionary
+export function ParseCookies(request: http.ServerRequest) : IDictionary<string>
 {
     var cookies = request.headers.cookie;
-    var list: IDictionary = {};
+    var list: IDictionary<string> = {};
 
     cookies && cookies.split(';').forEach(function (cookie: string) {
         var parts = cookie.split('=');

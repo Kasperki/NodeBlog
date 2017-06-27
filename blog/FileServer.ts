@@ -5,7 +5,7 @@ var mime = require('mime');
 var config = require('../config.js');
 import { RequestData } from './BaseController';
 import * as ErrorPage from './ErrorPage';
-var Logger = require('./Logger.js');
+import { ErrorLogger } from './Logger';
 
 var directoryPath: string;
 var status: fs.Stats;
@@ -45,7 +45,7 @@ export function TryLoadResourceFromRoute(requestData: RequestData, route: string
             }
             catch (e)
             {
-                Logger.Debug(config.log.error, e);
+                ErrorLogger().Debug(e);
                 continue;
             }
 
@@ -65,7 +65,7 @@ export function TryLoadResourceFromRoute(requestData: RequestData, route: string
     if (status == null)
     {
         ErrorPage.ThrowErrorPage(requestData, 404, "We have lost the page: " + route);
-        Logger.Warning(config.log.error, "Referer: " + requestData.request.headers['referer'] + " -- " + requestData.request.connection.remoteAddress + "Path not found:" + directoryPath);
+        ErrorLogger().Warning("Referer: " + requestData.request.headers['referer'] + " -- " + requestData.request.connection.remoteAddress + "Path not found:" + directoryPath);
     }
 };
 
@@ -127,7 +127,7 @@ function sendFile(response: http.ServerResponse, request: http.ServerRequest)
     }
     catch (e)
     {
-        Logger.Debug(config.log.error, e);
+        ErrorLogger().Debug(e);
     }
 }
 

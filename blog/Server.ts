@@ -17,7 +17,8 @@ import { UserController } from "./UserBundle/UserController.js";
 import { SessionManager } from "../blog/UserBundle/AuthenticationService";
 import * as Database from './Database';
 import * as FileServer from "./FileServer";
-var Logger = require('./Logger.js');
+import { AccessLogger } from "./Logger";
+import { ErrorLogger } from "./Logger";
 import * as Routing from "./Routing";
 
 //Initialize controllers
@@ -76,7 +77,7 @@ https.createServer(options, function (request: http.ServerRequest, response: htt
                 if (!controllerRoute.authenticated || authenticated)
                 {
                     var access = request.connection.remoteAddress + " " + request.headers['user-agent']  + "  " + request.method + " HTTP:" + request.httpVersion + " " + request.url;  
-                    Logger.Log(config.log.access, access);
+                    AccessLogger().Log(access);
 
                     controllers[i].requestData = requestData;
                     controllerRoute.action();
@@ -89,18 +90,22 @@ https.createServer(options, function (request: http.ServerRequest, response: htt
     });
 }).listen(config.httpsPort);
 
-http.createServer(function (request: http.ServerRequest, response: http.ServerResponse) {
+//Redirect http to https
+http.createServer(function (request: http.ServerRequest, response: http.ServerResponse)
+{
     var hostname = (request.headers.host.match(/:/g)) ? request.headers.host.slice(0, request.headers.host.indexOf(":")) : request.headers.host
     response.writeHead(301, { "Location": "https://" + hostname + ":" + String(config.httpsPort) + request.url });
     response.end();
 }).listen(config.httpPort);
 
 //Error logging
-process.on('uncaughtException', (err: Error) => {
+process.on('uncaughtException', (err: Error) =>
+{
     console.log(err);
     var message = "Referer: " + Request.headers['referer'] + " -- " + Request.connection.remoteAddress + " - Exception: " + err.stack;
-    Logger.Error(config.log.error, message);
+
+    ErrorLogger().Error(message);
     process.exit(1);
 });
 
-console.log("Server running!");
+console.log("Server running on port:" + config.httpPort);
