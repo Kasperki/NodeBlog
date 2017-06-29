@@ -1,5 +1,5 @@
 import { RequestData } from "./BaseController";
-var loadHtml = require('./HtmlLoader.js');
+import * as loadHtml from "./HtmlLoader";
 
 /**
  * Loads error page

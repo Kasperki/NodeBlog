@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-var config = require('../config.js');
+import * as config from "../config";
 import { ErrorLogger } from "./Logger";
 
 /**

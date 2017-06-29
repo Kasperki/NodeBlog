@@ -40,8 +40,8 @@ class CookieOptions
 */
 export function ParseCookies(request: http.ServerRequest) : IDictionary<string>
 {
-    var cookies = request.headers.cookie;
-    var list: IDictionary<string> = {};
+    let cookies = request.headers.cookie;
+    let list: IDictionary<string> = {};
 
     cookies && cookies.split(';').forEach(function (cookie: string)
     {
@@ -68,7 +68,7 @@ export function SetCookies(response: http.ServerResponse, cookies: Cookie[])
 
     for (let i = 0; i < cookies.length; i++)
     {
-        var cookie = "";
+        let cookie = "";
         cookie += cookies[i].name + "=" + cookies[i].content + ";";
         cookie += " expires=" + cookies[i].expires + ";";
 

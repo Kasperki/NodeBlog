@@ -1,5 +1,5 @@
 ﻿import * as fs from "fs";
-var config = require('../config.js');
+import * as config from "../config";
 
 enum LogLevel
 {
@@ -75,7 +75,7 @@ class Logger
 
         if (this.printLogs)
         {
-            console.log("\n" + log);
+            console.trace("\n" + log);
         }
 
         if (this.writeLogs)

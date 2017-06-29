@@ -67,7 +67,7 @@ export default class UserService
             return false;
         }
 
-        var user = await this.FindUser(username);
+        let user = await this.FindUser(username);
 
         if (user.username === username && hash.CompareSync(password, user.password)) {
             return true;

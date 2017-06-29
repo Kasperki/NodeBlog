@@ -9,7 +9,7 @@ import { BaseController } from "./BaseController";
 import { RequestData } from "./BaseController";
 import * as urlModule from "url";
 
-var config = require('../config.js'); 
+import * as config from "../config"; 
 import * as Cookies from './Cookies'; 
 import { BlogController } from "./BlogController";
 import { MainController } from "./MainController";
@@ -37,26 +37,26 @@ let options: https.ServerOptions = {
 };
 
 https.createServer(options, function (request: http.ServerRequest, response: http.ServerResponse)
-{	
+{
     Request = request;
     Response = response;
-        
+    
     let incomingData: string = '';
     request.on('data', function (data: string)
     {
         incomingData += data;
     });
-
+    
     request.on('end', function ()
     {
-        let url: urlModule.Url = urlModule.parse(String(request.url), true);   
+        let url: urlModule.Url = urlModule.parse(String(request.url), true);
 
         let requestData = new RequestData(request, response);
         requestData.data = incomingData;
 
-        for (var i = 0; i < controllers.length; i++)
+        for (let i = 0; i < controllers.length; i++)
         {
-            for (var j = 0; j < controllers[i].GetRoutes.length; j++)
+            for (let j = 0; j < controllers[i].GetRoutes.length; j++)
             {
                 let controllerRoute = controllers[i].GetRoutes[j];
                 let routeData = Routing.parseRoute(controllerRoute.route, url);
@@ -76,7 +76,7 @@ https.createServer(options, function (request: http.ServerRequest, response: htt
 
                 if (!controllerRoute.authenticated || authenticated)
                 {
-                    var access = request.connection.remoteAddress + " " + request.headers['user-agent']  + "  " + request.method + " HTTP:" + request.httpVersion + " " + request.url;  
+                    let access = request.connection.remoteAddress + " " + request.headers['user-agent']  + "  " + request.method + " HTTP:" + request.httpVersion + " " + request.url;  
                     AccessLogger().Log(access);
 
                     controllers[i].requestData = requestData;

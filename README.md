@@ -88,13 +88,17 @@ sudo -E ./run.sh
 
 ## Tests
 
+Run from root folder where is package.json
 You must have mongod running on background.
 I should try to mock this.
 
 Windows:
 ```
-//Run from root folder where is package.json
-set NODE_ENV=test && mocha
+//Commandline
+set "NODE_ENV=test" & mocha
+
+//Powershell
+$env:NODE_ENV = "test"; mocha
 ```
 
 ## Configs

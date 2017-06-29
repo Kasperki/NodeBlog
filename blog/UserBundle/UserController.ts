@@ -3,8 +3,8 @@ import { Route } from "../BaseController";
 
 import * as https from "https";
 import * as querystring from "querystring";
-var config = require('../../config.js');
-var loadHtml = require('../HtmlLoader.js');
+import * as config from "../../config";
+import * as loadHtml from "../HtmlLoader";
 import { SessionManager } from "./SessionManager";
 import UserService from "./UserService";
 import { AccessLogger } from "../Logger";
@@ -87,7 +87,7 @@ export class UserController extends BaseController
             {
                 if (res.statusCode === 200)
                 {
-                    var response = data.length ? JSON.parse(String(data)) : '';
+                    let response = data.length ? JSON.parse(String(data)) : '';
                     if (response.success === true)
                     {
                         callback(null, true);

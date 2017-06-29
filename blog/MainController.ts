@@ -1,7 +1,6 @@
 import { BaseController } from "./BaseController";
 import { Route } from "./BaseController";
-
-var loadHtml = require('./HtmlLoader.js');
+import * as loadHtml from "./HtmlLoader";
 
 export class MainController extends BaseController
 {

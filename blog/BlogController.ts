@@ -2,7 +2,7 @@ import { BaseController } from "./BaseController";
 import { Route } from "./BaseController";
 
 var marked = require('marked');
-var loadHtml = require('./HtmlLoader.js');
+import * as loadHtml from "./HtmlLoader";
 import * as BlogService from "./BlogService";
 import * as ErrorPage from "./ErrorPage";
 import { ErrorLogger } from "./Logger";
@@ -69,7 +69,7 @@ export class BlogController extends BaseController
 
     private filterBlogsPerPage(blogPosts: any): { blogs: any, pagesCount: number }
     {
-        var pageNumber = this.requestData.routeData.queryParameters['page'];
+        let pageNumber = this.requestData.routeData.queryParameters['page'];
 
         if (!pageNumber)
             pageNumber = 0;
@@ -81,14 +81,14 @@ export class BlogController extends BaseController
             pageNumber = Math.floor(blogPosts.length / BLOGS_PER_PAGE);
         }
 
-        var blogs = []
-        for (var index = pageNumber * BLOGS_PER_PAGE; index < (pageNumber + 1) * BLOGS_PER_PAGE; index++) {
+        let blogs = []
+        for (let index = pageNumber * BLOGS_PER_PAGE; index < (pageNumber + 1) * BLOGS_PER_PAGE; index++) {
             if (index < blogPosts.length) {
                 blogs.push(blogPosts[index]);
             }
         }
 
-        var pagesCount = Math.ceil(blogPosts.length / BLOGS_PER_PAGE);
+        let pagesCount = Math.ceil(blogPosts.length / BLOGS_PER_PAGE);
         return { blogs: blogs, pagesCount: pagesCount };
     }
 
@@ -101,19 +101,19 @@ export class BlogController extends BaseController
 
     private getByCategory = async () =>
     {
-        var category = this.requestData.routeData.queryParameters['category'];
+        let category = this.requestData.routeData.queryParameters['category'];
 
         let blogPosts = await BlogService.GetBlogPostsByCategory(category);
-        var blogs = this.filterBlogsPerPage(blogPosts);
+        let blogs = this.filterBlogsPerPage(blogPosts);
         this.JSONResponse(blogs)
     }
 
     private getByTag = async () =>
     {
-        var tag = this.requestData.routeData.queryParameters['tag'];
+        let tag = this.requestData.routeData.queryParameters['tag'];
 
         let blogPosts = await BlogService.GetBlogPostsByTag(tag);
-        var blogs = this.filterBlogsPerPage(blogPosts);
+        let blogs = this.filterBlogsPerPage(blogPosts);
         this.JSONResponse(blogs)
     }
 
@@ -131,7 +131,7 @@ export class BlogController extends BaseController
 
     private getMonthlyVisits = async () =>
     {
-        var id = this.requestData.routeData.queryParameters['id'];
+        let id = this.requestData.routeData.queryParameters['id'];
 
         try {
             let result = await BlogService.GetVisitsPerMonthByBlog(id);
@@ -169,7 +169,7 @@ export class BlogController extends BaseController
 
     private saveBlog = async () =>
     {
-        var jsonBlog = this.requestData.data.length ? JSON.parse(this.requestData.data) : '';
+        let jsonBlog = this.requestData.data.length ? JSON.parse(this.requestData.data) : '';
 
         let blogPost = await BlogService.GetBlogPostByTitle(this.requestData.routeData.queryParameters['title']);
 
@@ -189,7 +189,7 @@ export class BlogController extends BaseController
 
     private deleteBlog = () => 
     {
-        var id = this.requestData.routeData.queryParameters['id'];
+        let id = this.requestData.routeData.queryParameters['id'];
         BlogService.RemoveBlog(id);
 
         ErrorLogger().Debug("Blog" + id + " deleted");

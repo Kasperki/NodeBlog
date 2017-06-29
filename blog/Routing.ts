@@ -30,7 +30,7 @@ export function parseRoute(controllerRoute: string, url: urlModule.Url): RouteDa
         return null;
     }
 
-    for (var i = 0; i < regexMatchCtrlRoute.length; i++)
+    for (let i = 0; i < regexMatchCtrlRoute.length; i++)
     {
         if (regexMatchCtrlRoute[i].charAt(1) === "{" && regexMatchCtrlRoute[i].charAt(regexMatchCtrlRoute[i].length - 1) === "}")
         {

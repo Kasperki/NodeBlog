@@ -119,7 +119,7 @@ export async function GetCategories (): Promise<IDictionary<number>>
     let result = await Blog.find().exec();
     let categories: IDictionary<number> = {};
 
-    for (var i = 0; i < result.length; i++)
+    for (let i = 0; i < result.length; i++)
     {
         if (!categories[result[i].category])
         {
@@ -188,10 +188,10 @@ export function AddVisit(blog: IBlog.IBlogModel): void
  */
 export async function GetAllVisits(): Promise<IDictionary<number>>
 {
-    var allData: IDictionary<number> = {};
+    let allData: IDictionary<number> = {};
 
     let blogs = await this.GetLatestBlogPost(0)
-    for (var i = 0; i < blogs.length; i++)
+    for (let i = 0; i < blogs.length; i++)
     {
         allData[blogs[i].title] = blogs[i].visits.length;
     }
@@ -205,25 +205,25 @@ export async function GetAllVisits(): Promise<IDictionary<number>>
  */
 export async function GetVisitsPerWeekByAllBlogs(): Promise<IDictionary<number>>
 {
-    var blogData: IDictionary<number> = {}
+    let blogData: IDictionary<number> = {}
 
     let blogs = await this.GetLatestBlogPost(0);
 
-    var startYear = new Date(2016, 6, 1);
-    var endYear = new Date();
-    var cumulative = 0;
+    let startYear = new Date(2016, 6, 1);
+    let endYear = new Date();
+    let cumulative = 0;
 
-    for (var date = startYear; date < endYear; date.setDate(date.getDate() + 7))
+    for (let date = startYear; date < endYear; date.setDate(date.getDate() + 7))
     {
         blogData[date.getFullYear() + "/" + getWeek(date)] = 0;
     }
 
-    for (var i = 0; i < blogs.length; i++)
+    for (let i = 0; i < blogs.length; i++)
     {
-        for (var index in blogs[i].visits)
+        for (let index in blogs[i].visits)
         {
             cumulative++;
-            var date = new Date(blogs[i].visits[index]);
+            let date = new Date(blogs[i].visits[index]);
             blogData[date.getFullYear() + "/" + getWeek(date)] = cumulative;
         }
     }
@@ -238,20 +238,20 @@ export async function GetVisitsPerWeekByAllBlogs(): Promise<IDictionary<number>>
  */
 export async function GetVisitsPerMonthByBlog(id: string): Promise<IDictionary<number>>
 {
-    var blogData: IDictionary<number> = {}
+    let blogData: IDictionary<number> = {}
 
     let blog = await this.GetBlogPostById(id);
     if (blog != null)
     {
-        var startYear = new Date(2015, 12, 1);
-        var endYear = new Date();
+        let startYear = new Date(2015, 12, 1);
+        let endYear = new Date();
 
-        for (var i = startYear; i < endYear; i.setMonth(i.getMonth() + 1)) {
+        for (let i = startYear; i < endYear; i.setMonth(i.getMonth() + 1)) {
             blogData[i.getFullYear() + "/" + (i.getMonth() + 1)] = 0;
         }
 
-        for (var index in blog.visits) {
-            var date = new Date(blog.visits[index]);
+        for (let index in blog.visits) {
+            let date = new Date(blog.visits[index]);
             blogData[date.getFullYear() + "/" + (date.getMonth() + 1)]++;
         }
     }

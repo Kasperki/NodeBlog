@@ -2,7 +2,7 @@ import * as http from "http";
 import * as fs from "fs";
 import * as zlib from "zlib";
 var mime = require('mime');
-var config = require('../config.js');
+import * as config from "../config";
 import { RequestData } from './BaseController';
 import * as ErrorPage from './ErrorPage';
 import { ErrorLogger } from './Logger';
@@ -78,7 +78,7 @@ function sendGeneratedHtml(response: http.ServerResponse, route: string)
 {
     let paths = fs.readdirSync(directoryPath);
 
-    var generatedHtml = "<html>";
+    let generatedHtml = "<html>";
     generatedHtml += "<a href=\"" + route.substring(0,route.lastIndexOf("/")) + "\">..</a><br>";
 
     for (let i = 0; i < paths.length; i++)
