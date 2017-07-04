@@ -1,6 +1,6 @@
 //  Modified from https://github.com/elliotf/mocha-mongoose
 var mongoose = require('mongoose');
-var config = require('../config.js');
+var config = require('../app/config.js');
 
 /**
  * Cleans database after each test

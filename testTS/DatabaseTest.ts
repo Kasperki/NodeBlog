@@ -1,13 +1,14 @@
-const assert = require('assert');
-var mongoose = require('mongoose');
-var config = require('../app/config.js');
-var database = require('../app/blog/Database.js');
+import "mocha";
+import * as assert from "assert";
+import * as mongoose from "mongoose";
+import * as config from "../config";
+import * as database from "../blog/Database";
 
 //NOTE: This test case is F***ED. Getting done() called multiple times error.
 //Firstly Name is WDatabse so no error on before hooks... 
 //Test after(mongoose.disconncet) hook cannot be run becase done() error wtf???
-describe('Database', function () {
-  describe('#connectToDatabase()', function () {
+describe('Database', () => {
+  describe('#connectToDatabase()', () => {
     
     before(function (done) {
        mongoose.disconnect();
@@ -16,19 +17,19 @@ describe('Database', function () {
 
    it('Should connect to database', function (done) {
           
-        database.ConnectToDatabase();
+        database.ConnectToDatabase(null);
          
         mongoose.connection.on('connected', function () {  
             done();
         });
          
-        mongoose.connection.on('error',function (err) {  
+        mongoose.connection.on('error', function (err: Error) {  
             console.log('Mongoose default connection error: ' + err);   
         }); 
     });  
 });
     
-describe('#connectToDatabase()', function () {
+describe('#connectToDatabase()', () => {
     
     before(function (done) {
         var db = config.test.database.host + config.test.database.schema;
@@ -44,7 +45,7 @@ describe('#connectToDatabase()', function () {
             done();
         });
         
-        mongoose.connection.on('error',function (err) {  
+        mongoose.connection.on('error', function (err: Error) {  
             console.log('Mongoose default connection error: ' + err);   
         }); 
     });

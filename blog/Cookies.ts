@@ -83,7 +83,6 @@ export function SetCookies(response: http.ServerResponse, cookies: Cookie[])
             }
         }
 
-        console.log(cookie);
         setCookiesArray.push(cookie);
     }
 

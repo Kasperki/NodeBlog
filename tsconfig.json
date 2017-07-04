@@ -17,6 +17,7 @@
   },
   "include": [
     "./blog/**/*",
+    "./testTS/**/*",
     "./config.ts"
   ],
   "exclude": [

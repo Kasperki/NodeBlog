@@ -96,9 +96,9 @@ const config = new configd();
 //Test
 if (process.env.NODE_ENV == "test")
 {
-    config.cache.path = "C:\\Users\\kasper.kiiskinen\\NodeBlog\\";
     config.__base = "C:\\Users\\kasper.kiiskinen\\NodeBlog\\";
     config.__views = "C:\\Users\\kasper.kiiskinen\\NodeBlog\\";
+    config.cache.path = "C:\\Users\\kasper.kiiskinen\\NodeBlog\\";
 
     config.database =
     {
