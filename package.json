@@ -14,13 +14,13 @@
     "@types/node": "^7.0.33",
     "clean-css": "^3.4.19",
     "mocha": "2.4.x",
-    "node-mocks-http": "^1.6.4",
+    "node-mocks-http": "^1.5.2",
     "uglify-js": "^2.7.0"
   },
   "scripts": {
     "install": "tsc && node ./scripts/install.js",
     "start": "node ./app/blog/Server.js",
-    "test": "tsc && mocha test/*.js"
+    "test": "tsc && mocha app/testTS/*.js"
   },
   "repository": {
     "type": "git",

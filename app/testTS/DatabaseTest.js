@@ -4,9 +4,6 @@ require("mocha");
 const mongoose = require("mongoose");
 const config = require("../config");
 const database = require("../blog/Database");
-//NOTE: This test case is F***ED. Getting done() called multiple times error.
-//Firstly Name is WDatabse so no error on before hooks... 
-//Test after(mongoose.disconncet) hook cannot be run becase done() error wtf???
 describe('Database', () => {
     describe('#connectToDatabase()', () => {
         before(function (done) {
@@ -25,7 +22,7 @@ describe('Database', () => {
     });
     describe('#connectToDatabase()', () => {
         before(function (done) {
-            var db = config.test.database.host + config.test.database.schema;
+            var db = config.database.host + config.database.schema;
             mongoose.connect(db);
             return done();
         });

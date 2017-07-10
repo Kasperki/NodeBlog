@@ -1,4 +1,4 @@
-﻿class configd
+﻿class configuration
 {
     __base = __dirname + "/";
     __views = __dirname + "/";
@@ -47,9 +47,25 @@
         server_crt: process.env.CERT_SERVER_CRT || __dirname + "/../test/cert/server-crt.pem",
         ca_crt: process.env.CERT_CA_CRT || __dirname + "/../test/cert/ca-crt.pem"
     };
-
-    test: any;
 }
+
+const config = new configuration();
+export = config;
+
+//Test
+if (process.env.NODE_ENV == "test") {
+    config.__base = "C:\\Users\\kasper.kiiskinen\\NodeBlog\\";
+    config.__views = "C:\\Users\\kasper.kiiskinen\\NodeBlog\\";
+    config.cache.path = "C:\\Users\\kasper.kiiskinen\\NodeBlog\\";
+
+    config.database =
+        {
+            host: "mongodb://localhost:27017/",
+            schema: "blogTestdb",
+            user: "root",
+            password: "root"
+        }
+};
 
 interface Database
 {
@@ -90,23 +106,3 @@ interface Web
 {
     publicDirectories: any;
 }
-
-const config = new configd();
-
-//Test
-if (process.env.NODE_ENV == "test")
-{
-    config.__base = "C:\\Users\\kasper.kiiskinen\\NodeBlog\\";
-    config.__views = "C:\\Users\\kasper.kiiskinen\\NodeBlog\\";
-    config.cache.path = "C:\\Users\\kasper.kiiskinen\\NodeBlog\\";
-
-    config.database =
-    {
-        host: "mongodb://localhost:27017/",
-        schema: "blogTestdb",
-        user: "root",
-        password: "root"
-    }
-};
-
-export = config;
