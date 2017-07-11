@@ -1,9 +1,12 @@
 ﻿import "mocha";
 import * as assert from "assert";
-//let dbutils = require('./TestDBUtils.js');
+import * as testUtility from "../TestUtility";
 import * as authenticationService from "../../blog/UserBundle/SessionManager";
 
 describe('AuthenticationService', () => {
+
+    testUtility.DBInitialization();
+
     describe('#CreateSession()', () => {
         it('Should create new session with +1 hour expire time', () => {
 

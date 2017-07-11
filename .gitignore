@@ -43,5 +43,7 @@ nbproject
 obj
 bin
 /app/blog
+/app/testTS
 /app/config.js
 .vs
+
