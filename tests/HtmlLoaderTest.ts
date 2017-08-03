@@ -1,8 +1,11 @@
 import "mocha";
 import * as assert from "assert";
 import * as fs from "fs";
-import * as httpMocks from "node-mocks-http";
 import * as htmlLoader from "../blog/HtmlLoader";
+import * as config from "../config";
+import { RequestData } from "../blog/BaseController";
+import ServerResponseStub from "./Stubs/ServerResponseStub";
+import ServerRequestStub from "./Stubs/ServerRequestStub";
 
 describe('HtmlLoader', () => {
 
@@ -10,19 +13,22 @@ describe('HtmlLoader', () => {
 
     describe('load()', () => {
         it('should set correct http status code & correct headers', function (done) {
-            let response = httpMocks.createResponse();
 
-            htmlLoader.load({ response: response }, pathToTestFile, null, 203);
+            let response = new ServerResponseStub();
+            let requestData = new RequestData(new ServerRequestStub(), response);
+            htmlLoader.load(requestData, pathToTestFile, null, 203);
 
-            assert.equal(response._getStatusCode(), 203);
-            assert.deepEqual(response._getHeaders, { "Content-Type": "text/html" })
+            assert.equal(response.statusCode, 203);
+            assert.deepEqual(response.getHeaders(), { "Content-Type": "text/html" });
             done();
         });
         it('should send content of file', function (done) {
-            let response = httpMocks.createResponse();
+            let response = new ServerResponseStub();
+            let requestData = new RequestData(new ServerRequestStub(), response);
+            htmlLoader.load(requestData, pathToTestFile, null, 203);
 
-            htmlLoader.load({ response: response }, pathToTestFile, null);
-            assert.equal(response._getData(), "<p>extra content</p>");
+            htmlLoader.load(requestData, pathToTestFile, null);
+            assert.equal(response.getData(), "<p>extra content</p>");
             done();
         });
     });
@@ -136,18 +142,18 @@ describe('HtmlLoader', () => {
     describe('combineFiles()', () => {
 
         beforeEach(function () {
-            fs.mkdirSync("test/cache");
+            fs.mkdirSync(config.cache.path);
         });
 
         afterEach(function () {
 
-            let paths = fs.readdirSync("test/cache");
+            let paths = fs.readdirSync(config.cache.path);
 
             for (let i = 0; i < paths.length; i++) {
-                fs.unlinkSync("test/cache/" + paths[i]);
+                fs.unlinkSync(config.cache.path + "/" + paths[i]);
             }
 
-            fs.rmdirSync("test/cache");
+            fs.rmdirSync(config.cache.path);
         });
 
         it('should not do anything if {% stylesheet } tag is invalid', () => {
@@ -190,23 +196,23 @@ describe('HtmlLoader', () => {
         });
         it('should combine files in {% stylesheet %} to output directory', function (done) {
 
-            let outputPath = "test/cache/TESTFILE.css";
+            let outputPath = "TESTFILE.css";
             let htmlString = '<html> styles {% stylesheet output="' + outputPath + '" "test/file/test.html" "test/file/test.html" %}</html>';
             htmlLoader.combineFiles(htmlString);
 
-            let file = fs.readFileSync(outputPath, 'utf-8');
+            let file = fs.readFileSync(config.cache.path + outputPath, 'utf-8');
 
             assert.equal(file, '<p>extra content</p><p>extra content</p>');
             done();
         });
         it('should not combine files in {% stylesheet %} to outputFile if it already exists', function (done) {
 
-            let outputPath = "test/cache/TESTFILE.css";
+            let outputPath = "TESTFILE.css";
             let htmlString = '<html> styles {% stylesheet output="' + outputPath + '" "test/file/test.html" "test/file/test.html" %}</html>';
             htmlLoader.combineFiles(htmlString);
             htmlLoader.combineFiles(htmlString);
 
-            let file = fs.readFileSync(outputPath, 'utf-8');
+            let file = fs.readFileSync(config.cache.path + outputPath, 'utf-8');
 
             assert.equal(file, '<p>extra content</p><p>extra content</p>');
             done();

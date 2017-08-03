@@ -11,9 +11,10 @@ export function DBInitialization()
 
         function ClearDatabase()
         {
-            for (var i in mongoose.connection.collections)
+            for (let i in mongoose.connection.collections)
             {
-                mongoose.connection.collections[i].drop();
+                let collection = mongoose.connection.collections[i];
+                collection.drop();
             }
             return done();
         }

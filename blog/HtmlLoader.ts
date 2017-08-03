@@ -85,6 +85,8 @@ export function extendHtmlFile(html: string, parameters: any)
 
         try
         {
+            console.log(config.__views + filePath);
+
             let includingFile = fs.readFileSync(config.__views + filePath, "utf-8");
             includingFile = replaceParameters(includingFile, parameters);
             includingFile = TemplateIf(includingFile);
@@ -92,7 +94,7 @@ export function extendHtmlFile(html: string, parameters: any)
         }
         catch (e)
         {
-            ErrorLogger().Debug(config.__views + " No such file:" + filePath + " " + e);
+            ErrorLogger().Error(config.__views + " No such file:" + filePath + " " + e);
             html = html.replace(new RegExp(regexMatch[i]), "");
         }
     }

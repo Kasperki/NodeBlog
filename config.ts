@@ -53,10 +53,11 @@ const config = new configuration();
 export = config;
 
 //Test
-if (process.env.NODE_ENV == "test") {
-    config.__base = "C:\\Users\\kasper.kiiskinen\\NodeBlog\\";
-    config.__views = "C:\\Users\\kasper.kiiskinen\\NodeBlog\\";
-    config.cache.path = "C:\\Users\\kasper.kiiskinen\\NodeBlog\\";
+if (process.env.NODE_ENV == "test")
+{
+    config.__base = __dirname + "/tests/";
+    config.__views = __dirname + "/tests/";
+    config.cache.path = __dirname + "/tests/cache/";
 
     config.database =
         {
