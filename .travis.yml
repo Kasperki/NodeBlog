@@ -9,4 +9,4 @@ before_install:
   - npm install -g typescript@2.3.3
 before_script:
   - sleep 15
-  - mongo testdb --eval 'db.addUser("root", "root");'
+  - mongo blogTestdb --eval 'db.addUser("root", "root");'

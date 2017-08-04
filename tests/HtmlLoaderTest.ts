@@ -142,7 +142,9 @@ describe('HtmlLoader', () => {
     describe('combineFiles()', () => {
 
         beforeEach(function () {
-            fs.mkdirSync(config.cache.path);
+            if (fs.existsSync(config.cache.path) === false) {
+                fs.mkdirSync(config.cache.path);
+            }
         });
 
         afterEach(function () {
