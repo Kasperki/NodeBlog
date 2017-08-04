@@ -8,6 +8,7 @@ For disclamer this project is propably not using all of the best practices and h
 # Installation
 
 * Prequistes
+    * Typescript 2.3.X
     * Node 7.XX
     * MongoDB
     * Git
@@ -17,6 +18,12 @@ For disclamer this project is propably not using all of the best practices and h
     * npm install
     * Set env variables && node Server.js
 
+
+## Building with visual studio 2017
+
+You will need to install Typescript 2.3.X SDK
+
+[UPDATE: Typescript in Visual Studio 2017](https://github.com/Microsoft/TypeScript/wiki/Updating-TypeScript-in-Visual-Studio-2017)
 
 ## Setup mondodb & create new schema user
 

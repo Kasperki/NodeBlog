@@ -25,14 +25,13 @@ describe('UserService', function () {
                 done();
             });
         });
-        it('Should throw error if duplicate username', function (done) {
+        it('Should throw error if duplicate username', function () {
             var service = new UserService_1.default();
             service.AddUser('user1', 'bbb', (err, valid) => {
                 service.AddUser('user1', 'bcc', function (err, result) {
                     assert.ok(err instanceof Error);
                     assert.ok(err.message.includes("E11000 duplicate key error"));
                     assert.ok(err.message.includes("dup key: { : \"user1\" }"));
-                    done();
                 });
             });
         });
@@ -41,7 +40,7 @@ describe('UserService', function () {
         it('Should return null if user is not found', function () {
             return __awaiter(this, void 0, void 0, function* () {
                 var service = new UserService_1.default();
-                let actualUser = yield service.FindUser("admin");
+                let actualUser = yield service.FindUser("NONEXISTENTUSER");
                 assert.equal(actualUser, null);
             });
         });

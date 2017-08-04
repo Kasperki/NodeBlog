@@ -1,7 +1,7 @@
 var config = require('../app/config.js');
 var fs = require('fs');
 
-//Create folders for cache and logs
+//CREATE FOLDER FOR CACHE
 try {
     fs.accessSync(config.cache.path, fs.F_OK)
 
@@ -17,6 +17,7 @@ catch (e) {
     fs.mkdirSync(config.cache.path);
 }
 
+//CREATE FOLER FOR LOGS
 try {
     fs.accessSync(config.log.path, fs.F_OK)
 }

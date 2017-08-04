@@ -75,7 +75,7 @@ class Logger
 
         if (this.printLogs)
         {
-            console.trace("\n" + log);
+            console.log("\n" + log);
         }
 
         if (this.writeLogs)

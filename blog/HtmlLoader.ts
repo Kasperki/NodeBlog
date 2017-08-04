@@ -14,19 +14,14 @@ import * as Minify from "./Templating/MinifyFiles";
  */
 export function load(requestInfo: RequestData, file: string, parameters: any, code: number = 200)
 {
-    fs.readFile(config.__views + file, "utf-8", function (err, html)
+    try
     {
-        if (err)
-        {
-            throw err;
-        }
+        let html = fs.readFileSync(config.__views + file, "utf-8");
 
-        if (parameters != null)
-        {
+        if (parameters != null) {
             for (let attrname in requestInfo.parameters) { parameters[attrname] = requestInfo.parameters[attrname]; }
         }
-        else
-        {
+        else {
             parameters = requestInfo.parameters;
         }
 
@@ -38,7 +33,11 @@ export function load(requestInfo: RequestData, file: string, parameters: any, co
         requestInfo.response.writeHead(code, { "Content-Type": "text/html" });
         requestInfo.response.write(html);
         requestInfo.response.end();
-    });
+    }
+    catch (e)
+    {
+        ErrorLogger().Error(e.message);
+    }
 }
 
 /**

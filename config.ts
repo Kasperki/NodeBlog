@@ -43,9 +43,9 @@
     };
     cert: Cert =
     {
-        server_key: process.env.CERT_SERVER_KEY || __dirname + "/../test/cert/server-key.pem",
-        server_crt: process.env.CERT_SERVER_CRT || __dirname + "/../test/cert/server-crt.pem",
-        ca_crt: process.env.CERT_CA_CRT || __dirname + "/../test/cert/ca-crt.pem"
+        server_key: process.env.CERT_SERVER_KEY || __dirname + "/tests/test/cert/server-key.pem",
+        server_crt: process.env.CERT_SERVER_CRT || __dirname + "/tests/test/cert/server-crt.pem",
+        ca_crt: process.env.CERT_CA_CRT || __dirname + "/tests/test/cert/ca-crt.pem"
     };
 }
 

@@ -1,6 +1,5 @@
 ﻿import * as http from "http";
 import * as stream from "stream"
-import { IDictionary } from "../../blog/Infastructure/Dictionary";
 
 export default class ServerResponseStub extends stream.Writable implements http.ServerResponse
 {
@@ -21,9 +20,14 @@ export default class ServerResponseStub extends stream.Writable implements http.
 
     writeContinue = (): void => { };
     writeHead(statusCode: number, headers?: any): void;
-    writeHead(statusCode: number, reasonPhrase?: string, headers?: any)
+    writeHead(statusCode: number, reasonPhrase?: any, headers?: any)
     {
         this.statusCode = statusCode;
+
+        for (var i in reasonPhrase)
+        {
+            this.setHeader(i, reasonPhrase[i]);
+        }
     };
 
     setHeader = (name: string, value: string | string[]): void =>
@@ -38,7 +42,7 @@ export default class ServerResponseStub extends stream.Writable implements http.
 
             for (let i in value)
             {
-                this.headers.name[i] = value[i];
+                this.headers[name][i] = value[i];
             }
         }
     };

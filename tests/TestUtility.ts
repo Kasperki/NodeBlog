@@ -46,7 +46,7 @@ export function DBInitialization()
 /**
  * Fixture to database
  */
-export function fixtures(object: any)
+export function fixtures(object: mongoose.Document)
 {
     object.save(function (err: Error)
     {

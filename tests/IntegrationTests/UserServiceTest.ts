@@ -20,7 +20,7 @@ describe('UserService', function () {
             done();
         });
     });
-      it('Should throw error if duplicate username', function (done) {
+      it('Should throw error if duplicate username', function () {
 
         var service = new userService();
 
@@ -29,7 +29,6 @@ describe('UserService', function () {
                 assert.ok(err instanceof Error);
                 assert.ok(err.message.includes("E11000 duplicate key error"));
                 assert.ok(err.message.includes("dup key: { : \"user1\" }"));
-                done();
             }); 
         });   
     })
@@ -37,7 +36,7 @@ describe('UserService', function () {
    describe('#FindUser()', function () {
        it('Should return null if user is not found', async function () {
             var service = new userService();
-            let actualUser = await service.FindUser("admin");
+            let actualUser = await service.FindUser("NONEXISTENTUSER");
             assert.equal(actualUser, null);
         });
         it('Should find user from database', async function () {

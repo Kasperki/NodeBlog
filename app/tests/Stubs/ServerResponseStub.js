@@ -13,7 +13,7 @@ class ServerResponseStub extends stream.Writable {
             else {
                 this.headers[name] = [];
                 for (let i in value) {
-                    this.headers.name[i] = value[i];
+                    this.headers[name][i] = value[i];
                 }
             }
         };
@@ -27,6 +27,9 @@ class ServerResponseStub extends stream.Writable {
     ;
     writeHead(statusCode, reasonPhrase, headers) {
         this.statusCode = statusCode;
+        for (var i in reasonPhrase) {
+            this.setHeader(i, reasonPhrase[i]);
+        }
     }
     ;
     end(str, buffer, data, encoding, cb) { }

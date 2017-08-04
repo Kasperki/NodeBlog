@@ -21,7 +21,7 @@ describe('BlogService', function () {
             blogService.AddBlogPost('b', 'b', 'c', 'd', 'e', ['f']);
             done();
         });
-        it('Should throw error if duplicate title', function (done) {
+        it('Should throw error if duplicate title', function () {
             blogService.AddBlogPost('a', 'b', 'c', 'd', 'e', ['f']);
             try {
                 blogService.AddBlogPost('a', 'b', 'c', 'd', 'e', ['f']);
@@ -29,14 +29,13 @@ describe('BlogService', function () {
             catch (err) {
                 assert.ok(err.message.includes("E11000 duplicate key error"));
                 assert.ok(err.message.includes("dup key: { : \"a\" }"));
-                done();
             }
         });
     });
     describe('#GetLatestBlogPost()', function () {
         it('Should return empty array if no blog posts', function () {
             return __awaiter(this, void 0, void 0, function* () {
-                var result = yield blogService.GetLatestBlogPost(1);
+                let result = yield blogService.GetLatestBlogPost(1);
                 assert.equal(result.length, 0);
             });
         });
@@ -48,21 +47,21 @@ describe('BlogService', function () {
         });
         it('Should return all blogs when limit is 0', function () {
             return __awaiter(this, void 0, void 0, function* () {
-                var expected = 10;
-                for (var i = 0; i < 10; i++) {
+                let expected = 10;
+                for (let i = 0; i < 10; i++) {
                     testUtility.fixtures(new Blog({ title: i }));
                 }
-                var result = yield blogService.GetLatestBlogPost(0);
+                let result = yield blogService.GetLatestBlogPost(0);
                 assert.equal(result.length, expected);
             });
         });
         it('Should return expected number of blog posts', function () {
             return __awaiter(this, void 0, void 0, function* () {
                 var expected = 5;
-                for (var i = 0; i < 10; i++) {
+                for (let i = 0; i < 10; i++) {
                     testUtility.fixtures(new Blog({ title: i }));
                 }
-                var result = yield blogService.GetLatestBlogPost(expected);
+                let result = yield blogService.GetLatestBlogPost(expected);
                 assert.equal(result.length, expected);
             });
         });
@@ -81,14 +80,14 @@ describe('BlogService', function () {
         });
         it('Should return null if no blog posts found', function () {
             return __awaiter(this, void 0, void 0, function* () {
-                var result = yield blogService.GetBlogPostById('56cb91bdc3464f14678934ca');
+                let result = yield blogService.GetBlogPostById('56cb91bdc3464f14678934ca');
                 assert.equal(result, null);
             });
         });
         it('Should return searched blog post by id', function () {
             return __awaiter(this, void 0, void 0, function* () {
-                var expectedBlog = new Blog({ title: "expected", image: "image", text: "text", description: "txt", category: "c" });
-                var notExpectedBlog = new Blog({ title: "NotExpected", image: "image3", text: "tex_t", description: "tx_t", category: "c" });
+                let expectedBlog = new Blog({ title: "expected", image: "image", text: "text", description: "txt", category: "c" });
+                let notExpectedBlog = new Blog({ title: "NotExpected", image: "image3", text: "tex_t", description: "tx_t", category: "c" });
                 testUtility.fixtures(expectedBlog);
                 testUtility.fixtures(notExpectedBlog);
                 let result = yield blogService.GetBlogPostById(String(expectedBlog.id));
@@ -110,8 +109,8 @@ describe('BlogService', function () {
         });
         it('Should return searched blog post by title', function () {
             return __awaiter(this, void 0, void 0, function* () {
-                var expectedBlog = new Blog({ title: "expected", image: "image", text: "text", description: "txt", category: "c" });
-                var notExpectedBlog = new Blog({ title: "NotExpected", image: "image3", text: "tex_t", description: "tx_t", category: "c" });
+                let expectedBlog = new Blog({ title: "expected", image: "image", text: "text", description: "txt", category: "c" });
+                let notExpectedBlog = new Blog({ title: "NotExpected", image: "image3", text: "tex_t", description: "tx_t", category: "c" });
                 testUtility.fixtures(expectedBlog);
                 testUtility.fixtures(notExpectedBlog);
                 let blog = yield blogService.GetBlogPostByTitle(expectedBlog.title);

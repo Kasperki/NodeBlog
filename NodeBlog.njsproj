@@ -22,7 +22,6 @@
   <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
   <ItemGroup>
     <Content Include="package.json" />
-    <Content Include="testTS\TestUtility.ts" />
     <Content Include="tsconfig.json" />
     <Content Include="README.md" />
     <Compile Include="blog\BlogController.ts" />
@@ -37,8 +36,6 @@
     <Compile Include="blog\MainController.ts" />
     <Compile Include="blog\Server.ts" />
     <Compile Include="scripts\install.js" />
-    <Content Include="test\file\test.1.html" />
-    <Content Include="test\file\test.html" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="app" />
@@ -52,11 +49,6 @@
     <Folder Include="NodeBlog" />
     <Folder Include="scripts" />
     <Folder Include="test" />
-    <Folder Include="testTS\" />
-    <Folder Include="testTS\IntegrationTests\" />
-    <Folder Include="testTS\Stubs\" />
-    <Folder Include="test\cert" />
-    <Folder Include="test\file" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="blog\BaseController.ts">
@@ -94,20 +86,6 @@
     <TypeScriptCompile Include="blog\UserBundle\UserService.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
-    <TypeScriptCompile Include="testTS\CookiesTest.ts" />
-    <TypeScriptCompile Include="testTS\DatabaseTest.ts" />
-    <TypeScriptCompile Include="testTS\HashTest.ts" />
-    <TypeScriptCompile Include="testTS\HtmlLoaderTest.ts" />
-    <TypeScriptCompile Include="testTS\IntegrationTests\BlogServiceTest.ts" />
-    <TypeScriptCompile Include="testTS\IntegrationTests\SessionManagerTest.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="testTS\IntegrationTests\UserServiceTest.ts" />
-    <TypeScriptCompile Include="testTS\RoutingTest.ts" />
-    <TypeScriptCompile Include="testTS\Stubs\ServerRequestStub.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="testTS\Stubs\ServerResponseStub.ts" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <!--Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them.-->

@@ -14,9 +14,9 @@ describe('AuthenticationService', () => {
             let sessionManager = new authenticationService.SessionManager();
 
             let actualSession = sessionManager.CreateSession(new ServerResponseStub(), "t");
-            let expectedExpireDate = new Date(new Date().getTime() + 3600000).toUTCString();
+            let expectedExpireDate = new Date(new Date().getTime() + 3600000);
             let expectedTokenLength = 128;
-            
+
             assert.strictEqual(actualSession.expires, expectedExpireDate);
             assert.strictEqual(actualSession.token.length, expectedTokenLength);
         });
@@ -24,7 +24,7 @@ describe('AuthenticationService', () => {
             let sessionManager = new authenticationService.SessionManager();
             let actualSession = sessionManager.CreateSession(new ServerResponseStub(), "test");
 
-            assert.strictEqual(actualSession, sessionManager.GetSessions()[1]);
+            assert.strictEqual(actualSession, sessionManager.GetSessions()[0]);
         });
         it('Should create new session with username', () => {
             let sessionManager = new authenticationService.SessionManager();
@@ -48,7 +48,8 @@ describe('AuthenticationService', () => {
             sessionManager.CreateSession(new ServerResponseStub(), "NotThisDude");
 
             let tokenCookie: IDictionary<string> = {};
-            tokenCookie[expectedSession.id] = expectedSession.token;
+            tokenCookie["sessionId"] = expectedSession.id;
+            tokenCookie["authToken"] = expectedSession.token;
             assert.strictEqual(sessionManager.IsTokenValid(tokenCookie), expectedSession);
         });
         it('Should return false if token is invalid', () => {
