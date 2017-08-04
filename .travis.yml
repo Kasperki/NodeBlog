@@ -6,7 +6,7 @@ node_js:
 services:
   - mongodb
 before_install:
-  - npm install -g typescript@2.2.2
+  - npm install -g typescript@2.3.3
 before_script:
   - sleep 15
   - mongo testdb --eval 'db.addUser("root", "root");'
