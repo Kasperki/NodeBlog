@@ -52,7 +52,7 @@ describe('BlogService', function () {
         {
             let expected = 10;
             for (let i = 0; i < 10; i++) {
-                testUtility.fixtures(new Blog({ title: i }));
+                await testUtility.fixtures(new Blog({ title: i }));
             }
 
             let result = await blogService.GetLatestBlogPost(0);
@@ -62,7 +62,7 @@ describe('BlogService', function () {
         {
             var expected = 5;
             for (let i = 0; i < 10; i++) {
-                testUtility.fixtures(new Blog({ title: i }));
+                await testUtility.fixtures(new Blog({ title: i }));
             }
 
             let result = await blogService.GetLatestBlogPost(expected);
@@ -92,8 +92,8 @@ describe('BlogService', function () {
             let expectedBlog = new Blog({ title: "expected", image: "image", text: "text", description: "txt", category: "c" });
             let notExpectedBlog = new Blog({ title: "NotExpected", image: "image3", text: "tex_t", description: "tx_t", category: "c" });
 
-            testUtility.fixtures(expectedBlog);
-            testUtility.fixtures(notExpectedBlog);
+            await testUtility.fixtures(expectedBlog);
+            await testUtility.fixtures(notExpectedBlog);
 
             let result = await blogService.GetBlogPostById(String(expectedBlog.id));
             assert.equal(result.title, expectedBlog.title);
@@ -115,8 +115,8 @@ describe('BlogService', function () {
             let expectedBlog = new Blog({ title: "expected", image: "image", text: "text", description: "txt", category: "c" });
             let notExpectedBlog = new Blog({ title: "NotExpected", image: "image3", text: "tex_t", description: "tx_t", category: "c" });
 
-            testUtility.fixtures(expectedBlog);
-            testUtility.fixtures(notExpectedBlog);
+            await testUtility.fixtures(expectedBlog);
+            await testUtility.fixtures(notExpectedBlog);
 
             let blog = await blogService.GetBlogPostByTitle(expectedBlog.title);
 

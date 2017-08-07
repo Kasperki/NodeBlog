@@ -7,6 +7,8 @@ import * as config from "../config";
  */
 export function DBInitialization()
 {
+    mongoose.Promise = global.Promise;
+
     beforeEach(function (done) {
 
         function ClearDatabase()
@@ -27,6 +29,7 @@ export function DBInitialization()
                 {
                     throw err;
                 }
+
                 return ClearDatabase();
             });
         }
@@ -46,10 +49,7 @@ export function DBInitialization()
 /**
  * Fixture to database
  */
-export function fixtures(object: mongoose.Document)
+export async function fixtures(object: mongoose.Document)
 {
-    object.save(function (err: Error)
-    {
-        if (err) throw err;
-    });
+    return object.save();
 }
