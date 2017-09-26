@@ -1,0 +1,41 @@
+﻿<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0"> 
+
+{% stylesheet output="/main.js" 
+    "wwwroot/js/google-code-prettify/prettify.js"
+    "wwwroot/js/jquery.js"
+    "wwwroot/js/bootstrap.min.js"
+    "wwwroot/js/jquery.easing.min.js"
+    "wwwroot/js/jquery.fittext.js"
+    "wwwroot/js/wow.min.js"
+    "wwwroot/js/angular-1.5.6-min.js"
+    "wwwroot/js/angular-sanitize.js"
+%}
+
+{% if "{{NODE.ENV}}" == "dev" %}
+    <script src="/cache/main.js"></script>
+{% endif %}
+
+{% if "{{NODE.ENV}}" == "prod" %}
+    <script src="/cache/main.min.js"></script>    
+{% endif %}
+
+{% stylesheet output="/main.css"
+    "wwwroot/css/prettify.css"     
+    "wwwroot/css/animate.min.css"    
+    "wwwroot/font-awesome/css/font-awesome.min.css"    
+    "wwwroot/css/bootstrap.min.css"
+    "wwwroot/css/creative.css"    
+    "wwwroot/css/main.css"     
+%}
+
+{% if "{{NODE.ENV}}" == "dev" %}
+    <link rel="stylesheet" href="/cache/main.css" type="text/css">
+{% endif %}
+
+{% if "{{NODE.ENV}}" == "prod" %}
+    <link rel="stylesheet" href="/cache/main.min.css" type="text/css">    
+{% endif %}
+
+<!-- Custom Fonts -->
+<link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>

@@ -42,3 +42,6 @@ nbproject
 .vscode
 obj
 bin
+/app/blog
+/app/config.js
+.vs

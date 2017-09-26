@@ -1,6 +1,6 @@
 const assert = require('assert');
 var httpMocks = require('node-mocks-http');
-var cookies = require('../blog/Cookies.js');
+var cookies = require('../app/blog/Cookies.js');
 
 describe('Cookies', function () {
     describe('ParseCookies()', function () {

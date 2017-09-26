@@ -8,7 +8,7 @@ For disclamer this project is propably not using all of the best practices and h
 # Installation
 
 * Prequistes
-    * Node
+    * Node 7.XX
     * MongoDB
     * Git
 
@@ -88,13 +88,17 @@ sudo -E ./run.sh
 
 ## Tests
 
+Run from root folder where is package.json
 You must have mongod running on background.
 I should try to mock this.
 
 Windows:
 ```
-//Run from root folder where is package.json
-set NODE_ENV=test && mocha
+//Commandline
+set "NODE_ENV=test" & mocha
+
+//Powershell
+$env:NODE_ENV = "test"; mocha
 ```
 
 ## Configs
@@ -210,7 +214,7 @@ Extends .html file with another html file.
 
 Example 
 ```
-{% extends html/layout.html %}
+{% extends views/layout.html %}
 ```
 
 will be replaced with content in layout.html file.

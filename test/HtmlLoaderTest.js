@@ -1,29 +1,29 @@
 const assert = require('assert');
 var fs = require('fs');
 var httpMocks = require('node-mocks-http');
-var htmlLoader = require('../blog/HtmlLoader.js');
+var htmlLoader = require('../app/blog/HtmlLoader.js');
+var config = require("../app/config.js");
 
 describe('HtmlLoader', function () {
-    
+
     var pathToTestFile = "test/file/test.html";
     
     describe('load()', function () {
         it('should set correct http status code & correct headers', function (done) {
             var response = httpMocks.createResponse();
 
-            htmlLoader.load({response: response}, pathToTestFile, null, 203, function() {
-                assert.equal(response.statusCode, 203);
-                assert.deepEqual(response._headers,  {"Content-Type": "text/html"})
-                done();
-            });
+            htmlLoader.load({ response: response }, pathToTestFile, null, 203);
+
+            assert.equal(response.statusCode, 203);
+            assert.deepEqual(response._headers,  {"Content-Type": "text/html"})
+            done();
         });
         it('should send content of file', function (done) {
             var response = httpMocks.createResponse();
 
-            htmlLoader.load({response: response}, pathToTestFile, null, null, function(err, ready) {
-                assert.equal(response._getData(), "<p>extra content</p>");
-                done();
-            });
+            htmlLoader.load({ response: response }, pathToTestFile, null, null);
+            assert.equal(response._getData(), "<p>extra content</p>");
+            done();
         });
     });
     
@@ -218,84 +218,84 @@ describe('HtmlLoader', function () {
             var htmlString = "<html>{% if \"a\" == \"a\" %}OK{%endif%}</html>";
             var expectedString = "<html>OK</html>";
             
-            var actualString = htmlLoader.templateIf(htmlString);
+            var actualString = htmlLoader.TemplateIf(htmlString);
             assert.equal(actualString, expectedString);
         });
         it('should render block if numbers are equal', function () {
             var htmlString = "<html>{% if 2 == 2 %}OK{%endif%}</html>";
             var expectedString = "<html>OK</html>";
             
-            var actualString = htmlLoader.templateIf(htmlString);
+            var actualString = htmlLoader.TemplateIf(htmlString);
             assert.equal(actualString, expectedString);
         });
         it('should render block if bool is true', function () {
             var htmlString = "<html>{% if true == true %}OK{%endif%}</html>";
             var expectedString = "<html>OK</html>";
             
-            var actualString = htmlLoader.templateIf(htmlString);
+            var actualString = htmlLoader.TemplateIf(htmlString);
             assert.equal(actualString, expectedString);
         });
         it('should render block if var is null', function () {
             var htmlString = "<html>{% if null == null %}OK{%endif%}</html>";
             var expectedString = "<html>OK</html>";
             
-            var actualString = htmlLoader.templateIf(htmlString);
+            var actualString = htmlLoader.TemplateIf(htmlString);
             assert.equal(actualString, expectedString);
         });
         it('should NOT render block if strings are not equal', function () {
             var htmlString = "<html>{% if \"a\" == \"b\" %}OK{%endif%}</html>";
             var expectedString = "<html></html>";
             
-            var actualString = htmlLoader.templateIf(htmlString);
+            var actualString = htmlLoader.TemplateIf(htmlString);
             assert.equal(actualString, expectedString);
         });
         it('should NOT render block if numbers are not equal', function () {
             var htmlString = "<html>{% if 1 == 2 %}OK{%endif%}</html>";
             var expectedString = "<html></html>";
             
-            var actualString = htmlLoader.templateIf(htmlString);
+            var actualString = htmlLoader.TemplateIf(htmlString);
             assert.equal(actualString, expectedString);
         });
         it('should NOT render block if bool is not true', function () {
             var htmlString = "<html>{% if true == false %}OK{%endif%}</html>";
             var expectedString = "<html></html>";
             
-            var actualString = htmlLoader.templateIf(htmlString);
+            var actualString = htmlLoader.TemplateIf(htmlString);
             assert.equal(actualString, expectedString);
         });
         it('should NOT render block if var is not null', function () {
             var htmlString = "<html>{% if 1 == null %}OK{%endif%}</html>";
             var expectedString = "<html></html>";
             
-            var actualString = htmlLoader.templateIf(htmlString);
+            var actualString = htmlLoader.TemplateIf(htmlString);
             assert.equal(actualString, expectedString);
         });
         it('should render all if blocks that are true', function () {
             var htmlString = "<html>{% if 2 == 2 %}OK{%endif%} - {% if 3 == 3 %}KEK{%endif%}</html>";
             var expectedString = "<html>OK - KEK</html>";
             
-            var actualString = htmlLoader.templateIf(htmlString);
+            var actualString = htmlLoader.TemplateIf(htmlString);
             assert.equal(actualString, expectedString);
         });
         it('should render all if blocks that are true', function () {
             var htmlString = "<html>{% if 2 == 2 %}OK{%endif%} 2 {% if true == true %}KEDK{%endif%}</html>";
             var expectedString = "<html>OK 2 KEDK</html>";
             
-            var actualString = htmlLoader.templateIf(htmlString);
+            var actualString = htmlLoader.TemplateIf(htmlString);
             assert.equal(actualString, expectedString);
         });
         it('should render all if blocks that are true', function () {
             var htmlString = "<html>{% if 2 == 2 %}OK{%endif%} 1{% if false == true %}KEDK{%endif%}</html>";
             var expectedString = "<html>OK 1</html>";
             
-            var actualString = htmlLoader.templateIf(htmlString);
+            var actualString = htmlLoader.TemplateIf(htmlString);
             assert.equal(actualString, expectedString);
         });
         it('should render block even if the if condition is on multiple lines', function () {
             var htmlString = "<html>{% if 2 == 2 %}\n  OK \n {%endif%}</html>";
             var expectedString = "<html>OK</html>";
             
-            var actualString = htmlLoader.templateIf(htmlString);
+            var actualString = htmlLoader.TemplateIf(htmlString);
             assert.equal(actualString, expectedString);
         });
     });

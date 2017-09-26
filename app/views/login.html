@@ -1,0 +1,98 @@
+<html>
+<head>
+    <title>Kiiskinen - Login</title>
+    {% extends views/layout.html %}
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+</head>
+<body id="body">
+    {% extends views/nav.html %}
+    <br><br><br><br><br><br><br>
+    <section class="container">
+        <div class="row">
+            <div class="col-lg-4 text-center"></div>
+            <div class="col-lg-4 text-center">
+                <label for="username">Username</label>
+                <input id="username" style="width:100%;" type="text">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-4 text-center"></div>
+            <div class="col-lg-4 text-center">
+                <label for="password">Password</label>
+                <input id="password" style="width:100%;" type="password">
+            </div> 
+        </div>
+
+        <div class="row">
+            <div class="col-lg-4 text-center"></div>
+            <div class="col-lg-4 text-center" id="alert"></div>
+        </div> 
+   
+        <div class="row"> 
+            <div class="col-lg-4 text-center"></div>
+            <div class="col-lg-4 text-center">
+                <input type="submit" id="login" style="width:100%;" class="button disabled" value="Login">  
+            </div> 
+        </div> 
+        
+        <br>
+        <div class="row">   
+            <div class="col-lg-4 text-center"></div>
+            <div class="col-lg-4 text-center">
+
+                {% if "{{NODE.ENV}}" == "prod" %}
+                    <div id="recaptcha-service" class="g-recaptcha" data-callback="recaptchaCallback" data-sitekey="6LcM8R8TAAAAAIn5JrS2FxkRPj_XTTmSv6y0ng6a"></div>
+                {% endif %}
+
+                {% if "{{NODE.ENV}}" == "dev" %}
+                    <div id="recaptcha-service" class="g-recaptcha" data-callback="recaptchaCallback" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
+                {% endif %}
+            </div> 
+        </div>
+    </section>
+</body>
+</html>
+
+<script>
+
+    var reChapta;
+    window.recaptchaCallback = function recaptchaCallback(response) {
+        reChapta = response;
+        $("#login").removeClass('disabled');
+    }
+
+    //Login
+    $("#login").click(function () {
+        if ($(this).hasClass('disabled'))
+            return;
+
+        $.ajax({
+            url: './auth',
+            type: 'POST',
+            data: JSON.stringify({ username: $('#username').val(), password: $('#password').val(), recaptcha: reChapta }),
+            contentType: "application/json",
+            success: function (data) {
+                if (data === "Ok") {
+                    window.location.pathname = "./admin/blog"
+                } else {
+                    createAlert();
+                    grecaptcha.reset();
+                }
+            },
+        });
+    });
+
+    function createAlert() {
+        div = document.createElement('div');
+        $(div).addClass("alert-box")
+            .html("Incorrect login information")
+            .appendTo($('#alert'))
+            .click(function () {
+                $(this).remove();
+            })
+            .show("slow").delay(5000).hide("slow", function () {
+                $(this).remove();
+            });
+    }
+</script>
